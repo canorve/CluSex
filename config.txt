@@ -1,0 +1,49 @@
+
+
+
+#
+# first run
+
+# run using low deblend parameters and high SNR
+
+
+DEBLEND_NTHRESH1 32          # Number of deblending sub-thresholds
+DEBLEND_MINCONT1 0.001         # Minimum contrast parameter for deblending
+
+ANALYSIS_THRESH1 20          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DETECT_THRESH1   20          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DETECT_MINAREA1  100          # minimum number of pixels above threshold
+
+
+BACK_SIZE1      80
+BACK_FILTERSIZE1 11
+
+
+# params for second run
+# run with high deblend number and low SNR
+
+ANALYSIS_THRESH2 1.5            # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DETECT_THRESH2   1.5          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DETECT_MINAREA2  100      # minimum number of pixels above threshold
+
+DEBLEND_NTHRESH2 64           # Number of deblending sub-thresholds
+DEBLEND_MINCONT2 0.001         # Minimum contrast parapymeter for deblending
+
+BACK_SIZE2       30
+BACK_FILTERSIZE2 5
+
+Scale  1  # factor scale which ellipses are enlarged
+
+
+SatDs9 sat.reg
+
+SatScale 2
+
+SatOffset  1
+
+MakeMask  0
+
+
+OutCatalog  hotcold.cat
+
+RegDs9   hotcold.reg
