@@ -37,6 +37,8 @@ def main():
     output2="hotcold.cat"
     scale=1
 
+    run1=run2=0
+
     create = 0
 
     regoutfile = "hotcold.reg"
@@ -67,6 +69,12 @@ def main():
 
 
 # param 1
+
+            if param == "FirstRun":
+
+                (run1) = val.split()[0]
+                run1=int(run1)
+
 
             if param == "DEBLEND_NTHRESH1":
                 (dn1) = val.split()[0]
@@ -105,6 +113,13 @@ def main():
 
 
 #  param2
+
+
+            if param == "SecondRun":
+
+                (run2) = val.split()[0]
+                run2=int(run2)
+
 
             if param == "DEBLEND_NTHRESH2":
 
@@ -282,50 +297,77 @@ def main():
         sys.exit()
 
 
-    print("Running hot.sex and cold.sex  \n")
-
 
 ######  Running Sextractor  #######
-    err=sp.call(["sextractor", "-c",outhot,image])
 
-    err2=sp.call(["sextractor", "-c",outcold,image])
+    if (run1 == 1):
+        print("Running hot.sex   \n")
+        err=sp.call(["sextractor", "-c",outhot,image])
+
+    if (run2 == 1):
+        print("Running  cold.sex  \n")
+        err2=sp.call(["sextractor", "-c",outcold,image])
+
+
 ####################################
 
-
-    print ("joining hot.cat and cold.cat catalogs ....\n");
-    joinsexcat("hot.cat","cold.cat",output,scale)
-
-
-    print ("creating {0} for ds9 ....\n".format(satfileout))
-    ds9satbox(satfileout,output,satscale,satoffset) # crea archivo  de salida de reg
-
-    print ("recomputing flags on objects which are inside saturated regions  ....\n")
-    putflagsat(output,output2,satfileout)
-
-    print ("{0} is the output catalog  ....\n".format(output2))
+    if (run1 == 1 and run2 == 1):
+        print ("joining hot.cat and cold.cat catalogs ....\n");
+        joinsexcat("hot.cat","cold.cat",output,scale)
+    else:
+        print("Can not join catalogs because sextractor was not used \n")
 
 
-    print ("Creating ds9 check region file....\n")
-    ds9kron(output2,regoutfile,scale)
+    if (run1 == 1 and run2 == 1):
+        print ("creating {0} for ds9 ....\n".format(satfileout))
+        ds9satbox(satfileout,output,satscale,satoffset) # crea archivo  de salida de reg
+    elif(run1 ==1):
+        print ("creating {0} for ds9 ....\n".format(satfileout))
+        ds9satbox(satfileout,"hot.cat",satscale,satoffset) # crea archivo  de salida de reg
+    elif(run2 == 1):
+        print ("creating {0} for ds9 ....\n".format(satfileout))
+        ds9satbox(satfileout,"cold.cat",satscale,satoffset) # crea archivo  de salida de reg
+
+
+
+    if (run1 == 1 and run2 == 1):
+        print ("recomputing flags on objects which are inside saturated regions  ....\n")
+        putflagsat(output,output2,satfileout)
+
+
+    if (run1 == 1 and run2 == 1):
+        print ("{0} is the output catalog  ....\n".format(output2))
+        print ("Creating ds9 check region file....\n")
+        ds9kron(output2,regoutfile,scale)
+    elif(run1 ==1):
+        print ("{0} is the output catalog  ....\n".format("hot.cat"))
+        print ("Creating ds9 check region file....\n")
+        ds9kron("hot.cat",regoutfile,scale)
+    elif(run2==1):
+        print ("{0} is the output catalog  ....\n".format("cold.cat"))
+        print ("Creating ds9 check region file....\n")
+        ds9kron("cold.cat",regoutfile,scale)
 
 
 #####
 #####           creating mask
 
-
-
     if (create == 1):
-
 
         print ("Creating masks....\n")
 
         (NCol, NRow) = GetAxis(image)
 
 #        print(output2,scale,SexArSort,NCol,NRow)
-        Total = CatArSort(output2,scale,SexArSort,NCol,NRow)
+
+        if (run1 == 1 and run2 == 1):
+            Total = CatArSort(output2,scale,SexArSort,NCol,NRow)
+        elif(run1 ==1):
+            Total = CatArSort("hot.cat",scale,SexArSort,NCol,NRow)
+        elif(run2==1):
+            Total = CatArSort("cold.cat",scale,SexArSort,NCol,NRow)
 
 #        ParVar.Total = catfil.CatSort(ParVar)
-
 
 ##### segmentation mask
 
@@ -340,12 +382,13 @@ def main():
 
     else:
 
-        print ("Running ds9 ....\n")
-        runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} ".format(image,regoutfile,satfileout)
-        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
+        if (run1 == 1 or run2 == 1):
+            print ("Running ds9 ....\n")
+            runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} ".format(image,regoutfile,satfileout)
+            err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
 
-
-
+        else:
+            print ("Ds9 can not run because sextractor was not used ")
 
 #############################################################################
 ######################### End of program  ######################################
@@ -980,7 +1023,6 @@ def ds9kron(sexfile,regfile,scale):
 
 
     f_out.close()
-
 
 
 
