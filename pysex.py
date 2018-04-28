@@ -715,6 +715,7 @@ def joinsexcat (maincat,secondcat,output,KronScale):
 
     f_out = open(output, "w")
 
+#maincat
     N,Alpha,Delta,X,Y,Mg,Kr,Fluxr,Isoa,Ai,E,Theta,Bkgd,Idx,Flg=np.genfromtxt(maincat,delimiter="",unpack=True)
 
     AR         = 1 - E
@@ -746,16 +747,17 @@ def joinsexcat (maincat,secondcat,output,KronScale):
 #second cat
     N2,Alpha2,Delta2,X2,Y2,Mg2,Kr2,Fluxr2,Isoa2,Ai2,E2,Theta2,Bkgd2,Idx2,Flg2=np.genfromtxt(secondcat,delimiter="",unpack=True)
 
+    AR2         = 1 - E2
+    RKron2      = KronScale * Ai2 * Kr2
+
 
     for idx2, item2 in enumerate(N2):
 
         flag =False
         for idx, item in enumerate(N):
 
-
-            flag=CheckKron(X2[idx2],Y2[idx2],X[idx],Y[idx],RKron[idx],Theta[idx],AR[idx])
-
-
+#            flag=CheckKron(X2[idx2],Y2[idx2],X[idx],Y[idx],RKron[idx],Theta[idx],AR[idx])
+            flag=CheckKron(X[idx],Y[idx],X2[idx2],Y2[idx2],RKron2[idx2],Theta2[idx2],AR2[idx2])
 
             if flag:   # boolean value
                 break
