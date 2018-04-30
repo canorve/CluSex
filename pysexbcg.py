@@ -39,6 +39,8 @@ def main():
     output2="hotcold.cat"
     scale=1
 
+    run1=run2=run3=0
+
     create = 0
 
     regoutfile = "hotcold.reg"
@@ -71,6 +73,12 @@ def main():
 
 
 # param 1
+            if param == "FirstRun":
+
+                (run1) = val.split()[0]
+                run1=int(run1)
+
+
 
             if param == "DEBLEND_NTHRESH1":
                 (dn1) = val.split()[0]
@@ -110,11 +118,16 @@ def main():
 
 #  param2
 
+            if param == "SecondRun":
+
+                (run2) = val.split()[0]
+                run2=int(run2)
+
+
             if param == "DEBLEND_NTHRESH2":
 
                 (dn2) = val.split()[0]
                 dn2=float(dn2)
-
 
 
             if param == "DEBLEND_MINCONT2":
@@ -181,6 +194,13 @@ def main():
 
 # bcg.sex
 # param 3
+
+            if param == "BGCRun":
+
+                (run3) = val.split()[0]
+                run3=int(run3)
+
+
             if param == "BCG":
 
                 (bcg) = val.split()[0]
@@ -332,7 +352,6 @@ def main():
             f_out.write(line2+"\n")
 
 
-
     f_out.close()
 
 
@@ -391,9 +410,6 @@ def main():
         sys.exit()
 
 
-
-
-
     (NCol, NRow) = GetAxis(image)
 
     print("Running hot.sex, cold.sex and bcg.sex  \n")
@@ -401,31 +417,86 @@ def main():
 
 ######  Running Sextractor  #######
 
-    err=sp.call(["sextractor", "-c",outbcg,image])
+    if (run1 == 1):
+        err=sp.call(["sextractor", "-c",outhot,image])
 
-    err=sp.call(["sextractor", "-c",outhot,image])
+    if (run2 == 1):
+        err2=sp.call(["sextractor", "-c",outcold,image])
 
-    err2=sp.call(["sextractor", "-c",outcold,image])
+    if (run3 == 1):
+        err=sp.call(["sextractor", "-c",outbcg,image])
 
 ####################################
 
-    print ("adding the bright cluster galaxies from bcg.cat to hot.cat catalogs ....\n");
+    if (run1 == 1 and run3 ==1):
+        print ("adding the bright cluster galaxies from bcg.cat to hot.cat catalogs ....\n");
 
-    Total = CatArSort("bcg.cat",scale,"bcgsort.cat",NCol,NRow)
+        Total = CatArSort("bcg.cat",scale,"bcgsort.cat",NCol,NRow)
 
-    addbcgcat("hot.cat","bcgsort.cat","hotbcg.cat",bcg,scale)
+        addbcgcat("hot.cat","bcgsort.cat","hotbcg.cat",bcg,scale)
+
+        if (run2 == 1):
+            print ("joining hotbcg.cat and cold.cat catalogs ....\n");
+            joinsexcat("hotbcg.cat","cold.cat",output,scale)
+
+    elif(run2 == 1 and run3 ==1):
+        print ("adding the bright cluster galaxies from bcg.cat to cold.cat catalogs ....\n");
+
+        Total = CatArSort("bcg.cat",scale,"bcgsort.cat",NCol,NRow)
+
+        addbcgcat("cold.cat","bcgsort.cat","coldbcg.cat",bcg,scale)
+
 
 ###############
 
-    print ("joining hotbcg.cat and cold.cat catalogs ....\n");
-    joinsexcat("hotbcg.cat","cold.cat",output,scale)
+    if (run1 == 1 and run2 ==1 and run3 == 1 ):
+        print ("creating {0} for ds9 ....\n".format(satfileout))
+        ds9satbox(satfileout,output,satscale,satoffset) # crea archivo  de salida de reg
+
+        print ("recomputing flags on objects which are inside saturated regions  ....\n")
+        putflagsat(output, output2,satfileout)
 
 
-    print ("creating {0} for ds9 ....\n".format(satfileout))
-    ds9satbox(satfileout,output,satscale,satoffset) # crea archivo  de salida de reg
+    elif(run1 == 1 and run3 == 1):
+        print ("creating {0} for ds9 ....\n".format(satfileout))
+        ds9satbox(satfileout,"hotbcg.cat",satscale,satoffset) # crea archivo  de salida de reg
 
-    print ("recomputing flags on objects which are inside saturated regions  ....\n")
-    putflagsat(output,output2,satfileout)
+        print ("recomputing flags on objects which are inside saturated regions  ....\n")
+        putflagsat("hotbcg.cat", output2,satfileout)
+
+
+    elif(run2 ==1 and run3 == 1):
+        print ("creating {0} for ds9 ....\n".format(satfileout))
+        ds9satbox(satfileout,"coldbcg.cat",satscale,satoffset) # crea archivo  de salida de reg
+
+        print ("recomputing flags on objects which are inside saturated regions  ....\n")
+        putflagsat("coldbcg.cat", output2,satfileout)
+
+
+    elif(run1 ==1):
+        print ("creating {0} for ds9 ....\n".format(satfileout))
+        ds9satbox(satfileout,"hot.cat",satscale,satoffset) # crea archivo  de salida de reg
+
+        print ("recomputing flags on objects which are inside saturated regions  ....\n")
+        putflagsat("hot.cat", output2,satfileout)
+
+
+
+    elif(run2 ==1):
+        print ("creating {0} for ds9 ....\n".format(satfileout))
+        ds9satbox(satfileout,"cold.cat",satscale,satoffset) # crea archivo  de salida de reg
+
+        print ("recomputing flags on objects which are inside saturated regions  ....\n")
+        putflagsat("cold.cat", output2,satfileout)
+
+
+    elif(run3 ==1):
+        print ("creating {0} for ds9 ....\n".format(satfileout))
+        ds9satbox(satfileout,"bcg.cat",satscale,satoffset) # crea archivo  de salida de reg
+
+        print ("recomputing flags on objects which are inside saturated regions  ....\n")
+        putflagsat("bcg.cat", output2,satfileout)
+
 
     print ("{0} is the output catalog  ....\n".format(output2))
 
@@ -433,48 +504,55 @@ def main():
     print ("Creating ds9 check region files....\n")
 
 
-    ds9kron("bcg.cat","bcg.reg",scale)
+#    ds9kron("bcg.cat","bcg.reg",scale)
 
-    ds9kron("hot.cat","hot.reg",scale)
+#    ds9kron("hot.cat","hot.reg",scale)
 
-    ds9kron("cold.cat","cold.reg",scale)
+#    ds9kron("cold.cat","cold.reg",scale)
 
 
 #####
-    ds9kron(output2,regoutfile,scale)
+    if (run1 == 1 or run2 ==1 or run3 == 1 ):
+        ds9kron(output2,regoutfile,scale)
 #####
-
-
 
     if (create == 1):
 
+        if (run1 == 1 or run2 ==1 or run3 == 1 ):
 
-        print ("Creating masks....\n")
+            print ("Creating masks....\n")
 
 #        print(output2,scale,SexArSort,NCol,NRow)
-        Total = CatArSort(output2,scale,SexArSort,NCol,NRow)
+            Total = CatArSort(output2,scale,SexArSort,NCol,NRow)
 
 #        ParVar.Total = catfil.CatSort(ParVar)
 
 
 ##### segmentation mask
 
-        MakeImage(maskfile, NCol, NRow)
+            MakeImage(maskfile, NCol, NRow)
 
-        MakeMask(maskfile, SexArSort, scale,0,satfileout)  # offset set to 0
-        MakeSatBox(maskfile, satfileout, Total + 1, NCol, NRow)
+            MakeMask(maskfile, SexArSort, scale,0,satfileout)  # offset set to 0
+            MakeSatBox(maskfile, satfileout, Total + 1, NCol, NRow)
 
-        print ("Running ds9 ....\n")
-        runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} {} ".format(image,regoutfile,satfileout,maskfile)
-        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
+            print ("Running ds9 ....\n")
+            runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} {} ".format(image,regoutfile,satfileout,maskfile)
+            err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
+
+        else:
+            print("can't create mask because sextractor was not used \n")
+
 
     else:
 
-        print ("Running ds9 ....\n")
-        runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} ".format(image,regoutfile,satfileout)
-        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
+        if (run1 == 1 or run2 ==1 or run3 == 1 ):
 
+            print ("Running ds9 ....\n")
+            runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} ".format(image,regoutfile,satfileout)
+            err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
 
+        else:
+            print("can't create mask because sextractor was not used \n")
 
 
 #############################################################################
@@ -820,8 +898,6 @@ def joinsexcat (maincat,secondcat,output,KronScale):
 
         line="{0:.0f} {1} {2} {3} {4} {5} {6} {7} {8:.0f} {9} {10} {11} {12} {13} {14:.0f} \n".format(N[idx], Alpha[idx], Delta[idx], X[idx], Y[idx], Mg[idx], Kr[idx], Fluxr[idx], Isoa[idx], Ai[idx], E[idx], Theta[idx], Bkgd[idx], Idx[idx], Flg[idx])
 
-
-
         f_out.write(line)
 
 
@@ -833,16 +909,17 @@ def joinsexcat (maincat,secondcat,output,KronScale):
 #second cat
     N2,Alpha2,Delta2,X2,Y2,Mg2,Kr2,Fluxr2,Isoa2,Ai2,E2,Theta2,Bkgd2,Idx2,Flg2=np.genfromtxt(secondcat,delimiter="",unpack=True)
 
+    AR2         = 1 - E2
+    RKron2      = KronScale * Ai2 * Kr2
+
 
     for idx2, item2 in enumerate(N2):
 
         flag =False
         for idx, item in enumerate(N):
 
-
-            flag=CheckKron(X2[idx2],Y2[idx2],X[idx],Y[idx],RKron[idx],Theta[idx],AR[idx])
-
-
+#            flag=CheckKron(X2[idx2],Y2[idx2],X[idx],Y[idx],RKron[idx],Theta[idx],AR[idx])
+            flag=CheckKron(X[idx],Y[idx],X2[idx2],Y2[idx2],RKron2[idx2],Theta2[idx2],AR2[idx2])
 
             if flag:   # boolean value
                 break
@@ -897,9 +974,7 @@ def addbcgcat (maincat,secondcat,output,bcg,KronScale):
 
         checkflag=CheckFlag(Flg2[idx2],flagsat,maxflag)
 
-
         if checkflag == False:
-
 
             for idx, item in enumerate(N):
 
@@ -910,9 +985,9 @@ def addbcgcat (maincat,secondcat,output,bcg,KronScale):
                     flag = True
                     sidx=idx
 
-
             if flag:
 
+                print("BGC encontrado")
                 Alpha[sidx] = Alpha2[idx2]
                 Delta[sidx] = Delta2[idx2]
                 X[sidx] = X2[idx2]
@@ -932,7 +1007,6 @@ def addbcgcat (maincat,secondcat,output,bcg,KronScale):
             bcg+=1
 
         idx2 +=1
-
 
 
 ## writing results
