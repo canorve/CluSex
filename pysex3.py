@@ -209,7 +209,6 @@ def main():
                 (run3) = val.split()[0]
                 run3=int(run3)
 
-
             if param == "DEBLEND_NTHRESH3":
                 (dn3) = val.split()[0]
                 dn3=int(dn3)
@@ -246,7 +245,6 @@ def main():
                 bf3=int(bf3)
 
 
-
 # hot.sex
 
     flaghead = False
@@ -263,7 +261,7 @@ def main():
 #every line of the file:
         for line2 in lines:
 
-        #print line2
+
             (params)=line2.split()
 
             if params[0] == "DEBLEND_NTHRESH":
@@ -366,7 +364,7 @@ def main():
 #every line of the file:
         for line2 in lines:
 
-        #print line2
+
             (params)=line2.split()
 
             if params[0] == "DEBLEND_NTHRESH":
@@ -408,10 +406,6 @@ def main():
 
 
 
-
-
-
-
     if flaghead:
         print ("CATALOG_TYPE must be ASCII in default.sex. Ending program.. \n")
         sys.exit()
@@ -427,7 +421,6 @@ def main():
 #        runcmd = "rm galfit.*"
 #        errrm = sp.run([runcmd], shell=True, stdout=sp.PIPE,
 #                       stderr=sp.PIPE, universal_newlines=True)
-
 
     if (run2 == 1):
         print("Running  cold.sex  \n")
@@ -543,7 +536,7 @@ def main():
 
     else:
 
-        if (run1 == 1 or run2 == 1):
+        if (run1 == 1 or run2 == 1 or run3 ==1):
             print ("Running ds9 ....\n")
             runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} ".format(image,regoutfile,satfileout)
             err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT

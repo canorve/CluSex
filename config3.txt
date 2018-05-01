@@ -1,16 +1,13 @@
 
 
 
-#
-# first run
-
 # run using low deblend parameters and high SNR
 
-FirstRun  1   # Enable first run (1 = run)
+FirstRun  0   # Enable first run (1 = run)
 
-SecondRun 1  # enable second run   (1 = run)
+SecondRun 0  # enable second run   (1 = run)
 
-ThirdRun 1   # enable third run (1 = run)
+ThirdRun 0   # enable third run (1 = run)
 
 
 DEBLEND_NTHRESH1 32          # Number of deblending sub-thresholds
@@ -18,25 +15,40 @@ DEBLEND_MINCONT1 0.01         # Minimum contrast parameter for deblending
 
 ANALYSIS_THRESH1 10          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
 DETECT_THRESH1   10          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
-DETECT_MINAREA1  50          # minimum number of pixels above threshold
+DETECT_MINAREA1  70          # minimum number of pixels above threshold
 
-
-BACK_SIZE1      120
+BACK_SIZE1      200
 BACK_FILTERSIZE1 11
 
 
 # params for second run
 # run with high deblend number and low SNR
 
-ANALYSIS_THRESH2 1.5          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
-DETECT_THRESH2   1.5          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
-DETECT_MINAREA2  10      # minimum number of pixels above threshold
-
 DEBLEND_NTHRESH2 64           # Number of deblending sub-thresholds
 DEBLEND_MINCONT2 0.001         # Minimum contrast parapymeter for deblending
 
+ANALYSIS_THRESH2 10         # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DETECT_THRESH2   10          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DETECT_MINAREA2  50      # minimum number of pixels above threshold
+
 BACK_SIZE2       10
-BACK_FILTERSIZE2 2
+BACK_FILTERSIZE2 7
+
+
+
+DEBLEND_NTHRESH3 64          # Number of deblending sub-thresholds
+DEBLEND_MINCONT3 0.001         # Minimum contrast parameter for deblending
+
+ANALYSIS_THRESH3 1.5          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DETECT_THRESH3   1.5          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DETECT_MINAREA3  10          # minimum number of pixels above threshold
+
+BACK_SIZE3      10
+BACK_FILTERSIZE3 2
+
+
+####################################################################
+
 
 Scale  1  # factor scale which ellipses are enlarged
 

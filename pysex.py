@@ -394,7 +394,7 @@ def main():
 
     else:
 
-        if (run1 == 1 or run2 == 1):
+        if (run1 == 1 or run2 == 1 or run3 ==1):
             print ("Running ds9 ....\n")
             runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} ".format(image,regoutfile,satfileout)
             err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
