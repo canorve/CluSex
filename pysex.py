@@ -29,6 +29,7 @@ def main():
 
 
 # init parameters
+# default values
     outhot  = "hot.sex"
     outcold = "cold.sex"
     sexfile="default.sex"
@@ -46,6 +47,17 @@ def main():
     maskfile="mask.fits"
 
     SexArSort="sortar.cat"
+
+
+    dn1 = dn2 = 1
+    dm1 = dm2 = 1
+    at1 = at2 = 1
+    dt1 = dt2 = 1
+    da1 = da2 = 1
+    bs1 = bs2 = 1
+    bf1 = bf2 = 1
+
+
 
 
     if not os.path.exists(ConfigFile):

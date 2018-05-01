@@ -30,7 +30,7 @@ def main():
     ConfigFile= sys.argv[1]
     image= sys.argv[2]
 
-
+# default values
 # init parameters
     outhot  = "hot.sex"
     outcold = "cold.sex"
@@ -50,6 +50,17 @@ def main():
     maskfile="mask.fits"
 
     SexArSort="sortar.cat"
+
+    dn1 = dn2 = dn3 =1
+    dm1 = dm2 = dm3 =1
+    at1 = at2 = at3 =1
+    dt1 = dt2 = dt3 =1
+    da1 = da2 = da3 =1
+    bs1 = bs2 = bs3 =1
+    bf1 = bf2 = bf3 =1
+
+
+
 
 
     if not os.path.exists(ConfigFile):
@@ -478,7 +489,6 @@ def main():
     if ((run1 == 1 and run2 == 1) or (run2 == 1 and run3 == 1) or (run1 == 1 and run3 == 1)):
         print ("recomputing flags on objects which are inside saturated regions  ....\n")
         putflagsat(output,output2,satfileout)
-
 
 
     if ((run1 == 1 and run2 == 1) or (run2 == 1 and run3 == 1) or (run1 == 1 and run3 == 1)):
