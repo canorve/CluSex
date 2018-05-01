@@ -1028,6 +1028,10 @@ def ds9satbox (satfileout,output,satscale,satoffset):
     for idx, item in enumerate(N):
 
 
+
+        if (E[idx] >= 0.3):
+             E[idx]-=0.2
+
         bi=Ai[idx]*(1-E[idx])
 
         Theta[idx] = Theta[idx] * np.pi /180  #rads!!!
