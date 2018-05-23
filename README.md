@@ -4,10 +4,10 @@
 
 Pysex is a script written in python to combine
 two Sextractor catalogs.  Pysex runs
-Sextractor twice with two different configuration parameters.
+Sextractor twice with two different configurations.
 
-This way of combine two Sextractor catalogs allows
-to pysex extract and estimate size all possible sources in an image.
+In this way, this combination allows
+to extract and estimate the size of all possible sources in an image.
 
 ## Installation
 
@@ -39,11 +39,11 @@ To run the code just type in the command line:
 ```
 ./pysex.py ConfigFile ImageFile
 ```
-Where ConfigFile is the configuration parameters filename for pysex and ImageFile is the image.
+Where ConfigFile is the configuration parameters filename for pysex, and ImageFile is the image.
 
 
 #### Example of Configuration filename
-Check the *config.txt* that comes with the code.
+Check the *config.txt* file that comes with the code.
 This is displayed here:
 
 \# params for first run of Sextractor
@@ -111,7 +111,7 @@ of the first Sextractor Run. Later, it adds
 the objects of the second Sextractor Run with
 the following condition: The object center
 must not be inside within the ellipse of the
-objects of any of the firt run.
+objects of the first run.
 
 
 To make pysex works properly, the first run
@@ -123,7 +123,7 @@ must be configurated with a low deblend number and high SNR, and the second run 
 ## Additional code
 In addition, this code comes with pysex3.py
 and pysexbcg.py  which basically do the same
-but they run Sextractor 3 times for more  reliability
+as pysex.py but they run Sextractor 3 times for more  reliability.
 
 
 ## More information
