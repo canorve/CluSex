@@ -309,7 +309,7 @@ def main():
         sys.exit()
 
 
-
+#ATENTION change for sp.run
 ######  Running Sextractor  #######
 
     if (run1 == 1):
