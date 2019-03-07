@@ -171,7 +171,7 @@ def main():
 
             if param == "SatScale":
                 (satscale) = val.split()[0]
-                satscale=int(satscale)
+                satscale=float(satscale)
 
             if param == "SatOffset":
                 (satoffset) = val.split()[0]
