@@ -428,13 +428,21 @@ def main():
 ######  Running Sextractor  #######
 
     if (run1 == 1):
-        err=sp.call(["sextractor", "-c",outhot,image])
+
+        runcmd="sextractor -c {} {} ".format(outhot,image)
+        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
+
 
     if (run2 == 1):
-        err2=sp.call(["sextractor", "-c",outcold,image])
+
+        runcmd="sextractor -c {} {} ".format(outcold,image)
+        err2 = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
+
 
     if (run3 == 1):
-        err=sp.call(["sextractor", "-c",outbcg,image])
+
+        runcmd="sextractor -c {} {} ".format(outbcg,image)
+        err3 = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
 
 ####################################
 
@@ -615,7 +623,7 @@ def MakeMask(maskimage, catfile, scale, offset, regfile):
         checkflag = CheckFlag(flg[idx], flagsat, maxflag)
         # check if object is inside of a saturaded box region indicated by
         # user in ds9
-        regflag = CheckSatReg(xx[idx], yy[idx], regfile, Rkron[idx], theta[idx], e[idx])
+        regflag = CheckSatReg(xx[idx], yy[idx], Rkron[idx], theta[idx], e[idx], regfile)
 
         if (checkflag == False) and (regflag == False):
 
@@ -1201,7 +1209,7 @@ def putflagsat(sexfile,sexfile2,regfile):
 
 
         check=CheckFlag(Flg[idx],flagsat,maxflag)  ## check if object doesn't has saturated regions
-        regflag=CheckSatReg(X[idx],Y[idx],regfile,Rkron,Theta[idx],E[idx])    ## check if object is inside of a saturaded box region indicated by user in ds9
+        regflag=CheckSatReg(X[idx],Y[idx],Rkron,Theta[idx],E[idx],regfile)    ## check if object is inside of a saturaded box region indicated by user in ds9
 
         if  (check == False ) and ( regflag == True) :
 
@@ -1265,7 +1273,7 @@ def ds9kron(sexfile,regfile,scale):
 
 
         check=CheckFlag(Flg[idx],flagsat,maxflag)  ## check if object doesn't has saturated regions
-#        regflag=CheckSatReg(X[idx],Y[idx],regfile,Rkron,Theta[idx],E[idx])    ## check if object is inside of a saturaded box region indicated by user in ds9
+#        regflag=CheckSatReg(X[idx],Y[idx],Rkron,Theta[idx],E[idx],regfile)    ## check if object is inside of a saturaded box region indicated by user in ds9
 
         if  (check == False ) :
 
@@ -1295,7 +1303,7 @@ def ds9kron(sexfile,regfile,scale):
 
 
 
-def CheckSatReg(x,y,filein,R,theta,ell):
+def CheckSatReg(x,y,R,theta,ell,filein):
    "Check if object is inside of saturated region. returns True if at least one pixel is inside"
 ## check if object is inside of
 ## saturaded region as indicated by ds9 box region

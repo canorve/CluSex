@@ -309,16 +309,23 @@ def main():
         sys.exit()
 
 
-#ATENTION change for sp.run
+
 ######  Running Sextractor  #######
 
     if (run1 == 1):
         print("Running hot.sex   \n")
-        err=sp.call(["sextractor", "-c",outhot,image])
+
+        runcmd="sextractor -c {} {} ".format(outhot,image)
+        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
+
 
     if (run2 == 1):
         print("Running  cold.sex  \n")
-        err2=sp.call(["sextractor", "-c",outcold,image])
+
+        runcmd="sextractor -c {} {} ".format(outcold,image)
+        err2 = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
+
+
 
 
 ####################################
@@ -452,7 +459,7 @@ def MakeMask(maskimage, catfile, scale, offset, regfile):
         checkflag = CheckFlag(flg[idx], flagsat, maxflag)
         # check if object is inside of a saturaded box region indicated by
         # user in ds9
-        regflag = CheckSatReg(xx[idx], yy[idx], regfile, Rkron[idx], theta[idx], e[idx])
+        regflag = CheckSatReg(xx[idx], yy[idx], Rkron[idx], theta[idx], e[idx],regfile)
 
         if (checkflag == False) and (regflag == False):
 
@@ -951,7 +958,7 @@ def putflagsat(sexfile,sexfile2,regfile):
 
 
         check=CheckFlag(Flg[idx],flagsat,maxflag)  ## check if object doesn't has saturated regions
-        regflag=CheckSatReg(X[idx],Y[idx],regfile,Rkron,Theta[idx],E[idx])    ## check if object is inside of a saturaded box region indicated by user in ds9
+        regflag=CheckSatReg(X[idx],Y[idx],Rkron,Theta[idx],E[idx],regfile)    ## check if object is inside of a saturaded box region indicated by user in ds9
 
         if  (check == False ) and ( regflag == True) :
 
@@ -1015,7 +1022,7 @@ def ds9kron(sexfile,regfile,scale):
 
 
         check=CheckFlag(Flg[idx],flagsat,maxflag)  ## check if object doesn't has saturated regions
-#        regflag=CheckSatReg(X[idx],Y[idx],regfile,Rkron,Theta[idx],E[idx])    ## check if object is inside of a saturaded box region indicated by user in ds9
+#        regflag=CheckSatReg(X[idx],Y[idx],Rkron,Theta[idx],E[idx],regfile)    ## check if object is inside of a saturaded box region indicated by user in ds9
 
         if  (check == False ) :
 
@@ -1024,7 +1031,7 @@ def ds9kron(sexfile,regfile,scale):
             f_out.write(line)
 
 
-            line2="point({0},{1}) # point=boxcircle font=\"times 10 bold\" text={2} {3} {4} \n".format(X[idx],Y[idx],"{",int(N[idx]),"}")
+            line2="point({0},{1}) # point=boxcircle font=\"times 10 bold\" text={2} {3} {4} \n".format(X[idx],Y[idx],"{",np.int(N[idx]),"}")
 
             f_out.write(line2)
 
@@ -1045,12 +1052,11 @@ def ds9kron(sexfile,regfile,scale):
 
 
 
-def CheckSatReg(x,y,filein,R,theta,ell):
+def CheckSatReg(x,y,R,theta,ell,filein):
    "Check if object is inside of saturated region. returns True if at least one pixel is inside"
 ## check if object is inside of
 ## saturaded region as indicated by ds9 box region
-## returns 1 if object center is in saturaded region
-
+## returns True if object center is in saturaded region
 
    q = (1 - ell)
 
@@ -1059,7 +1065,7 @@ def CheckSatReg(x,y,filein,R,theta,ell):
    theta = theta * np.pi /180  ## Rads!!!
 
    flag = False
-   fileflag =1
+#   fileflag =1
 
 
 
@@ -1071,7 +1077,6 @@ def CheckSatReg(x,y,filein,R,theta,ell):
        lines = (line for line in lines if line) # Non-blank lines
 
        for line in lines:
-
 
            if (line != "image"):
 
@@ -1096,7 +1101,62 @@ def CheckSatReg(x,y,filein,R,theta,ell):
                    dx = xpos - x
                    dy = ypos - y
 
+                   distcen = np.sqrt(dx**2 + dy**2)
+
+##
+
+                   dxlb = xlo - x
+                   dylb = ylo - y
+
+                   distleftbot = np.sqrt(dxlb**2 + dylb**2)
+
+                   dxlt = xlo - x
+                   dylt = yhi - y
+
+                   distleftop = np.sqrt(dxlt**2 + dylt**2)
+
+                   dxrb = xhi - x
+                   dyrb = ylo - y
+
+                   distrightbot = np.sqrt(dxrb**2 + dyrb**2)
+
+                   dxrt = xhi - x
+                   dyrt = yhi - y
+
+                   distrightop = np.sqrt(dxrt**2 + dyrt**2)
+
+#####
                    landa=np.arctan2( dy,dx )
+
+                   if landa < 0:
+                       landa=landa + 2 * np.pi
+
+                   landa = landa - theta
+
+                   angle = np.arctan2(np.sin(landa)/bim, np.cos(landa)/R)
+
+                   xell =  x + R * np.cos(angle)* np.cos(theta)  - bim * np.sin(angle) * np.sin(theta)
+                   yell =  y + R * np.cos(angle)* np.sin(theta)  + bim * np.sin(angle) * np.cos(theta)
+
+                   dxe = xell - x
+                   dye = yell - y
+#####
+                   landa=np.arctan2( dylb,dxlb )
+
+                   if landa < 0:
+                       landa=landa + 2 * np.pi
+
+                   landa = landa - theta
+
+                   angle = np.arctan2(np.sin(landa)/bim, np.cos(landa)/R)
+
+                   xellb =  x + R * np.cos(angle)* np.cos(theta)  - bim * np.sin(angle) * np.sin(theta)
+                   yellb =  y + R * np.cos(angle)* np.sin(theta)  + bim * np.sin(angle) * np.cos(theta)
+
+                   dxelb = xellb - x
+                   dyelb = yellb - y
+#####
+                   landa=np.arctan2( dylt,dxlt )
 
                    if landa < 0:
                        landa=landa + 2 * np.pi
@@ -1106,17 +1166,80 @@ def CheckSatReg(x,y,filein,R,theta,ell):
 
                    angle = np.arctan2(np.sin(landa)/bim, np.cos(landa)/R)
 
-                   xell =  x + R * np.cos(angle)* np.cos(theta)  - bim * np.sin(angle) * np.sin(theta)
-                   yell =  y + R * np.cos(angle)* np.sin(theta)  + bim * np.sin(angle) * np.cos(theta)
+                   xellt =  x + R * np.cos(angle)* np.cos(theta)  - bim * np.sin(angle) * np.sin(theta)
+                   yellt =  y + R * np.cos(angle)* np.sin(theta)  + bim * np.sin(angle) * np.cos(theta)
+
+                   dxelt = xellt - x
+                   dyelt = yellt - y
+#####
+                   landa=np.arctan2( dyrb,dxrb )
+
+                   if landa < 0:
+                       landa=landa + 2 * np.pi
+
+
+                   landa = landa - theta
+
+                   angle = np.arctan2(np.sin(landa)/bim, np.cos(landa)/R)
+
+                   xellrb =  x + R * np.cos(angle)* np.cos(theta)  - bim * np.sin(angle) * np.sin(theta)
+                   yellrb =  y + R * np.cos(angle)* np.sin(theta)  + bim * np.sin(angle) * np.cos(theta)
+
+                   dxerb = xellrb - x
+                   dyerb = yellrb - y
+#####
+                   landa=np.arctan2( dyrt,dxrt )
+
+                   if landa < 0:
+                       landa=landa + 2 * np.pi
+
+
+                   landa = landa - theta
+
+                   angle = np.arctan2(np.sin(landa)/bim, np.cos(landa)/R)
+
+                   xellrt =  x + R * np.cos(angle)* np.cos(theta)  - bim * np.sin(angle) * np.sin(theta)
+                   yellrt =  y + R * np.cos(angle)* np.sin(theta)  + bim * np.sin(angle) * np.cos(theta)
+
+                   dxert = xellrt - x
+                   dyert = yellrt - y
+#####
+
+####################
+
+                   distell = np.sqrt(dxe**2 + dye**2)
+
+                   distellb = np.sqrt(dxelb**2 + dyelb**2)
+                   distellt = np.sqrt(dxelt**2 + dyelt**2)
+                   distellrb = np.sqrt(dxerb**2 + dyerb**2)
+                   distellrt = np.sqrt(dxert**2 + dyert**2)
 
 
                    if ( (xell > xlo and xell < xhi) and (yell > ylo and yell < yhi)  ):
+                       flag=True
+                       break
+## extender xell a las 4 coordenadas 
+## lastmod
 
+                   if (distcen < distell):
+                       flag=True
+                       break
+                   if (distleftbot < distellb):
+                       flag=True
+                       break
+                   if (distleftop < distellt):
+                       flag=True
+                       break
+                   if (distrightbot < distellrb):
+                       flag=True
+                       break
+                   if (distrightop < distellrt):
                        flag=True
                        break
 
-
    return flag
+
+
 
 #end of program
 if __name__ == '__main__':
