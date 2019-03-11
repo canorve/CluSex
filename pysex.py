@@ -770,6 +770,11 @@ def joinsexcat (maincat,secondcat,output,KronScale):
     RKron2      = KronScale * Ai2 * Kr2
 
 
+    maskar2 = AR2 <= 0.005
+    AR2[maskar2]=0.005
+
+
+
     for idx2, item2 in enumerate(N2):
 
         flag =False
@@ -1218,7 +1223,7 @@ def CheckSatReg(x,y,R,theta,ell,filein):
                    if ( (xell > xlo and xell < xhi) and (yell > ylo and yell < yhi)  ):
                        flag=True
                        break
-## extender xell a las 4 coordenadas 
+## extender xell a las 4 coordenadas
 ## lastmod
 
                    if (distcen < distell):
