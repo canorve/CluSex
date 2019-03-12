@@ -899,17 +899,33 @@ def ds9satbox (satfileout,output,satscale,satoffset):
 
 
 
-        if (E[idx] >= 0.3):
-             E[idx]-=0.2
+#        if (E[idx] >= 0.3):
+#             E[idx]-=0.2
 
-        bi=Ai[idx]*(1-E[idx])
+#        if (E[idx] >= 0.4):
+#             E[idx]=0.4
+
+
+        bi=Ai[idx]*(1-E[idx])*Kr[idx]
 
         Theta[idx] = Theta[idx] * np.pi /180  #rads!!!
 
+#    RKron2      = KronScale * Ai2 * Kr2
+#    Rkron = scale * ai * kr + offset
 
-        Rkronx = satscale * 2 * Ai[idx] * Kr[idx]  + satoffset
-        Rkrony = satscale * 2 * bi * Kr[idx]  + satoffset
+#        Rkronx = satscale * 2 * Ai[idx] * Kr[idx]  + satoffset
+#        Rkrony = satscale * 2 * bi * Kr[idx]  + satoffset
 
+        Rkronx = satscale * Ai[idx] * Kr[idx] * np.cos(Theta[idx])  + satoffset
+        Rkrony = satscale * Ai[idx] * Kr[idx] * np.sin(Theta[idx])  + satoffset
+
+#        print(Rkronx,Rkrony)
+
+        if (Rkrony <= 30):
+             Rkrony=30
+
+        if (Rkronx <= 30):
+             Rkronx=30
 
 
         if Rkronx == 0:
