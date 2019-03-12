@@ -1223,8 +1223,21 @@ def CheckSatReg(x,y,R,theta,ell,filein):
                    if ( (xell > xlo and xell < xhi) and (yell > ylo and yell < yhi)  ):
                        flag=True
                        break
-## extender xell a las 4 coordenadas
-## lastmod
+
+
+                   if ( (xellb > xlo and xellb < xhi) and (yellb > ylo and yellb < yhi)  ):
+                       flag=True
+                       break
+                   if ( (xellt > xlo and xellt < xhi) and (yellt > ylo and yellt < yhi)  ):
+                       flag=True
+                       break
+                   if ( (xellrb > xlo and xellrb < xhi) and (yellrb > ylo and yellrb < yhi)  ):
+                       flag=True
+                       break
+                   if ( (xellrt > xlo and xellrt < xhi) and (yellrt > ylo and yellrt < yhi)  ):
+                       flag=True
+                       break
+
 
                    if (distcen < distell):
                        flag=True
