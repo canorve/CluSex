@@ -42,11 +42,16 @@ def main():
 
     create = 0
 
+    minsatsize=20
+    satq=0.1
+
+
     regoutfile = "hotcold.reg"
 
     maskfile="mask.fits"
 
     SexArSort="sortar.cat"
+
 
 
     dn1 = dn2 = 1
@@ -78,7 +83,6 @@ def main():
         for line2 in lines:
 
             (param,val)=line2.split()
-
 
 # param 1
 
@@ -139,7 +143,6 @@ def main():
                 dn2=float(dn2)
 
 
-
             if param == "DEBLEND_MINCONT2":
 
                 (dm2) = val.split()[0]
@@ -162,6 +165,13 @@ def main():
                 (da2) = val.split()[0]
                 da2=int(da2)
 
+            if param == "BACK_SIZE2":
+
+                (bs2) = val.split()[0]
+                bs2= float(bs2)
+
+# other options
+
             if param == "SatDs9":
                 (satfileout) = val.split()[0]
                 satfileout=str(satfileout)
@@ -174,15 +184,10 @@ def main():
                 (satoffset) = val.split()[0]
                 satoffset=int(satoffset)
 
-            if param == "BACK_SIZE2":
+            if param == "SatLevel":
+                (satlevel) = val.split()[0]
+                satlevel=int(satlevel)
 
-                (bs2) = val.split()[0]
-                bs2= float(bs2)
-
-            if param == "BACK_FILTERSIZE2":
-
-                (bf2) = val.split()[0]
-                bf2=int(bf2)
 
             if param == "MakeMask":
 
@@ -197,6 +202,17 @@ def main():
             if param == "OutCatalog":
                 (output2) = val.split()[0]
                 output2=str(output2)
+
+            if param == "MinSatSize":   # min size for sat regions
+
+                (minsatsize) = val.split()[0]
+                minsatsize=int(minsatsize)
+
+            if param == "SatQ":
+
+                (satq) = val.split()[0]
+                satq=float(satq)
+
 
 # f_in.close() #not need if with is used
 
@@ -333,25 +349,34 @@ def main():
     if (run1 == 1 and run2 == 1):
         print ("joining hot.cat and cold.cat catalogs ....\n");
         joinsexcat("hot.cat","cold.cat",output,scale)
+
     else:
         print("Can not join catalogs because sextractor was not used \n")
 
-
     if (run1 == 1 and run2 == 1):
         print ("creating {0} for ds9 ....\n".format(satfileout))
-        ds9satbox(satfileout,output,satscale,satoffset) # crea archivo  de salida de reg
-    elif(run1 ==1):
-        print ("creating {0} for ds9 ....\n".format(satfileout))
-        ds9satbox(satfileout,"hot.cat",satscale,satoffset) # crea archivo  de salida de reg
-    elif(run2 == 1):
-        print ("creating {0} for ds9 ....\n".format(satfileout))
-        ds9satbox(satfileout,"cold.cat",satscale,satoffset) # crea archivo  de salida de reg
-
-
-
-    if (run1 == 1 and run2 == 1):
+        Ds9SatBox(image,satfileout,output,satscale,satoffset,satlevel,minsatsize,satq) # crea archivo  de salida de reg
         print ("recomputing flags on objects which are inside saturated regions  ....\n")
         putflagsat(output,output2,satfileout)
+
+    elif(run1 ==1):
+        print ("creating {0} for ds9 ....\n".format(satfileout))
+        Ds9SatBox(image,satfileout,"hot.cat",satscale,satoffset,satlevel,minsatsize,satq) # crea archivo  de salida de reg
+        print ("recomputing flags on objects which are inside saturated regions  ....\n")
+        putflagsat("hot.cat","hot2.cat",satfileout)
+        # renaming hot2.cat catalog
+        runcmd="mv hot2.cat hot.cat"
+        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
+
+
+    elif(run2 == 1):
+        print ("creating {0} for ds9 ....\n".format(satfileout))
+        Ds9SatBox(image,satfileout,"cold.cat",satscale,satoffset,satlevel,minsatsize,satq) # crea archivo  de salida de reg
+        print ("recomputing flags on objects which are inside saturated regions  ....\n")
+        putflagsat("cold.cat","cold2.cat",satfileout)
+        # renaming cold2.cat catalog
+        runcmd="mv cold2.cat cold.cat"
+        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
 
 
     if (run1 == 1 and run2 == 1):
@@ -401,11 +426,10 @@ def main():
 
     else:
 
-        if (run1 == 1 or run2 == 1 or run3 ==1):
+        if (run1 == 1 or run2 == 1):
             print ("Running ds9 ....\n")
             runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} ".format(image,regoutfile,satfileout)
             err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
-
         else:
             print ("Ds9 can not run because sextractor was not used ")
 
@@ -432,7 +456,6 @@ def MakeMask(maskimage, catfile, scale, offset, regfile):
 
     checkflag = 0
     flagsat = 4  # flag value when object is saturated (or close to)
-    maxflag = 128  # max value for flag
 
     regflag = 0  # flag for saturaded regions
 
@@ -456,10 +479,13 @@ def MakeMask(maskimage, catfile, scale, offset, regfile):
     for idx, val in enumerate(n):
 
         # check if object doesn't has saturaded regions
-        checkflag = CheckFlag(flg[idx], flagsat, maxflag)
+        checkflag = CheckFlag(flg[idx], flagsat)
         # check if object is inside of a saturaded box region indicated by
         # user in ds9
-        regflag = CheckSatReg(xx[idx], yy[idx], Rkron[idx], theta[idx], e[idx],regfile)
+#        regflag = CheckSatReg(xx[idx], yy[idx], Rkron[idx], theta[idx], e[idx],regfile)
+        regflag = CheckSatReg2(xx[idx], yy[idx],regfile)
+
+
 
         if (checkflag == False) and (regflag == False):
 
@@ -777,23 +803,27 @@ def joinsexcat (maincat,secondcat,output,KronScale):
 
     for idx2, item2 in enumerate(N2):
 
-        flag =False
+        flagf =False
         for idx, item in enumerate(N):
 
-#            flag=CheckKron(X2[idx2],Y2[idx2],X[idx],Y[idx],RKron[idx],Theta[idx],AR[idx])
-            flag=CheckKron(X[idx],Y[idx],X2[idx2],Y2[idx2],RKron2[idx2],Theta2[idx2],AR2[idx2])
 
-            if flag:   # boolean value
+            flag1=CheckKron(X2[idx2],Y2[idx2],X[idx],Y[idx],RKron[idx],Theta[idx],AR[idx])
+            flag2=CheckKron(X[idx],Y[idx],X2[idx2],Y2[idx2],RKron2[idx2],Theta2[idx2],AR2[idx2])
+            flagf=flag1 or flag2
+
+            if flagf:   # boolean value
                 break
 
-        if not flag:
+        if not flagf:
 
             line="{0:.0f} {1} {2} {3} {4} {5} {6} {7} {8:.0f} {9} {10} {11} {12} {13} {14:.0f} \n".format(NewN, Alpha2[idx2], Delta2[idx], X2[idx2], Y2[idx2], Mg2[idx2], Kr2[idx2], Fluxr2[idx2], Isoa2[idx2], Ai2[idx2], E2[idx2], Theta2[idx2], Bkgd2[idx2], Idx2[idx2], Flg2[idx2])
 
             f_out.write(line)
 
             NewN+=1
-
+        else:
+            linout="object {} from cold run rejected ".format(np.int(N2[idx2]))
+            print(linout)
     f_out.close()
 
 
@@ -840,12 +870,13 @@ def CheckKron (xpos,ypos,x,y,R,theta,q):
     return flag
 
 
-
-def CheckFlag(val,check,max):
+def CheckFlag(val,check):
    "Check for flag contained in $val, returns 1 if found "
 
    flag = False
    mod = 1
+   max=128
+
 
    while (mod != 0):
 
@@ -867,8 +898,7 @@ def CheckFlag(val,check,max):
    return flag
 
 
-
-def ds9satbox (satfileout,output,satscale,satoffset):
+def Ds9SatBox (image,satfileout,output,satscale,satoffset,satlevel,minsatsize,satq):
     "Creates a file for ds9 which selects bad saturated regions"
 
     scaleflag=1
@@ -878,11 +908,22 @@ def ds9satbox (satfileout,output,satscale,satoffset):
     clasflag=1
 
     flagsat=4      ## flag value when object is saturated (or close to)
-    maxflag=128    ## max value for flag
     check=0
     regflag = 0    ## flag for saturaded regions
 
 
+### read image
+
+    hdu = fits.open(image)
+    imgdat = hdu[0].data
+    hdu.close()
+
+###
+    (imaxx, imaxy) = GetAxis(image)
+
+    #corrected for python array
+    imaxx= imaxx -1
+    imaxy= imaxy -1
 
 
     f_out = open(satfileout, "w")
@@ -894,62 +935,113 @@ def ds9satbox (satfileout,output,satscale,satoffset):
     f_out.write(line)
 
 
-
     for idx, item in enumerate(N):
 
 
-
-#        if (E[idx] >= 0.3):
-#             E[idx]-=0.2
-
-#        if (E[idx] >= 0.4):
-#             E[idx]=0.4
-
-
-        bi=Ai[idx]*(1-E[idx])*Kr[idx]
+        bi=Ai[idx]*(1-E[idx])
 
         Theta[idx] = Theta[idx] * np.pi /180  #rads!!!
 
-#    RKron2      = KronScale * Ai2 * Kr2
-#    Rkron = scale * ai * kr + offset
+        Rkronx =  2 * Ai[idx] * Kr[idx] * np.cos(Theta[idx])
+        Rkrony =  2 * bi * Kr[idx] * np.sin(Theta[idx])
 
-#        Rkronx = satscale * 2 * Ai[idx] * Kr[idx]  + satoffset
-#        Rkrony = satscale * 2 * bi * Kr[idx]  + satoffset
+        if Rkronx <= minsatsize:
+            Rkronx = minsatsize
 
-        Rkronx = satscale * Ai[idx] * Kr[idx] * np.cos(Theta[idx])  + satoffset
-        Rkrony = satscale * Ai[idx] * Kr[idx] * np.sin(Theta[idx])  + satoffset
+        if Rkrony <= minsatsize:
+            Rkrony = minsatsize
 
-#        print(Rkronx,Rkrony)
+        Rkronx=np.int(np.round(Rkronx))
+        Rkrony=np.int(np.round(Rkrony))
 
-        if (Rkrony <= 30):
-             Rkrony=30
-
-        if (Rkronx <= 30):
-             Rkronx=30
-
-
-        if Rkronx == 0:
-            Rkronx = 1
-
-        if Rkrony == 0:
-            Rkrony = 1
-
-        check=CheckFlag(Flg[idx],flagsat,maxflag)  ## check if object has saturated regions
+        check=CheckFlag(Flg[idx],flagsat)  # check if object has saturated region
 
         if (check):
 
-            line="box({0},{1},{2},{3},0) # color=red move=0 \n".format(X[idx],Y[idx],Rkronx,Rkrony)
+            # -1 correction for python array
+            xmin= X[idx] - Rkronx / 2 - 1
+            xmax= X[idx] + Rkronx / 2  -1
+            ymin= Y[idx] - Rkrony / 2  -1
+            ymax= Y[idx] + Rkrony / 2  -1
+
+            xmin=np.int(np.round(xmin))
+            xmax=np.int(np.round(xmax))
+            ymin=np.int(np.round(ymin))
+            ymax=np.int(np.round(ymax))
+
+            # check if xmin, xmax, ymin, ymax have values outsides of image limits
+            if xmin < 0:
+                xmin=0
+            if xmax > imaxx:
+                xmax=imaxx
+
+            if ymin < 0:
+                ymin=0
+            if ymax > imaxy:
+                ymax=imaxy
+
+            chunkimg = imgdat[ymin:ymax,xmin:xmax]
+
+
+            satm= (chunkimg > satlevel) + (chunkimg < (-1)*satlevel)
+            satind= np.where(satm)
+
+            y,x=satind
+
+            errmsg="Can't found sat pixels in [{}:{},{}:{}]. Try to increase MinSatSize value \n".format(xmin+1,xmax+1,ymin+1,ymax+1)
+            assert x.size != 0, errmsg
+
+            satymin = y.min() +  ymin
+            satxmin = x.min() +  xmin
+            satymax = y.max() +  ymin
+            satxmax = x.max() +  xmin
+
+            sidex= x.max() - x.min()
+            sidey= y.max() - y.min()
+
+            xcent= satxmin + sidex/2 + 1
+            ycent= satymin + sidey/2 + 1
+
+            xcent=np.int(np.round(xcent))
+            ycent=np.int(np.round(ycent))
+
+
+            # increasing sides of saturated regions
+            sidex=sidex*satscale + satoffset
+            sidey=sidey*satscale + satoffset
+
+
+
+            if sidex >= sidey:
+                div = sidey/sidex
+                if div < satq:
+                    sidey=sidex*satq
+                    sidey=np.int(np.round(sidey))
+            else:
+                div = sidex/sidey
+                if div < satq:
+                    sidex=sidey*satq
+                    sidex=np.int(np.round(sidex))
+
+
+
+
+
+#            line="box({0},{1},{2},{3},0) # color=red move=0 \n".format(X[idx],Y[idx],sidex,sidey)
+            line="box({0},{1},{2},{3},0) # color=red move=0 \n".format(xcent,ycent,sidex,sidey)
+
             f_out.write(line)
 
-            line2="point({0},{1}) # point=boxcircle font=\"times 10 bold\" text={{ {2} }} \n".format(X[idx],Y[idx],N[idx])
+#            line2="point({0},{1}) # point=boxcircle font=\"times 10 bold\" text={{ {2} }} \n".format(X[idx],Y[idx],np.int(N[idx]))
+            line2="point({0},{1}) # color=red point=boxcircle font=\"times 10 bold\" text={{ {2} }} \n".format(xcent,ycent,np.int(N[idx]))
+
             f_out.write(line2)
 
 
     f_out.close()
 
 
-
-
+# this need an update
 def putflagsat(sexfile,sexfile2,regfile):
     "Put flags on objects which are inside saturated regions"
 
@@ -961,7 +1053,6 @@ def putflagsat(sexfile,sexfile2,regfile):
 
 
     flagsat=4      ## flag value when object is saturated (or close to)
-    maxflag=128    ## max value for flag
 
 
     N,Alpha,Delta,X,Y,Mg,Kr,Fluxr,Isoa,Ai,E,Theta,Bkgd,Idx,Flg=np.genfromtxt(sexfile,delimiter="",unpack=True)
@@ -978,8 +1069,10 @@ def putflagsat(sexfile,sexfile2,regfile):
         bim = q * Rkron
 
 
-        check=CheckFlag(Flg[idx],flagsat,maxflag)  ## check if object doesn't has saturated regions
-        regflag=CheckSatReg(X[idx],Y[idx],Rkron,Theta[idx],E[idx],regfile)    ## check if object is inside of a saturaded box region indicated by user in ds9
+        check=CheckFlag(Flg[idx],flagsat)  ## check if object doesn't has saturated regions
+#        regflag=CheckSatReg(X[idx],Y[idx],Rkron,Theta[idx],E[idx],regfile)    ## check if object is inside of a saturaded box region indicated by user in ds9
+        regflag=CheckSatReg2(X[idx],Y[idx],regfile)    ## check if object is inside of a saturaded box region indicated by user in ds9
+
 
         if  (check == False ) and ( regflag == True) :
 
@@ -1008,6 +1101,8 @@ def ds9kron(sexfile,regfile,scale):
     "Creates ds9 region file to check output catalog "
 
 
+
+
     f_out= open(regfile, "w")
 
 #    scale = 1
@@ -1015,8 +1110,6 @@ def ds9kron(sexfile,regfile,scale):
 
 
     flagsat=4      ## flag value when object is saturated (or close to)
-    maxflag=128    ## max value for flag
-
 
 
 #print OUT "image \n";
@@ -1042,10 +1135,11 @@ def ds9kron(sexfile,regfile,scale):
         bim = q * Rkron
 
 
-        check=CheckFlag(Flg[idx],flagsat,maxflag)  ## check if object doesn't has saturated regions
-#        regflag=CheckSatReg(X[idx],Y[idx],Rkron,Theta[idx],E[idx],regfile)    ## check if object is inside of a saturaded box region indicated by user in ds9
+        check=CheckFlag(Flg[idx],flagsat)  ## check if object doesn't has saturated regions
+
 
         if  (check == False ) :
+
 
             line="ellipse({0},{1},{2},{3},{4}) # color=blue move=0 \n".format(X[idx],Y[idx],Rkron,bim[idx],Theta[idx])
 
@@ -1056,12 +1150,10 @@ def ds9kron(sexfile,regfile,scale):
 
             f_out.write(line2)
 
-
-
         else:
 
 
-            print ("Skipping object {} one or more pixels are saturated \n".format(N[idx]))
+            print ("Skipping object {} one or more pixels are saturated \n".format(np.int(N[idx])))
 
 
     #        f_out.write(line)
@@ -1272,6 +1364,53 @@ def CheckSatReg(x,y,R,theta,ell,filein):
                        break
 
    return flag
+
+
+
+def CheckSatReg2(x,y,filein):
+   "Check if object is inside of saturated region. returns True if at least one pixel is inside"
+## check if object is inside of
+## saturaded region as indicated by ds9 box region
+## returns True if object center is in saturaded region
+
+   flag = False
+
+   with open(filein) as f_in:
+
+       lines = (line.rstrip() for line in f_in) # All lines including the blank ones
+       lines = (line.split('#', 1)[0] for line in lines) # remove comments
+       lines = (line.rstrip() for line in lines)   # remove lines containing only comments
+       lines = (line for line in lines if line) # Non-blank lines
+
+       for line in lines:
+
+           if (line != "image"):
+
+               (box,info)=line.split('(')
+
+               if(box == "box"):
+
+                   (xpos,ypos,xlong,ylong,trash)=info.split(',')
+
+                   xpos=float(xpos)
+                   ypos=float(ypos)
+                   xlong=float(xlong)
+                   ylong=float(ylong)
+
+
+                   xlo = xpos - xlong/2
+                   xhi = xpos + xlong/2
+
+                   ylo = ypos - ylong/2
+                   yhi = ypos + ylong/2
+
+                   if ( (x > xlo and x < xhi) and (y > ylo and y < yhi) ):
+                       flag=True
+                       break
+
+
+   return flag
+
 
 
 

@@ -8,15 +8,15 @@
 
 FirstRun  1   # Enable first run (1 = run)
 
-SecondRun 1  # enable second run   (1 = run)
+SecondRun 1 # enable second run   (1 = run)
 
 
 DEBLEND_NTHRESH1 64          # Number of deblending sub-thresholds
 DEBLEND_MINCONT1 0.001         # Minimum contrast parameter for deblending
 
-ANALYSIS_THRESH1 20          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+ANALYSIS_THRESH1 20        # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
 DETECT_THRESH1   20          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
-DETECT_MINAREA1  10          # minimum number of pixels above threshold
+DETECT_MINAREA1  20          # minimum number of pixels above threshold
 
 
 BACK_SIZE1      100
@@ -26,24 +26,29 @@ BACK_FILTERSIZE1 11
 # params for second run
 # run with high deblend number and low SNR
 
-ANALYSIS_THRESH2 1.5          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
-DETECT_THRESH2   1.5          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DEBLEND_NTHRESH2 8           # Number of deblending sub-thresholds
+DEBLEND_MINCONT2 1         # Minimum contrast parapymeter for deblending
+
+ANALYSIS_THRESH2 1.1          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DETECT_THRESH2   1.1          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
 DETECT_MINAREA2  10      # minimum number of pixels above threshold
 
-DEBLEND_NTHRESH2 16           # Number of deblending sub-thresholds
-DEBLEND_MINCONT2 0.01         # Minimum contrast parapymeter for deblending
 
 BACK_SIZE2       10
 BACK_FILTERSIZE2 2
 
-Scale  1  # factor scale which ellipses are enlarged
+Scale  1 # factor scale which ellipses are enlarged
+
+
+
+SatLevel 30000
 
 
 SatDs9 sat.reg
 
-SatScale 3
+SatScale 1.05
 
-SatOffset  1
+SatOffset  25
 
 MakeMask  0
 
@@ -51,3 +56,20 @@ MakeMask  0
 OutCatalog  hotcold.cat
 
 RegDs9   hotcold.reg
+
+
+MinSatSize 20      # min size for sat regions
+
+SatQ 0.14
+
+
+
+
+
+
+
+
+
+
+
+
