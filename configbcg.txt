@@ -1,16 +1,10 @@
 
+
+
 #
 # first run
 
 # run using low deblend parameters and high SNR
-
-
-FirstRun  1   # Enable first run (1 = run)
-
-SecondRun 1  # enable second run   (1 = run)
-
-BGCRun 1   # enable third run (1 = run)
-
 
 
 DEBLEND_NTHRESH1 32          # Number of deblending sub-thresholds
@@ -50,6 +44,20 @@ SatOffset  1
 MakeMask  0
 
 
+
+SatLevel 30000
+
+
+SatDs9 sat.reg
+
+
+MinSatSize 20      # min size for sat regions
+
+SatQ 0.3
+
+
+
+
 OutCatalog  hotcold.cat
 
 RegDs9   hotcold.reg
@@ -60,13 +68,13 @@ RegDs9   hotcold.reg
 # it also helps to use ANALYSIS_THRESH3 high and DETECT_THRESH3 low
 
 
-BCG   2    # number of Bright Cluster Galaxies to search in the catalog
+BCG   1    # number of Bright Cluster Galaxies to search in the catalog
 
 DEBLEND_NTHRESH3 16          # Number of deblending sub-thresholds
 DEBLEND_MINCONT3 0.1         # Minimum contrast parameter for deblending
 
 ANALYSIS_THRESH3 10          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
-DETECT_THRESH3   10          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DETECT_THRESH3   5          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
 DETECT_MINAREA3  30          # minimum number of pixels above threshold
 
 BACK_SIZE3      200

@@ -62,6 +62,23 @@ SatOffset  1
 MakeMask  0
 
 
+
+
+SatLevel 30000
+
+
+SatDs9 sat.reg
+
+
+MinSatSize 20      # min size for sat regions
+
+SatQ 0.3
+
+
+
+
+
+
 OutCatalog  hotcold.cat
 
 RegDs9   hotcold.reg

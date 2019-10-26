@@ -42,9 +42,12 @@ def main():
 
     create = 0
 
+
+    satscale=1
     minsatsize=20
     satq=0.1
-
+    satlevel=50000
+    
 
     regoutfile = "hotcold.reg"
 
