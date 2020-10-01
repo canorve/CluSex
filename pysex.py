@@ -37,6 +37,8 @@ def main():
     output="hc.cat"
     output2="hotcold.cat"
     scale=1
+    scale2=1
+
 
     run1=run2=0
 
@@ -202,6 +204,13 @@ def main():
                 (scale) = val.split()[0]
                 scale=float(scale)
 
+            if param == "Scale2":
+
+                (scale2) = val.split()[0]
+                scale2=float(scale2)
+
+
+
             if param == "OutCatalog":
                 (output2) = val.split()[0]
                 output2=str(output2)
@@ -351,7 +360,7 @@ def main():
 
     if (run1 == 1 and run2 == 1):
         print ("joining hot.cat and cold.cat catalogs ....\n");
-        joinsexcat("hot.cat","cold.cat",output,scale)
+        joinsexcat("hot.cat","cold.cat",output,scale,scale2)
 
     else:
         print("Can not join catalogs because sextractor was not used \n")
@@ -758,7 +767,7 @@ def GetSize(x, y, R, theta, ell, ncol, nrow):
     return (xmin, xmax, ymin, ymax)
 
 
-def joinsexcat (maincat,secondcat,output,KronScale):
+def joinsexcat (maincat,secondcat,output,KronScale,KronScale2):
     "merges two Sextractor catalogs"
 
     f_out = open(output, "w")
@@ -796,7 +805,7 @@ def joinsexcat (maincat,secondcat,output,KronScale):
     N2,Alpha2,Delta2,X2,Y2,Mg2,Kr2,Fluxr2,Isoa2,Ai2,E2,Theta2,Bkgd2,Idx2,Flg2=np.genfromtxt(secondcat,delimiter="",unpack=True)
 
     AR2         = 1 - E2
-    RKron2      = KronScale * Ai2 * Kr2
+    RKron2      = KronScale2 * Ai2 * Kr2
 
 
     maskar2 = AR2 <= 0.005
