@@ -18,6 +18,11 @@ import scipy
 
 def main():
 
+#########################################
+##### lectura de archivo #######
+#########################################
+
+
     if len(sys.argv[1:]) != 2:
         print ('Missing arguments')
         print ("Usage:\n %s [ConfigFile] [ImageFile]" % sys.argv[0])
@@ -26,6 +31,10 @@ def main():
 
     ConfigFile= sys.argv[1]
     image= sys.argv[2]
+
+#########################################
+##### parametros iniciales #######
+#########################################
 
 
 # init parameters
@@ -66,6 +75,10 @@ def main():
     da1 = da2 = 1
     bs1 = bs2 = 1
     bf1 = bf2 = 1
+
+#########################################
+##### lectura del archivo de parametros #######
+#########################################
 
 
 
@@ -228,6 +241,10 @@ def main():
 
 # f_in.close() #not need if with is used
 
+##############################################################
+##### lectura y modificacion de los archivos de Sextractor ########
+#########################################################
+
 
 # hot.sex
 
@@ -333,8 +350,12 @@ def main():
     f_out.close()
 
     if flaghead:
-        print ("CATALOG_TYPE must be ASCII in default.sex. Ending program.. \n")
+        print ("CATALOG_TYPE must be ASCII in default.sex. Ending program.. \n") # change here to assert function
         sys.exit()
+
+##############################################################
+##### ejecucion de sextractor ################### 
+#########################################################
 
 
 
@@ -354,9 +375,17 @@ def main():
         err2 = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
 
 
+##############################################################
+##### llamado a la funcion radcor, rad correccion################### 
+#########################################################
 
 
-####################################
+
+
+##############################################################
+##### une los dos archivos hot.cat y cold.cat ####### 
+#########################################################
+
 
     if (run1 == 1 and run2 == 1):
         print ("joining hot.cat and cold.cat catalogs ....\n");
@@ -365,9 +394,20 @@ def main():
     else:
         print("Can not join catalogs because sextractor was not used \n")
 
+
+##############################################################
+##### busca y selecciona las estrellas saturadas ####### 
+##### modifica las banderas para los objetos cercanos a regiones 
+###### de saturacion ####
+#########################################################
+
+
+
     if (run1 == 1 and run2 == 1):
         print ("creating {0} for ds9 ....\n".format(satfileout))
         Ds9SatBox(image,satfileout,output,satscale,satoffset,satlevel,minsatsize,satq) # crea archivo  de salida de reg
+
+
         print ("recomputing flags on objects which are inside saturated regions  ....\n")
         putflagsat(output,output2,satfileout)
 
@@ -390,6 +430,10 @@ def main():
         runcmd="mv cold2.cat cold.cat"
         err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
 
+##################################################################
+###### crea los archivos de salida para ds9 ###################### 
+##################################################################
+
 
     if (run1 == 1 and run2 == 1):
         print ("{0} is the output catalog  ....\n".format(output2))
@@ -407,6 +451,13 @@ def main():
 
 #####
 #####           creating mask
+
+#########################################################################
+########### crea la mascara a partir del archivo  ###################### 
+#####################################################################
+
+
+
 
     if (create == 1):
 
@@ -444,6 +495,14 @@ def main():
             err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
         else:
             print ("Ds9 can not run because sextractor was not used ")
+
+
+#########################################################################
+########### anadir calculo de cielo para cada objeto del catalogo  ###################### 
+#######################################################################
+
+
+
 
 #############################################################################
 ######################### End of program  ######################################
