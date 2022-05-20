@@ -34,7 +34,7 @@ CluSex
 ======
 
 
-    Add a short description here!
+  Combines Sextractor catalogs to better estimate the photometry of cluster galaxies. 
 
 
 A longer description of your project goes here...
