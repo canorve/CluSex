@@ -41,7 +41,7 @@ def main():
 # default values
     outhot  = "hot.sex"
     outcold = "cold.sex"
-    sexfile="default.sex"
+    sexfile="def/default.sex"
 #    image="A1413-cD.fits"
     output="hc.cat"
     output2="hotcold.cat"
