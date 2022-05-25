@@ -8,6 +8,8 @@ from astropy.io import fits
 import os.path
 import scipy
 
+from pathlib import Path
+
 # This program creates a catalog of Sextractor with
 # a combination of two runs of Sextractor with
 # different configuration parameters
@@ -37,11 +39,12 @@ def main():
 #########################################
 
 
+
 # init parameters
 # default values
     outhot  = "hot.sex"
     outcold = "cold.sex"
-    sexfile="def/default.sex"
+    sexfile= Path(__file__).parent / "../../def/default.sex"
 #    image="A1413-cD.fits"
     output="hc.cat"
     output2="hotcold.cat"
