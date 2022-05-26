@@ -10,12 +10,11 @@ import scipy
 
 from pathlib import Path
 
+import argparse
+
 # This program creates a catalog of Sextractor with
 # a combination of two runs of Sextractor with
 # different configuration parameters
-
-# ATENTION
-#  fusionar las librerias con DGCG
 
 
 def main():
@@ -25,14 +24,17 @@ def main():
 #########################################
 
 
-    if len(sys.argv[1:]) != 2:
-        print ('Missing arguments')
-        print ("Usage:\n %s [ConfigFile] [ImageFile]" % sys.argv[0])
-        print ("Example:\n %s Config.txt image.fits " % sys.argv[0])
-        sys.exit()
+    parser = argparse.ArgumentParser(description="CluSex: combines two Sextractor catalogs among other stuff")
 
-    ConfigFile= sys.argv[1]
-    image= sys.argv[2]
+    # required arguments
+    parser.add_argument("ConfigFile",help="CluSex configuration file ")
+    parser.add_argument("image",help="FITS image file of the galaxy cluster ")
+
+
+    args = parser.parse_args()
+
+    ConfigFile= args.ConfigFile 
+    image = args.imagefile 
 
 #########################################
 ##### parametros iniciales #######
