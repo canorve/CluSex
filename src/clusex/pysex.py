@@ -9,7 +9,7 @@ import os.path
 import scipy
 
 from pathlib import Path
-
+import shutil
 import argparse
 
 # This program creates a catalog of Sextractor with
@@ -34,19 +34,33 @@ def main():
     args = parser.parse_args()
 
     ConfigFile= args.ConfigFile 
-    image = args.imagefile 
+    image = args.image
 
 #########################################
 ##### parametros iniciales #######
 #########################################
 
 
+    #copying files to actual folder
+
+    filsex = Path(__file__).parent / "../../def/default.sex"
+    filnnw = Path(__file__).parent / "../../def/default.nnw"
+    filcon = Path(__file__).parent / "../../def/default.conv"
+    filpar = Path(__file__).parent / "../../def/sex.param"
+
+    to_des = Path('.')
+
+    shutil.copy2(filsex, to_des)  
+    shutil.copy2(filnnw, to_des)  
+    shutil.copy2(filcon, to_des) 
+    shutil.copy2(filpar, to_des)
+
 
 # init parameters
 # default values
     outhot  = "hot.sex"
     outcold = "cold.sex"
-    sexfile= Path(__file__).parent / "../../def/default.sex"
+    sexfile= "default.sex"
 #    image="A1413-cD.fits"
     output="hc.cat"
     output2="hotcold.cat"
@@ -367,16 +381,17 @@ def main():
 ######  Running Sextractor  #######
 
     if (run1 == 1):
-        print("Running hot.sex   \n")
+        print("Running hot.sex ")
 
-        runcmd="sextractor -c {} {} ".format(outhot,image)
+        print("sex -c {} {} \n".format(outhot,image))
+        runcmd="sex -c {} {} ".format(outhot,image)
         err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
 
-
     if (run2 == 1):
-        print("Running  cold.sex  \n")
+        print("Running cold.sex ")
 
-        runcmd="sextractor -c {} {} ".format(outcold,image)
+        print("sex -c {} {} \n".format(outcold,image))
+        runcmd="sex -c {} {} ".format(outcold,image)
         err2 = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
 
 
