@@ -1,3 +1,14 @@
+#! /usr/bin/env python
+
+import numpy as np
+import os
+from astropy.io import fits
+
+
+
+from clusex.lib.satbox  import CheckFlag 
+from clusex.lib.satbox  import CheckSatReg2
+
 
 def MakeMask(maskimage, catfile, scale, offset, regfile):
     "Create a mask image using ellipses for every Object of catfile. Now includes offset"

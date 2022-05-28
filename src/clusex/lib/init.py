@@ -1,21 +1,12 @@
 
+class Params:
 
+    # class variables
+    # default values
 
-
-
-
-#########################################
-##### parametros iniciales #######
-#########################################
-
-
-
-# init parameters
-# default values
     outhot  = "hot.sex"
     outcold = "cold.sex"
-    sexfile= Path(__file__).parent / "../../def/default.sex"
-#    image="A1413-cD.fits"
+    sexfile= "default.sex"
     output="hc.cat"
     output2="hotcold.cat"
     scale=1
@@ -39,8 +30,6 @@
 
     SexArSort="sortar.cat"
 
-
-
     dn1 = dn2 = 1
     dm1 = dm2 = 1
     at1 = at2 = 1
@@ -48,5 +37,27 @@
     da1 = da2 = 1
     bs1 = bs2 = 1
     bf1 = bf2 = 1
+
+
+    satfileout="sat.reg"
+
+    satscale = 1
+
+    satoffset  = 1
+
+    satlevel = 100000
+
+    create = 0
+
+    scale = 1
+
+    scale  = 2
+
+    output2 = "hotcold.cat"
+
+    minsatsize = 10
+
+    satq = 0.1
+
 
 

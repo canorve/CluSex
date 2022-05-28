@@ -1,3 +1,9 @@
+#! /usr/bin/env python
+
+import numpy as np
+
+
+
 def joinsexcat (maincat,secondcat,output,KronScale,KronScale2):
     "merges two Sextractor catalogs"
 

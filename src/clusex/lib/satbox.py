@@ -1,4 +1,8 @@
+#! /usr/bin/env python
 
+import numpy as np
+
+from astropy.io import fits
 
 
 
@@ -198,6 +202,88 @@ def putflagsat(sexfile,sexfile2,regfile):
 
 
     f_out.close()
+
+
+def GetAxis(Image):
+    # k Check
+    "Get number of rows and columns from the image"
+
+    hdu = fits.open(Image)
+    ncol = hdu[0].header["NAXIS1"]
+    nrow = hdu[0].header["NAXIS2"]
+    hdu.close()
+    return ncol, nrow
+
+
+def CheckFlag(val,check):
+   "Check for flag contained in $val, returns 1 if found "
+
+   flag = False
+   mod = 1
+   max=128
+
+
+   while (mod != 0):
+
+       res = int(val/max)
+
+       if (max == check and res == 1 ):
+
+           flag=True
+
+       mod = val % max
+
+       val = mod
+       max = max/2
+
+
+   return flag
+
+
+def CheckSatReg2(x,y,filein):
+   "Check if object is inside of saturated region. returns True if at least one pixel is inside"
+## check if object is inside of
+## saturaded region as indicated by ds9 box region
+## returns True if object center is in saturaded region
+
+   flag = False
+
+   with open(filein) as f_in:
+
+       lines = (line.rstrip() for line in f_in) # All lines including the blank ones
+       lines = (line.split('#', 1)[0] for line in lines) # remove comments
+       lines = (line.rstrip() for line in lines)   # remove lines containing only comments
+       lines = (line for line in lines if line) # Non-blank lines
+
+       for line in lines:
+
+           if (line != "image"):
+
+               (box,info)=line.split('(')
+
+               if(box == "box"):
+
+                   (xpos,ypos,xlong,ylong,trash)=info.split(',')
+
+                   xpos=float(xpos)
+                   ypos=float(ypos)
+                   xlong=float(xlong)
+                   ylong=float(ylong)
+
+
+                   xlo = xpos - xlong/2
+                   xhi = xpos + xlong/2
+
+                   ylo = ypos - ylong/2
+                   yhi = ypos + ylong/2
+
+                   if ( (x > xlo and x < xhi) and (y > ylo and y < yhi) ):
+                       flag=True
+                       break
+
+
+   return flag
+
 
 
 

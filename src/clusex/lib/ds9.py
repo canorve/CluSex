@@ -1,8 +1,14 @@
+#! /usr/bin/env python
+
+import numpy as np
+
+
+from clusex.lib.satbox  import CheckFlag 
+
 
 
 def ds9kron(sexfile,regfile,scale):
     "Creates ds9 region file to check output catalog "
-
 
 
 
