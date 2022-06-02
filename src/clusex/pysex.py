@@ -34,6 +34,10 @@ from clusex.lib.mask import MakeImage
 from clusex.lib.mask import MakeSatBox 
 from clusex.lib.mask import CatArSort
 
+
+from clusex.lib.radcor import RadMod
+
+
 # This program creates a catalog of Sextractor with
 # a combination of two runs of Sextractor with
 # different configuration parameters
@@ -107,6 +111,19 @@ def main():
 ##############################################################
 ##### llamado a la funcion radcor, rad correccion################### 
 #########################################################
+
+    print("correcting radius of galaxies")
+
+
+    tol = 0.5 #tolerance for radius differences between the two catalogs (proportion) 
+    red = 0.3  # reduction factor
+    RadMod("hot.cat","cold.cat","hot2.cat",tol)
+    RadMod("cold.cat","hot.cat","cold2.cat",tol,red)
+
+
+    os.rename("hot2.cat","hot.cat")
+    os.rename("cold2.cat","cold.cat")
+
 
 
 
@@ -193,7 +210,7 @@ def main():
 
 
 
-    if (create == 1):
+    if (params.create == 1):
 
         print ("Creating masks....\n")
 
@@ -223,7 +240,7 @@ def main():
 
     else:
 
-        if (run1 == 1 or run2 == 1):
+        if (params.run1 == 1 or params.run2 == 1):
             print ("Running ds9 ....\n")
             runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} ".format(image,params.regoutfile,params.satfileout)
             err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT

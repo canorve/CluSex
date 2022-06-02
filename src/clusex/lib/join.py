@@ -3,6 +3,7 @@
 import numpy as np
 
 
+from clusex.lib.check  import CheckKron
 
 def joinsexcat (maincat,secondcat,output,KronScale,KronScale2):
     "merges two Sextractor catalogs"
@@ -74,48 +75,6 @@ def joinsexcat (maincat,secondcat,output,KronScale,KronScale2):
             linout="object {} from cold run rejected ".format(np.int(N2[idx2]))
             print(linout)
     f_out.close()
-
-
-def CheckKron (xpos,ypos,x,y,R,theta,q):
-    "check if position is inside of the Kron Ellipse saturaded region returns True if object center is in Ellipse region"
-
-
-    bim = q * R
-
-    theta = theta * np.pi /180  ## Rads!!!
-
-
-    flag =False
-
-
-    dx = xpos - x
-    dy = ypos - y
-
-
-    landa = np.arctan2( dy,dx )
-
-    if landa < 0:
-        landa=landa + 2 * np.pi
-
-
-    landa = landa - theta
-
-
-    angle = np.arctan2(np.sin(landa)/bim, np.cos(landa)/R)
-
-    xell =  x + R * np.cos(angle)* np.cos(theta)  - bim * np.sin(angle) * np.sin(theta)
-    yell =  y + R * np.cos(angle)* np.sin(theta)  + bim * np.sin(angle) * np.cos(theta)
-
-    dell = np.sqrt ( (xell - x)**2 + (yell - y)**2 )
-    dist = np.sqrt ( dx**2 + dy**2 )
-
-
-    if  dist < dell:
-	      flag=True
-
-
-    return flag
-
 
 
 

@@ -122,7 +122,7 @@ def runsex(params,image):
         runcmd="sex -c {} {} ".format(params.outhot,image)
         err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
 
-    if (run2 == 1):
+    if (params.run2 == 1):
         print("Running cold.sex ")
 
         print("sex -c {} {} \n".format(params.outcold,image))
