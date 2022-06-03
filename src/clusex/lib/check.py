@@ -114,4 +114,15 @@ def CheckKron (xpos,ypos,x,y,R,theta,q):
     return flag
 
 
+def GetAxis(Image):
+    # k Check
+    "Get number of rows and columns from the image"
+
+    hdu = fits.open(Image)
+    ncol = hdu[0].header["NAXIS1"]
+    nrow = hdu[0].header["NAXIS2"]
+    hdu.close()
+    return ncol, nrow
+
+
 

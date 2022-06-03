@@ -6,8 +6,8 @@ from astropy.io import fits
 
 
 
-from clusex.lib.satbox  import CheckFlag 
-from clusex.lib.satbox  import CheckSatReg2
+from clusex.lib.check import CheckFlag 
+from clusex.lib.check import CheckSatReg2
 
 
 def MakeMask(maskimage, catfile, scale, offset, regfile):

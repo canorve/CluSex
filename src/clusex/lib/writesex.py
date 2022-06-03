@@ -111,7 +111,7 @@ def wsex(params):
         sys.exit()
 
 
-def runsex(params,image):
+def runsex(image,params):
 
 ######  Running Sextractor  #######
 

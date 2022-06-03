@@ -3,7 +3,7 @@
 import numpy as np
 
 
-from clusex.lib.satbox  import CheckFlag 
+from clusex.lib.check import CheckFlag 
 
 
 

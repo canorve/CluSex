@@ -22,9 +22,7 @@ from clusex.lib.writesex import runsex
 from clusex.lib.join import joinsexcat 
 
 
-from clusex.lib.satbox  import Ds9SatBox
-from clusex.lib.satbox  import putflagsat  
-from clusex.lib.satbox  import GetAxis
+from clusex.lib.check  import GetAxis
 
 from clusex.lib.ds9 import ds9kron
 
@@ -37,6 +35,8 @@ from clusex.lib.mask import CatArSort
 
 from clusex.lib.radcor import RadMod
 
+
+from clusex.lib.satbox import SatBox 
 
 # This program creates a catalog of Sextractor with
 # a combination of two runs of Sextractor with
@@ -105,7 +105,7 @@ def main():
 
 
 
-    runsex(params,image)
+    runsex(image,params)
 
 
 ##############################################################
@@ -115,8 +115,10 @@ def main():
     print("correcting radius of galaxies")
 
 
+    #incorporate this two parameters to input file
     tol = 0.5 #tolerance for radius differences between the two catalogs (proportion) 
     red = 0.3  # reduction factor
+
     RadMod("hot.cat","cold.cat","hot2.cat",tol)
     RadMod("cold.cat","hot.cat","cold2.cat",tol,red)
 
@@ -138,7 +140,7 @@ def main():
         joinsexcat("hot.cat","cold.cat",params.output,params.scale,params.scale2)
 
     else:
-        print("Can not join catalogs because sextractor was not used \n")
+        print("Unable to join catalogs because sextractor was not used \n")
 
 
 
@@ -149,32 +151,8 @@ def main():
 #########################################################
     
 
-
-    if (params.run1 == 1 and params.run2 == 1):
-        print ("creating {0} for ds9 ....\n".format(params.satfileout))
-        Ds9SatBox(image,params.satfileout,params.output,params.satscale,params.satoffset,params.satlevel,params.minsatsize,params.satq) # crea archivo  de salida de reg
-
-        print ("recomputing flags on objects which are inside saturated regions  ....\n")
-        putflagsat(params.output,params.output2,params.satfileout)
-
-    elif(params.run1 ==1):
-        print ("creating {0} for ds9 ....\n".format(params.satfileout))
-        Ds9SatBox(image,satfileout,"hot.cat",params.satscale,params.satoffset,params.satlevel,params.minsatsize,params.satq) # crea archivo  de salida de reg
-        print ("recomputing flags on objects which are inside saturated regions  ....\n")
-        putflagsat("hot.cat","hot2.cat",params.satfileout)
-        # renaming hot2.cat catalog
-        runcmd="mv hot2.cat hot.cat"
-        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
-
-
-    elif(params.run2 == 1):
-        print ("creating {0} for ds9 ....\n".format(params.satfileout))
-        Ds9SatBox(image,params.satfileout,"cold.cat",params.satscale,params.satoffset,params.satlevel,params.minsatsize,params.satq) # crea archivo  de salida de reg
-        print ("recomputing flags on objects which are inside saturated regions  ....\n")
-        putflagsat("cold.cat","cold2.cat",params.satfileout)
-        # renaming cold2.cat catalog
-        runcmd="mv cold2.cat cold.cat"
-        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
+    SatBox(image,params)
+    
 
 
 
