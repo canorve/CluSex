@@ -166,11 +166,11 @@ def main():
         print ("{0} is the output catalog  ....\n".format(params.output2))
         print ("Creating ds9 check region file....\n")
         ds9kron(params.output2,params.regoutfile,params.scale)
-    elif(run1 ==1):
+    elif(params.run1 ==1):
         print ("{0} is the output catalog  ....\n".format("hot.cat"))
         print ("Creating ds9 check region file....\n")
         ds9kron("hot.cat",params.regoutfile,params.scale)
-    elif(run2==1):
+    elif(params.run2==1):
         print ("{0} is the output catalog  ....\n".format("cold.cat"))
         print ("Creating ds9 check region file....\n")
         ds9kron("cold.cat",params.regoutfile,params.scale)
