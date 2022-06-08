@@ -13,7 +13,7 @@ class Params:
     scale2=1
 
 
-    run1=run2=0
+    run1=run2=1
 
     create = 0
 
