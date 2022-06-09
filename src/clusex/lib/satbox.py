@@ -138,10 +138,12 @@ class SatBox:
 
             if divflag:
 
-                #xmin,xmax,ymin,ymax = self.BoxSide2Corners(xcent, ycent, sidex2, sidey2)
-                #xmin,xmax,ymin,ymax = self.CorrectCorners(xmin,xmax,ymin,ymax,imaxx,imaxy)
 
-                method = 1
+               # here we have 3 methods for saturated regions divided in one vertical and one horizontal 
+               # select the best method for your convinience. However the best method so far 
+               # has been the third one, so this is one for default
+
+                method = 3
                 
                 posxmax,posymax = self.GetMaxCor(image,xmin,xmax,ymin,ymax)
 
