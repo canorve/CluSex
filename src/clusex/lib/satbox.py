@@ -139,13 +139,14 @@ class SatBox:
             if divflag:
 
 
-               # here we have 3 methods for saturated regions divided in one vertical and one horizontal 
+               # here we have 4 methods for saturated regions divided in one vertical and one horizontal 
                # select the best method for your convinience. However the best method so far 
                # has been the third one, so this is one for default
 
-                method = 3
+                method = 4
                 
                 posxmax,posymax = self.GetMaxCor(image,xmin,xmax,ymin,ymax)
+                posxmax2,posymax2 = self.GetMaxCor2(image,xmin,xmax,ymin,ymax) # for method 4
 
                 xmin,xmax,ymin,ymax = self.BoxSide2Corners(xcent, ycent, sidex2, sidey2)
                 xmin,xmax,ymin,ymax = self.CorrectCorners(xmin,xmax,ymin,ymax,imaxx,imaxy)
@@ -167,6 +168,15 @@ class SatBox:
                     xmin,xmax,ymin,ymax = self.IncludeBoxCenterInPoint(posxmax,posymax,xmin,xmax,ymin,ymax)
 
                     ### 
+
+                #method 4
+                elif method ==4:
+                    #5c. combining methods and avoids to select the greatest negative pixexl value as a center
+
+                    xmin,xmax,ymin,ymax = self.IncludeBoxCenterInPoint(posxmax2,posymax2,xmin,xmax,ymin,ymax)
+
+ 
+
 
                 xmin,xmax,ymin,ymax = self.CorrectCorners(xmin,xmax,ymin,ymax,imaxx,imaxy)
                 xcent, ycent, sidex2, sidey2  = self.BoxCorners2Side(xmin,xmax,ymin,ymax)
@@ -277,6 +287,23 @@ class SatBox:
 
             return  p[1][0] + xmin, p[0][0] + ymin
  
+    def GetMaxCor2(self,image,xmin,xmax,ymin,ymax):
+            '''Get coordinate (x,y) where the max value in counts. Avoids negative pixels'''
+        
+            hdu = fits.open(image)
+            imgdat = hdu[0].data
+            hdu.close()
+
+            chunkimg = imgdat[ymin-1:ymax-1,xmin-1:xmax-1]
+
+            #mask = chunkimg < 0
+            #chunkimg[mask]=chunkimg[mask]*-1
+
+            p = np.where(chunkimg == np.amax(chunkimg))
+
+            return  p[1][0] + xmin, p[0][0] + ymin
+ 
+
 
 
     def ResizeBox(self,xx,yy,sx,sy,N):

@@ -113,18 +113,23 @@ def main():
     print("correcting radius of galaxies")
 
 
-    #incorporate this two parameters to input file
-    tol = 0.5 #tolerance for radius differences between the two catalogs (proportion) 
-    red = 0.3  # reduction factor
 
-    RadMod("hot.cat","cold.cat","hot2.cat",tol)
-    RadMod("cold.cat","hot.cat","cold2.cat",tol,red)
+    if (params.run1 == 1 and params.run2 == 1):
+
+        #incorporate this two parameters to input file
+        tol = 0.5 #tolerance for radius differences between the two catalogs (proportion) 
+        red = 0.3  # reduction factor
+
+        RadMod("hot.cat","cold.cat","hot2.cat",tol)
+        RadMod("cold.cat","hot.cat","cold2.cat",tol,red)
 
 
-    os.rename("hot2.cat","hot.cat")
-    os.rename("cold2.cat","cold.cat")
+        os.rename("hot2.cat","hot.cat")
+        os.rename("cold2.cat","cold.cat")
 
+    else:
 
+        print("Unable to correct radius because it needs to run sextractor twice. run = 1 run2 = 1 \n")
 
     #####################################################################
     ##### joins the two output sextractor files into one single file ############## 
