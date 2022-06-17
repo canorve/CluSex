@@ -54,13 +54,13 @@ def main():
 
     # required arguments
     parser.add_argument("ConfigFile",help="CluSex configuration file ")
-    parser.add_argument("image",help="FITS image file of the galaxy cluster ")
+    #parser.add_argument("image",help="FITS image file of the galaxy cluster ")  # incorporated   
 
 
     args = parser.parse_args()
 
     confile = args.ConfigFile 
-    image = args.image
+    #image = args.image
 
     #########################################
     ##### initial parameters ########
@@ -103,7 +103,7 @@ def main():
 
 
 
-    runsex(image,params)
+    runsex(params)
 
 
     #################################################################
@@ -117,11 +117,11 @@ def main():
     if (params.run1 == 1 and params.run2 == 1):
 
         #incorporate this two parameters to input file
-        tol = 0.5 #tolerance for radius differences between the two catalogs (proportion) 
-        red = 0.3  # reduction factor
+        #tol = 0.5 #tolerance for radius differences between the two catalogs (proportion) 
+        #red = 0.3  # reduction factor
 
-        RadMod("hot.cat","cold.cat","hot2.cat",tol)
-        RadMod("cold.cat","hot.cat","cold2.cat",tol,red)
+        RadMod("hot.cat","cold.cat","hot2.cat",params.tol)
+        RadMod("cold.cat","hot.cat","cold2.cat",params.tol,params.red)
 
 
         os.rename("hot2.cat","hot.cat")
@@ -151,7 +151,7 @@ def main():
     ##########################################################################
         
 
-    SatBox(image,params)
+    SatBox(params)
     
 
     ##################################################################
@@ -185,7 +185,7 @@ def main():
 
         print ("Creating masks....\n")
 
-        (NCol, NRow) = GetAxis(image)
+        (NCol, NRow) = GetAxis(params.image)
 
 #        print(output2,scale,SexArSort,NCol,NRow)
 
@@ -205,14 +205,14 @@ def main():
         MakeSatBox(params.maskfile, params.satfileout, Total + 1, NCol, NRow)
 
         print ("Running ds9 ....\n")
-        runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} {} ".format(image,params.regoutfile,params.satfileout,params.maskfile)
+        runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} {} ".format(params.image,params.regoutfile,params.satfileout,params.maskfile)
         err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
 
     else:
 
         if (params.run1 == 1 or params.run2 == 1):
             print ("Running ds9 ....\n")
-            runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} ".format(image,params.regoutfile,params.satfileout)
+            runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} ".format(params.image,params.regoutfile,params.satfileout)
             err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
         else:
             print ("Ds9 can not run because sextractor was not used ")

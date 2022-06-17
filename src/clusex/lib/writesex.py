@@ -111,22 +111,22 @@ def wsex(params):
         sys.exit()
 
 
-def runsex(image,params):
+def runsex(params):
 
 ######  Running Sextractor  #######
 
     if (params.run1 == 1):
         print("Running hot.sex ")
 
-        print("sex -c {} {} \n".format(params.outhot,image))
-        runcmd="sex -c {} {} ".format(params.outhot,image)
+        print("sex -c {} {} \n".format(params.outhot,params.image))
+        runcmd="sex -c {} {} ".format(params.outhot,params.image)
         err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
 
     if (params.run2 == 1):
         print("Running cold.sex ")
 
-        print("sex -c {} {} \n".format(params.outcold,image))
-        runcmd="sex -c {} {} ".format(params.outcold,image)
+        print("sex -c {} {} \n".format(params.outcold,params.image))
+        runcmd="sex -c {} {} ".format(params.outcold,params.image)
         err2 = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
 
 

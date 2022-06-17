@@ -9,31 +9,19 @@ import os
 
 class SatBox:
 
-    def __init__(self, image: str,  params: object ):
+    def __init__(self, params: object ):
         """
         This routine creates a Ds9 box region file where it contains the saturated 
         regions of the image.
         """
 
-        #output=sexcat
-        #output2="newcat.cat"
-
-
-        #satscale=1.2
-        #minsatsize=20
-        #satq=0.5
-        #satlevel=30000
-        #satoffset=20
-        
-
-        #satfileout = "satbox.reg"
 
 
 
         if (params.run1 == 1 and params.run2 == 1):
 
             print ("creating {0} for ds9 ....\n".format(params.satfileout))
-            self.Ds9SatBox(image,params.satfileout,params.output,params.satscale,params.satoffset,params.satlevel,params.minsatsize,params.satq) 
+            self.Ds9SatBox(params.image,params.satfileout,params.output,params.satscale,params.satoffset,params.satlevel,params.minsatsize,params.satmethod,params.satq) 
 
             # crea archivo  de salida de reg
             print ("recomputing flags on objects which are inside saturated regions  ....\n")
@@ -43,7 +31,7 @@ class SatBox:
         elif(params.run1 ==1):
 
             print ("creating {0} for ds9 ....\n".format(params.satfileout))
-            self.Ds9SatBox(image,params.satfileout,"hot.cat",params.satscale,params.satoffset,params.satlevel,params.minsatsize,params.satq) 
+            self.Ds9SatBox(params.image,params.satfileout,"hot.cat",params.satscale,params.satoffset,params.satlevel,params.minsatsize,params.satmethod,params.satq) 
 
             # crea archivo  de salida de reg
             print ("recomputing flags on objects which are inside saturated regions  ....\n")
@@ -56,7 +44,7 @@ class SatBox:
         elif(params.run2 == 1):
 
             print ("creating {0} for ds9 ....\n".format(params.satfileout))
-            self.Ds9SatBox(image,params.satfileout,"cold.cat",params.satscale,params.satoffset,params.satlevel,params.minsatsize,params.satq) 
+            self.Ds9SatBox(params.image,params.satfileout,"cold.cat",params.satscale,params.satoffset,params.satlevel,params.minsatsize,params.satmethod,params.satq) 
 
             # crea archivo  de salida de reg
             print ("recomputing flags on objects which are inside saturated regions  ....\n")
@@ -69,7 +57,7 @@ class SatBox:
 
 
 
-    def Ds9SatBox (self,image,satfileout,sexcat,satscale,satoffset,satlevel,minsatsize,satq=0.5):
+    def Ds9SatBox (self,image,satfileout,sexcat,satscale,satoffset,satlevel,minsatsize,method,satq=0.5):
         "Creates a file for ds9 which selects bad saturated regions"
 
 
@@ -143,7 +131,7 @@ class SatBox:
                # select the best method for your convinience. However the best method so far 
                # has been the third one, so this is one for default
 
-                method = 4
+                #method = 4
                 
                 posxmax,posymax = self.GetMaxCor(image,xmin,xmax,ymin,ymax)
                 posxmax2,posymax2 = self.GetMaxCor2(image,xmin,xmax,ymin,ymax) # for method 4

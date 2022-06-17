@@ -4,6 +4,10 @@ class Params:
     # class variables
     # default values
 
+
+    image = "none.fits"
+
+
     outhot  = "hot.sex"
     outcold = "cold.sex"
     sexfile= "default.sex"
@@ -58,6 +62,11 @@ class Params:
     minsatsize = 10
 
     satq = 0.1
+
+
+    tol = 0.5  #tolerance for radius differences between the two catalogs (proportion)  
+    red = 0.3  # reduction factor
+    satmethod = 3 
 
 
 

@@ -161,5 +161,27 @@ def readcon(params,confile):
                 params.satq=float(satq)
 
 
+            if param == "image":
+
+                (image) = val.split()[0]
+                params.image = str(image)
+
+
+            if param == "PropTol":   # proportion tolerance
+
+                (tol) = val.split()[0]
+                params.tol=float(tol)
+
+
+            if param == "RedFact":  #reduction factor
+
+                (red) = val.split()[0]
+                params.red =float(red)
+
+
+            if param == "SatMethod":   #   method for detecting very bright saturated stars 
+
+                (satmethod) = val.split()[0]
+                params.satmethod=int(satmethod)
 
 
