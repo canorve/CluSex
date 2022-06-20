@@ -24,6 +24,17 @@ def wsex(params):
 
             (linparams)=line2.split()
 
+            if linparams[0] ==  "MAG_ZEROPOINT":
+	            line2= "MAG_ZEROPOINT "+str(params.zpt)
+            if linparams[0] ==  "GAIN":
+	            line2= "GAIN "+str(params.gain)
+            if linparams[0] ==  "PIXEL_SCALE":
+	            line2= "PIXEL_SCALE "+str(params.plate)
+            if linparams[0] ==  "SEEING_FWHM":
+	            line2= "SEEING_FWHM "+str(params.seeing)
+
+
+
             if linparams[0] == "DEBLEND_NTHRESH":
                 line2="DEBLEND_NTHRESH "+str(params.dn1)
 
@@ -52,6 +63,8 @@ def wsex(params):
                 if linparams[1] !=  "ASCII":
 	                   flaghead = True
 
+
+
             line2 = line2+"\n"
             f_out.write(line2)
 
@@ -74,6 +87,16 @@ def wsex(params):
         for line2 in lines:
 
             (linparams)=line2.split()
+
+            if linparams[0] ==  "MAG_ZEROPOINT":
+	            line2= "MAG_ZEROPOINT "+str(params.zpt)
+            if linparams[0] ==  "GAIN":
+	            line2= "GAIN "+str(params.gain)
+            if linparams[0] ==  "PIXEL_SCALE":
+	            line2= "PIXEL_SCALE "+str(params.plate)
+            if linparams[0] ==  "SEEING_FWHM":
+	            line2= "SEEING_FWHM "+str(params.seeing)
+
 
             if linparams[0] == "DEBLEND_NTHRESH":
                 line2="DEBLEND_NTHRESH "+str(params.dn2)
@@ -101,7 +124,6 @@ def wsex(params):
 
 
             f_out.write(line2+"\n")
-
 
 
     f_out.close()

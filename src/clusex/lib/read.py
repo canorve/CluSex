@@ -185,3 +185,34 @@ def readcon(params,confile):
                 params.satmethod=int(satmethod)
 
 
+        # SExtractor configuration parameters
+
+            if param == "MAG_ZEROPOINT":  # zpt for sextractor  
+
+                (zpt) = val.split()[0]
+                params.zpt=float(zpt)
+
+
+            if param == "GAIN":   
+
+                (gain) = val.split()[0]
+                params.gain=float(gain)
+
+            if param == "PIXEL_SCALE":   
+
+                (plate) = val.split()[0]
+                params.plate=float(plate)
+
+
+            if param == "SEEING_FWHM":   
+
+                (seeing) = val.split()[0]
+                params.seeing=float(seeing)
+
+
+
+
+
+
+
+

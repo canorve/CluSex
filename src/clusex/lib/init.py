@@ -69,4 +69,24 @@ class Params:
     satmethod = 3 
 
 
+    zpt = 25
+
+    gain = 10
+
+
+    plate = 1
+
+
+    seeing = 2
+
+
+
+
+
+
+
+
+
+
+
 
