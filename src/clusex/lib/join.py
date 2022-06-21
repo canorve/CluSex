@@ -5,16 +5,20 @@ import numpy as np
 
 from clusex.lib.check  import CheckKron
 
-def joinsexcat (maincat,secondcat,output,KronScale,KronScale2):
+
+
+def joinsexcat (maincat,secondcat,output,JoinScale):
     "merges two Sextractor catalogs"
 
     f_out = open(output, "w")
 
-#maincat
+    KronScale2 = 1
+
+    #maincat
     N,Alpha,Delta,X,Y,Mg,Kr,Fluxr,Isoa,Ai,E,Theta,Bkgd,Idx,Flg=np.genfromtxt(maincat,delimiter="",unpack=True)
 
     AR         = 1 - E
-    RKron      = KronScale * Ai * Kr
+    RKron      = JoinScale * Ai * Kr
 
 
 
@@ -50,6 +54,10 @@ def joinsexcat (maincat,secondcat,output,KronScale,KronScale2):
     AR2[maskar2]=0.005
 
 
+    count=0
+
+    flag1 = False
+    flag2 = False
 
     for idx2, item2 in enumerate(N2):
 
@@ -58,7 +66,7 @@ def joinsexcat (maincat,secondcat,output,KronScale,KronScale2):
 
 
             flag1=CheckKron(X2[idx2],Y2[idx2],X[idx],Y[idx],RKron[idx],Theta[idx],AR[idx])
-            flag2=CheckKron(X[idx],Y[idx],X2[idx2],Y2[idx2],RKron2[idx2],Theta2[idx2],AR2[idx2])
+            #flag2=CheckKron(X[idx],Y[idx],X2[idx2],Y2[idx2],RKron2[idx2],Theta2[idx2],AR2[idx2])
             flagf=flag1 or flag2
 
             if flagf:   # boolean value
@@ -72,9 +80,9 @@ def joinsexcat (maincat,secondcat,output,KronScale,KronScale2):
 
             NewN+=1
         else:
-            linout="object {} from cold run rejected ".format(np.int(N2[idx2]))
-            print(linout)
+            count+=1       
     f_out.close()
 
-
+    linout="{} objects from cold run rejected ".format(count)
+    print(linout)
 

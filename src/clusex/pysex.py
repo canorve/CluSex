@@ -138,7 +138,7 @@ def main():
 
     if (params.run1 == 1 and params.run2 == 1):
         print ("joining hot.cat and cold.cat catalogs ....\n");
-        joinsexcat("hot.cat","cold.cat",params.output,params.scale,params.scale2)
+        joinsexcat("hot.cat","cold.cat",params.output,params.joinscale)
 
     else:
         print("Unable to join catalogs because sextractor was not used \n")

@@ -123,7 +123,7 @@ def readcon(params,confile):
                 (satoffset) = val.split()[0]
                 params.satoffset=int(satoffset)
 
-            if param == "SatLevel":
+            if param == "SATUR_LEVEL":
 
                 (satlevel) = val.split()[0]
                 params.satlevel=int(satlevel)
@@ -210,6 +210,10 @@ def readcon(params,confile):
                 params.seeing=float(seeing)
 
 
+
+            if param == "JoinScale":
+                (joinscale) = val.split()[0]
+                params.joinscale=float(joinscale)
 
 
 

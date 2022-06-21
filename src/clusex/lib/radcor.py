@@ -26,6 +26,9 @@ class RadMod:
 
         dmax= 3 # max distance to match the same object in different catalogs 
 
+        count = 0
+        count2 = 0
+
         for idx, item in enumerate(N):
 
             foundflag = False
@@ -40,15 +43,17 @@ class RadMod:
             if distmin <= dmax:
 
                 foundflag = True
-                cflag1 = self.CheckFlag(Flg[idx],4) #check for saturated flag 
-                cflag2 = self.CheckFlag(Flg2[idx2],4) #check for saturated flag 
+                #cflag1 = self.CheckFlag(Flg[idx],4) #check for saturated flag 
+                #cflag2 = self.CheckFlag(Flg2[idx2],4) #check for saturated flag 
 
+                cflag1 = False 
+                cflag2 = False 
 
 
                 #the comparison is based in Fluxr parameter
 
-                rad = Fluxr[idx]
-                rad2 = Fluxr2[idx2]
+                #rad = Fluxr[idx]
+                #rad2 = Fluxr2[idx2]
 
                 # or  you can use kr * ai
 
@@ -66,8 +71,7 @@ class RadMod:
 
                     if comp > tol:
 
-                        line = "catalog {}: Radius of object {} updated ".format(sexcat1,int(N[idx]),)
-                        print(line)
+                        count +=1 
 
                         # reduction factor included
                         #Kr[idx],Fluxr[idx],Isoa[idx],Ai[idx] = red * Kr2[idx2],Fluxr2[idx2],Isoa2[idx2],Ai2[idx2]
@@ -81,7 +85,17 @@ class RadMod:
                     #catalog. This is done to avoid faint large galaxies.
                     Kr[idx]= red * Kr[idx]
                     
+        
+                    count2 +=1 
 
+        
+
+        line = "catalog {}: {} objects with modified radius ".format(sexcat1,count)
+        print(line)
+
+
+        line = "catalog {}: {} objects with reduced radius ".format(sexcat1,count2)
+        print(line)
 
 
         #writing catalogs

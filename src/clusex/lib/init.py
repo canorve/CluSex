@@ -45,7 +45,6 @@ class Params:
 
     satfileout="sat.reg"
 
-    satscale = 1
 
     satoffset  = 1
 
@@ -53,9 +52,6 @@ class Params:
 
     create = 0
 
-    scale = 1
-
-    scale  = 2
 
     output2 = "hotcold.cat"
 
@@ -79,7 +75,7 @@ class Params:
 
     seeing = 2
 
-
+    joinscale = 0.7
 
 
 

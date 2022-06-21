@@ -27,6 +27,7 @@ def ds9kron(sexfile,regfile,scale):
     line="image \n"
     f_out.write(line)
 
+    count=0
 
     N,Alpha,Delta,X,Y,Mg,Kr,Fluxr,Isoa,Ai,E,Theta,Bkgd,Star,Flg=np.genfromtxt(sexfile,delimiter="",unpack=True)
 
@@ -60,9 +61,11 @@ def ds9kron(sexfile,regfile,scale):
             f_out.write(line2)
 
         else:
+            count +=1
 
 
-            print ("Skipping object {} one or more pixels are saturated \n".format(np.int(N[idx])))
+
+    print ("{} objects skipped because one or more pixels are saturated \n".format(count))
 
 
     #        f_out.write(line)
