@@ -14,14 +14,14 @@ def ds9kron(sexfile,regfile,scale):
 
     f_out= open(regfile, "w")
 
-#    scale = 1
+    #    scale = 1
     offset=0
 
 
     flagsat=4      ## flag value when object is saturated (or close to)
 
 
-#print OUT "image \n";
+    #print OUT "image \n";
 
 
     line="image \n"
@@ -35,7 +35,7 @@ def ds9kron(sexfile,regfile,scale):
 
         Rkron = scale * Ai[idx] * Kr[idx] + offset
 
-#        print (Rkron)
+    #        print (Rkron)
 
         if Rkron == 0:
 
@@ -48,7 +48,7 @@ def ds9kron(sexfile,regfile,scale):
         check=CheckFlag(Flg[idx],flagsat)  ## check if object doesn't has saturated regions
 
 
-        if  (check == False ) :
+        if  (check == False) :
 
 
             line="ellipse({0},{1},{2},{3},{4}) # color=blue move=0 \n".format(X[idx],Y[idx],Rkron,bim[idx],Theta[idx])
