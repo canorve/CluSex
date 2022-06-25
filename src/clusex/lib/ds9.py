@@ -63,9 +63,19 @@ def ds9kron(sexfile,regfile,scale):
         else:
             count +=1
 
+            line="ellipse({0},{1},{2},{3},{4}) # color=red move=0 \n".format(X[idx],Y[idx],Rkron,bim[idx],Theta[idx])
+
+            f_out.write(line)
 
 
-    print ("{} objects skipped because one or more pixels are saturated \n".format(count))
+            line2="point({0},{1}) # point=boxcircle color=red font=\"times 10 bold\" text={2} {3} {4} \n".format(X[idx],Y[idx],"{",np.int(N[idx]),"}")
+
+            f_out.write(line2)
+
+
+
+
+    print ("{} objects have one or more pixels saturated \n".format(count))
 
 
     #        f_out.write(line)
