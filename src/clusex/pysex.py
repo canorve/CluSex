@@ -162,15 +162,15 @@ def main():
     if (params.run1 == 1 and params.run2 == 1):
         print ("{0} is the output catalog  ....\n".format(params.output2))
         print ("Creating ds9 check region file....\n")
-        ds9kron(params.output2,params.regoutfile,params.scale)
+        ds9kron(params.output2,params.regoutfile,params.scale,params.offset)
     elif(params.run1 ==1):
         print ("{0} is the output catalog  ....\n".format("hot.cat"))
         print ("Creating ds9 check region file....\n")
-        ds9kron("hot.cat",params.regoutfile,params.scale)
+        ds9kron("hot.cat",params.regoutfile,params.scale,params.offset)
     elif(params.run2==1):
         print ("{0} is the output catalog  ....\n".format("cold.cat"))
         print ("Creating ds9 check region file....\n")
-        ds9kron("cold.cat",params.regoutfile,params.scale)
+        ds9kron("cold.cat",params.regoutfile,params.scale,params.offset)
 
 
 
@@ -190,11 +190,11 @@ def main():
 #        print(output2,scale,SexArSort,NCol,NRow)
 
         if (run1 == 1 and run2 == 1):
-            Total = CatArSort(params.output2,params.scale,params.SexArSort,NCol,NRow)
+            Total = CatArSort(params.output2,params.scale,params.offset,params.SexArSort,NCol,NRow)
         elif(run1 ==1):
-            Total = CatArSort("hot.cat",params.scale,params.SexArSort,NCol,NRow)
+            Total = CatArSort("hot.cat",params.scale,params.offset,params.SexArSort,NCol,NRow)
         elif(run2==1):
-            Total = CatArSort("cold.cat",params.scale,params.SexArSort,NCol,NRow)
+            Total = CatArSort("cold.cat",params.scale,params.offset,params.SexArSort,NCol,NRow)
 
 
         ##### segmentation mask

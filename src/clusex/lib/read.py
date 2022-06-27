@@ -139,6 +139,13 @@ def readcon(params,confile):
                 (scale) = val.split()[0]
                 params.scale=float(scale)
 
+            if param == "Offset":
+
+                (offset) = val.split()[0]
+                params.offset=int(offset)
+
+
+
             if param == "Scale2":
 
                 (scale2) = val.split()[0]

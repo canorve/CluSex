@@ -14,6 +14,7 @@ class Params:
     output="hc.cat"
     output2="hotcold.cat"
     scale=1
+    offset = 0
     scale2=1
 
 

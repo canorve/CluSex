@@ -7,7 +7,7 @@ from clusex.lib.check import CheckFlag
 
 
 
-def ds9kron(sexfile,regfile,scale):
+def ds9kron(sexfile,regfile,scale,offset):
     "Creates ds9 region file to check output catalog "
 
 
@@ -15,7 +15,7 @@ def ds9kron(sexfile,regfile,scale):
     f_out= open(regfile, "w")
 
     #    scale = 1
-    offset=0
+    #offset=0
 
 
     flagsat=4      ## flag value when object is saturated (or close to)

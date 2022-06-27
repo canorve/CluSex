@@ -207,7 +207,7 @@ def GetAxis(Image):
     return ncol, nrow
 
 
-def CatArSort(SexCat,scale,SexArSort,NCol,NRow):
+def CatArSort(SexCat,scale,offset,SexArSort,NCol,NRow):
     # k Check
 
     # sort the sextractor
@@ -241,7 +241,7 @@ def CatArSort(SexCat,scale,SexArSort,NCol,NRow):
     n = n.astype(int)
     flg = flg.astype(int)
 
-    Rkron = scale * ai * kr
+    Rkron = scale * ai * kr + offset
 
     Rwsky = scale * ai * kr + 10  + 20
 
