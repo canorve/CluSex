@@ -65,7 +65,7 @@ def ds9kron(sexfile,regfile,scale,offset):
 
             line="ellipse({0},{1},{2},{3},{4}) # color=red move=0 \n".format(X[idx],Y[idx],Rkron,bim[idx],Theta[idx])
 
-            f_out.write(line)
+            #f_out.write(line)
 
 
             line2="point({0},{1}) # point=boxcircle color=red font=\"times 10 bold\" text={2} {3} {4} \n".format(X[idx],Y[idx],"{",np.int(N[idx]),"}")
