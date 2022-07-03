@@ -63,6 +63,9 @@ class Params:
 
     tol = 0.5  #tolerance for radius differences between the two catalogs (proportion)  
     red = 0.3  # reduction factor
+    minrad = 10 # minimum radius to apply for reduction factor
+
+
     satmethod = 3 
 
 

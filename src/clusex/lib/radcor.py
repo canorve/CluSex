@@ -80,7 +80,7 @@ class RadMod:
             if foundflag == False:
 
                 if Kr[idx]*Ai[idx] > minrad:    
-                    # radius is reduced to a factor red for obj 
+                    # radius is minimazed by a factor reduction for obj 
                     # greater than minrad and not found in the second 
                     #catalog. This is done to avoid faint large galaxies.
                     Kr[idx]= red * Kr[idx]

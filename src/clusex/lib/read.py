@@ -185,6 +185,13 @@ def readcon(params,confile):
                 (red) = val.split()[0]
                 params.red =float(red)
 
+            if param == "MinRad":  #reduction factor
+
+                (minrad) = val.split()[0]
+                params.minrad =float(minrad)
+
+
+
 
             if param == "SatMethod":   #   method for detecting very bright saturated stars 
 

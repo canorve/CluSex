@@ -120,8 +120,8 @@ def main():
         #tol = 0.5 #tolerance for radius differences between the two catalogs (proportion) 
         #red = 0.3  # reduction factor
 
-        RadMod("hot.cat","cold.cat","hot2.cat",params.tol,params.red)
-        RadMod("cold.cat","hot.cat","cold2.cat",params.tol,params.red)
+        RadMod("hot.cat","cold.cat","hot2.cat",tol=params.tol,red=params.red,minrad=params.minrad)
+        RadMod("cold.cat","hot.cat","cold2.cat",tol=params.tol,red=params.red,minrad=params.minrad)
 
 
         os.rename("hot2.cat","hot.cat")
