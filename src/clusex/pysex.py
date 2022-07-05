@@ -120,6 +120,10 @@ def main():
         #tol = 0.5 #tolerance for radius differences between the two catalogs (proportion) 
         #red = 0.3  # reduction factor
 
+        if not(params.flagminrad):
+            params.minrad = params.seeing
+
+
         RadMod("hot.cat","cold.cat","hot2.cat",tol=params.tol,red=params.red,minrad=params.minrad)
         RadMod("cold.cat","hot.cat","cold2.cat",tol=params.tol,red=params.red,minrad=params.minrad)
 

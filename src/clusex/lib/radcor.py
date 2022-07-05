@@ -7,7 +7,7 @@ import numpy as np
 
 class RadMod:
 
-    def __init__(self, sexcat1: str, sexcat2: str, newcat: str, tol =1,red=1, minrad = 20):
+    def __init__(self, sexcat1: str, sexcat2: str, newcat: str, tol =1,red=1, minrad = 10):
         """
         This routine modifies wrong large estimated radius for Sextractor catalogs. 
         It does so by comparing the radius of two catalogs of the same image. It 
@@ -79,14 +79,19 @@ class RadMod:
 
             if foundflag == False:
 
-                if Kr[idx]*Ai[idx] > minrad:    
-                    # radius is minimazed by a factor reduction for obj 
-                    # greater than minrad and not found in the second 
-                    #catalog. This is done to avoid faint large galaxies.
-                    Kr[idx]= red * Kr[idx]
-                    
+                # If object was not found in the other catalog, then
+                # the Kr is reduced by a factor "red". Final radius
+                # can not be less than minrad
+                # This is done to avoid faint large galaxies.
+ 
+
+                Kr[idx]= red * Kr[idx]
+
+                if Kr[idx]*Ai[idx] < minrad:    
+
+                    Kr[idx] = minrad/Ai[idx]
         
-                    count2 +=1 
+                count2 +=1 
 
         
 

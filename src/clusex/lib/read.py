@@ -189,7 +189,7 @@ def readcon(params,confile):
 
                 (minrad) = val.split()[0]
                 params.minrad =float(minrad)
-
+                params.flagminrad = True
 
 
 
