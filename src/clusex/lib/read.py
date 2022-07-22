@@ -231,6 +231,11 @@ def readcon(params,confile):
 
 
 
+            if param == "ScaleCor":
+
+                (scalecor) = val.split()[0]
+                params.scalecor=float(scalecor)
+
 
 
 

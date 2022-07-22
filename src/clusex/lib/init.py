@@ -82,6 +82,7 @@ class Params:
     joinscale = 0.7
 
 
+    scalecor=1
 
 
 

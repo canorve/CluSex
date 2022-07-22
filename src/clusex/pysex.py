@@ -124,8 +124,10 @@ def main():
             params.minrad = params.seeing
 
 
-        RadMod("hot.cat","cold.cat","hot2.cat",tol=params.tol,red=params.red,minrad=params.minrad)
-        RadMod("cold.cat","hot.cat","cold2.cat",tol=params.tol,red=params.red,minrad=params.minrad)
+        RadMod("hot.cat","cold.cat","hot2.cat",tol=params.tol,
+                red=params.red,minrad=params.minrad,scalecor=params.scalecor)
+        RadMod("cold.cat","hot.cat","cold2.cat",tol=params.tol,
+                red=params.red,minrad=params.minrad,scalecor=params.scalecor)
 
 
         os.rename("hot2.cat","hot.cat")
