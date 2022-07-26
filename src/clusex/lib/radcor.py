@@ -61,6 +61,8 @@ class RadMod:
                 rad = Kr[idx] * Ai[idx]
                 rad2 =  Kr2[idx2] *  Ai2[idx2]
 
+                kr1 = Kr[idx]
+                kr2 = Kr2[idx2]
 
                 den = rad2 
 
@@ -83,9 +85,14 @@ class RadMod:
                         #this is to avoid galaxies with very low radius after interchanging
                         #radius. However we don't want to increase it to a larger 
                         #radius than the previous one:
+
+                        #yran = mincnt * (maxcnt/mincnt)**np.array([-0.05, +1.05])
+                        
+                        #Kr[idx] = kr2 * (kr1/kr2)**scalecor 
+
                         comp = rad/(scalecor*rad2)  - 1
                         if comp > tol:
-                           Kr[idx] = scalecor*Kr[idx]
+                            Kr[idx] = scalecor*Kr[idx]
                         ###
 
             if foundflag == False:
