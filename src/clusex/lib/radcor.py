@@ -8,7 +8,7 @@ import numpy as np
 class RadMod:
 
     def __init__(self, sexcat1: str, sexcat2: str, newcat: str, tol=1, red=1, 
-                minrad=10,scalecor=0):
+                minrad=10,scalecor=1):
         """
         This routine modifies wrong large estimated radius for Sextractor catalogs. 
         It does so by comparing the radius of two catalogs of the same image. It 
@@ -98,13 +98,11 @@ class RadMod:
 
                         #kr2 is the smallest radii of the two 
                         
-                        #Kr[idx] = kr2 + (kr1 - kr2)*scalecor#**.5
-                        #Ai[idx] = ai2 + (ai1 - ai2)*scalecor#**.5
-                        
 
                         comp = rad/(scalecor*rad2)  - 1
                         if comp > tol:
                             Kr[idx] = scalecor*Kr[idx]
+                            #Ai[idx] = scalecor*Ai[idx]
                         
 
             if foundflag == False:

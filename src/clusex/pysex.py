@@ -130,6 +130,7 @@ def main():
                 red=params.red,minrad=params.minrad,scalecor=params.scalecor)
 
 
+
         os.rename("hot2.cat","hot.cat")
         os.rename("cold2.cat","cold.cat")
 
