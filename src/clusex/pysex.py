@@ -164,22 +164,25 @@ def main():
     ###### creates the output files for DS9 ###################### 
     ##################################################################
 
-
-    if (params.run1 == 1 and params.run2 == 1):
-        print ("{0} is the output catalog  ....\n".format(params.output2))
-        print ("Creating ds9 check region file....\n")
-        ds9kron(params.output2,params.regoutfile,params.scale,params.offset)
-    elif(params.run1 ==1):
-        print ("{0} is the output catalog  ....\n".format("hot.cat"))
-        print ("Creating ds9 check region file....\n")
-        ds9kron("hot.cat",params.regoutfile,params.scale,params.offset)
-    elif(params.run2==1):
-        print ("{0} is the output catalog  ....\n".format("cold.cat"))
-        print ("Creating ds9 check region file....\n")
-        ds9kron("cold.cat",params.regoutfile,params.scale,params.offset)
+    if params.flagDs9 == 1:
 
 
+        if (params.run1 == 1 and params.run2 == 1):
+            print ("{0} is the output catalog  ....\n".format(params.output2))
+            print ("Creating ds9 check region file....\n")
+            ds9kron(params.output2,params.regoutfile,params.scale,params.offset)
+        elif(params.run1 ==1):
+            print ("{0} is the output catalog  ....\n".format("hot.cat"))
+            print ("Creating ds9 check region file....\n")
+            ds9kron("hot.cat",params.regoutfile,params.scale,params.offset)
+        elif(params.run2==1):
+            print ("{0} is the output catalog  ....\n".format("cold.cat"))
+            print ("Creating ds9 check region file....\n")
+            ds9kron("cold.cat",params.regoutfile,params.scale,params.offset)
 
+    else:
+
+        print("CluSex won't run ds9 because DisplayDs9 is set to 0 ")
 
     #####################################################################
     ########### Make masks from output ################################## 

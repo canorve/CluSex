@@ -8,7 +8,7 @@ import numpy as np
 class RadMod:
 
     def __init__(self, sexcat1: str, sexcat2: str, newcat: str, tol=1, red=1, 
-                minrad=10,scalecor=1):
+                minrad=10,scalecor=0):
         """
         This routine modifies wrong large estimated radius for Sextractor catalogs. 
         It does so by comparing the radius of two catalogs of the same image. It 
@@ -64,6 +64,14 @@ class RadMod:
                 kr1 = Kr[idx]
                 kr2 = Kr2[idx2]
 
+                ai1 = Ai[idx]
+                ai2 = Ai2[idx2]
+
+
+                if rad2 < .1: 
+                    rad2 = .1 #avoids division by zero
+
+
                 den = rad2 
 
                 num = rad - rad2
@@ -80,20 +88,24 @@ class RadMod:
                         #Kr[idx],Fluxr[idx],Isoa[idx],Ai[idx] = red * Kr2[idx2],Fluxr2[idx2],Isoa2[idx2],Ai2[idx2]
                         Kr[idx],Fluxr[idx],Isoa[idx],Ai[idx] =  Kr2[idx2],Fluxr2[idx2],Isoa2[idx2],Ai2[idx2]
 
+                        #Ai[idx] =  Ai2[idx2]
+                        #Kr[idx] =  Kr2[idx2]
 
 
                         #this is to avoid galaxies with very low radius after interchanging
                         #radius. However we don't want to increase it to a larger 
                         #radius than the previous one:
 
-                        #yran = mincnt * (maxcnt/mincnt)**np.array([-0.05, +1.05])
+                        #kr2 is the smallest radii of the two 
                         
-                        #Kr[idx] = kr2 * (kr1/kr2)**scalecor 
+                        #Kr[idx] = kr2 + (kr1 - kr2)*scalecor#**.5
+                        #Ai[idx] = ai2 + (ai1 - ai2)*scalecor#**.5
+                        
 
                         comp = rad/(scalecor*rad2)  - 1
                         if comp > tol:
                             Kr[idx] = scalecor*Kr[idx]
-                        ###
+                        
 
             if foundflag == False:
 

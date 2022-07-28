@@ -82,9 +82,9 @@ class Params:
     joinscale = 0.7
 
 
-    scalecor=1
+    scalecor = 1
 
-
+    flagDs9 = 1 
 
 
 

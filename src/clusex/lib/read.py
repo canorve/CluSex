@@ -237,5 +237,11 @@ def readcon(params,confile):
                 params.scalecor=float(scalecor)
 
 
+            if param == "DisplayDs9":
+
+                (ds9) = val.split()[0]
+                params.flagDs9=int(ds9)
+
+
 
 
