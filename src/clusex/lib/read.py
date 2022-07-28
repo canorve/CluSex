@@ -174,13 +174,13 @@ def readcon(params,confile):
                 params.image = str(image)
 
 
-            if param == "PropTol":   # proportion tolerance
+            if param == "FracTol":   # proportion tolerance
 
                 (tol) = val.split()[0]
                 params.tol=float(tol)
 
 
-            if param == "RedFact":  #reduction factor
+            if param == "ReduCoef":  #reduction factor
 
                 (red) = val.split()[0]
                 params.red =float(red)

@@ -61,8 +61,8 @@ class Params:
     satq = 0.1
 
 
-    tol = 0.5  #tolerance for radius differences between the two catalogs (proportion)  
-    red = 0.3  # reduction factor
+    tol = 0.5  #Fraction tolerance for differences between the two catalogs (proportion)  
+    red = 0.3  # reduction factor or reduction coefficient 
     minrad = 10 # minimum radius to apply for reduction factor
     flagminrad = False # if minrad is not readed from conf file, then fwhm is set as minrad
 
