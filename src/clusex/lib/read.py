@@ -124,6 +124,14 @@ def readcon(params,confile):
                 params.bs2= float(bs2)
                 flag = True 
 
+            if param == "BACK_FILTERSIZE2":
+
+                (bf2) = val.split()[0]
+                params.bf2=int(bf2)
+                flag = True 
+
+
+
     # other options
 
             if param == "SatDs9":
@@ -279,6 +287,12 @@ def readcon(params,confile):
 
                 (ds9) = val.split()[0]
                 params.flagDs9=int(ds9)
+                flag = True 
+
+            if param == "RegDs9":
+
+                (regds9) = val.split()[0]
+                params.regoutfile=str(regds9)
                 flag = True 
 
 
