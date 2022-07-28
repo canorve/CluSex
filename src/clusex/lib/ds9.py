@@ -35,7 +35,7 @@ def ds9kron(sexfile,regfile,scale,offset):
 
         Rkron = scale * Ai[idx] * Kr[idx] + offset
 
-    #        print (Rkron)
+       
 
         if Rkron == 0:
 
