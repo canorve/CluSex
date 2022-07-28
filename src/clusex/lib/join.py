@@ -55,6 +55,7 @@ def joinsexcat (maincat,secondcat,output,JoinScale):
 
 
     count=0
+    count2=0
 
     flag1 = False
     flag2 = False
@@ -79,10 +80,17 @@ def joinsexcat (maincat,secondcat,output,JoinScale):
             f_out.write(line)
 
             NewN+=1
+            count2+=1
         else:
             count+=1       
     f_out.close()
 
     linout="{} objects from cold run rejected ".format(count)
     print(linout)
+
+    linout="{} objects were added from cold run ".format(count2)
+    print(linout)
+
+
+
 
