@@ -139,17 +139,24 @@ def runsex(params):
 
     if (params.run1 == 1):
         print("Running hot.sex ")
-
         print("sex -c {} {} \n".format(params.outhot,params.image))
         runcmd="sex -c {} {} ".format(params.outhot,params.image)
-        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
+        # Run GALFIT
+        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  
+        if err.returncode != 0:
+            print("error: ",err.returncode,err.stderr)
+            sys.exit("There was a problem running sextractor")
 
     if (params.run2 == 1):
         print("Running cold.sex ")
-
         print("sex -c {} {} \n".format(params.outcold,params.image))
         runcmd="sex -c {} {} ".format(params.outcold,params.image)
-        err2 = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
+        # Run GALFIT
+        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True) 
+        if err.returncode != 0:
+            print("error: ",err.returncode,err.stderr)
+            sys.exit("There was a problem running sextractor")
+
 
 
 
