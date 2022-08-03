@@ -211,7 +211,7 @@ def main():
 
         MakeImage(params.maskfile, NCol, NRow)
 
-        MakeMask(params.maskfile, params.SexArSort, params.scale,0,params.satfileout)  # offset set to 0
+        MakeMask(params.maskfile, params.SexArSort, params.scale,params.offset,params.satfileout)  # offset set to 0
         MakeSatBox(params.maskfile, params.satfileout, Total + 1, NCol, NRow)
 
         print ("Running ds9 ....\n")

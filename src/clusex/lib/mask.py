@@ -4,10 +4,72 @@ import numpy as np
 import os
 from astropy.io import fits
 
+import argparse
 
 
 from clusex.lib.check import CheckFlag 
 from clusex.lib.check import CheckSatReg2
+from clusex.lib.ds9 import ds9kron
+
+
+def makemask():
+    """makes a mask from sextractor catalog"""
+
+    parser = argparse.ArgumentParser(description="MakeMask: Creates mask from sextractor catalog")
+
+    # required arguments
+    parser.add_argument("SexCatalog",help="sextractor catalog")
+    parser.add_argument("Image",help="Fits image of the objects")
+
+
+    parser.add_argument("-s","--scale", type=float, help="factor that multiplies the radius of the catalog objects. Default = 1",default=1)
+    
+    parser.add_argument("-off","--offset", type=float, help="factor that it is added to the scale times radius of the catalog objects. Default = 0",default=0)
+
+    parser.add_argument("-o","--outmask", type=str, help="name of the output mask ",default='out.mask')
+
+    parser.add_argument("-sf","--SatFile", type=str, help="Saturation DS9 reg file")
+
+    args = parser.parse_args()
+
+    sexcatalog = args.SexCatalog
+    scale = args.scale
+    offset = args.offset
+    output = args.outmask
+    satfile = args.SatFile
+    image = args.Image
+
+
+    sexarsort="sexarea.cat"
+
+    
+
+    print ("Creating mask....\n")
+
+    (NCol, NRow) = GetAxis(image)
+
+
+    Total = CatArSort(sexcatalog,scale,offset,sexarsort,NCol,NRow)
+   
+    ##### segmentation mask
+
+    MakeImage(output, NCol, NRow)
+
+    MakeMask(output, sexarsort, scale, offset, satfile)  # offset set to 0
+    MakeSatBox(output, satfile, Total + 1, NCol, NRow)
+
+    #calling ds9kron to create ds9 reg objects
+    ds9kron(sexcatalog,regoutfile,scale,offset)
+
+
+    print ("Running ds9 ...\n")
+    runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} {} ".format(image,regoutfile,satfile,output)
+    err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  
+
+
+
+
+
 
 
 def MakeMask(maskimage, catfile, scale, offset, regfile):
@@ -25,7 +87,7 @@ def MakeMask(maskimage, catfile, scale, offset, regfile):
     n = n.astype(int)
     flg = flg.astype(int)
 
-    print("Creating Masks for sky \n")
+    print("Creating Masks ... \n")
 
     Rkron = scale * ai * kr + offset
 
@@ -35,6 +97,8 @@ def MakeMask(maskimage, catfile, scale, offset, regfile):
 
     hdu = fits.open(maskimage)
     img = hdu[0].data
+
+    count1 = count2 = 0
 
     for idx, val in enumerate(n):
 
@@ -49,13 +113,16 @@ def MakeMask(maskimage, catfile, scale, offset, regfile):
 
         if (checkflag == False) and (regflag == False):
 
-            print ("Creating ellipse mask for object {}  ".format(n[idx]))
+            count1 += 1
             img = MakeKron(img, n[idx], xx[idx], yy[idx], Rkron[idx], theta[idx], e[
                 idx], sxsmin[idx], sxsmax[idx], sysmin[idx], sysmax[idx])
 
         elif(checkflag == True or regflag == True):
+            count2 += 1
+            
 
-            print ("Skipping object {}, one or more pixels are saturated \n".format(n[idx]))
+    print ("Number of ellipse masks created: {}  ".format(count1))
+    print ("Number of objects rejected because they are saturated: {} \n".format(count2))
 
     hdu[0].data = img
     hdu.writeto(maskimage, overwrite=True)
