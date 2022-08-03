@@ -481,7 +481,6 @@ class SatBox:
             return (xcent,ycent,sidex,sidey)
 
 
-    # this need an update
     def putflagsat(self,sexfile,sexfile2,regfile):
         "Put flags on objects which are inside saturated regions"
 

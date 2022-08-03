@@ -154,7 +154,7 @@ def main():
 
     ###########################################################################
     ##### search for saturated stars and figure out the saturated area  ####### 
-    ##### It also modify flags of objects near to saturared stars ################ 
+    ##### It also modify flags of objects near to saturated stars ############# 
     ##########################################################################
         
 
@@ -235,7 +235,6 @@ def main():
     ########### Computes sky for every object and produces a new catalog ####
     #######################################################################
 
-    #lastmod
 
 
 
