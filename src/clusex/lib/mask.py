@@ -5,7 +5,7 @@ import os
 from astropy.io import fits
 
 import argparse
-
+import subprocess as sp
 
 from clusex.lib.check import CheckFlag 
 from clusex.lib.check import CheckSatReg2
@@ -41,7 +41,7 @@ def makemask():
 
 
     sexarsort="sexarea.cat"
-
+    regoutfile="mask.reg"
     
 
     print ("Creating mask....\n")
