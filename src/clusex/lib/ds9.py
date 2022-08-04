@@ -23,6 +23,9 @@ def sex2ds9():
 
     parser.add_argument("-o","--outreg", type=str, help="name of the output ds9 reg file ",default='ds9.reg')
 
+
+    args = parser.parse_args()
+
     sexcatalog = args.SexCatalog
     scale = args.scale
     offset = args.offset
