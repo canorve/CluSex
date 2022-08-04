@@ -29,6 +29,7 @@ def sex2ds9():
     sexcatalog = args.SexCatalog
     scale = args.scale
     offset = args.offset
+    regoutfile = args.outreg
  
     print("Creating ds9 reg file: ",regoutfile)
 
@@ -106,7 +107,7 @@ def ds9kron(sexfile,regfile,scale,offset):
 
 
 
-    print ("{} objects have one or more pixels saturated \n".format(count))
+    print ("{} objects have  at least one saturated pixels  \n".format(count))
 
 
     #        f_out.write(line)
