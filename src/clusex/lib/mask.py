@@ -21,7 +21,7 @@ def makemask():
     parser.add_argument("SexCatalog",help="sextractor catalog")
     parser.add_argument("Image",help="Fits image of the objects")
 
-
+    #optional arguments
     parser.add_argument("-s","--scale", type=float, help="factor that multiplies the radius of the catalog objects. Default = 1",default=1)
     
     parser.add_argument("-off","--offset", type=float, help="factor that it is added to the scale times radius of the catalog objects. Default = 0",default=0)
