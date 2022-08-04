@@ -26,7 +26,7 @@ def makemask():
     
     parser.add_argument("-off","--offset", type=float, help="factor that it is added to the scale times radius of the catalog objects. Default = 0",default=0)
 
-    parser.add_argument("-o","--outmask", type=str, help="name of the output mask ",default='out.mask')
+    parser.add_argument("-o","--outmask", type=str, help="name of the output mask ",default='mask.fits')
 
     parser.add_argument("-sf","--SatFile", type=str, help="Saturation DS9 reg file",default='ds9sat.reg')
 
