@@ -28,7 +28,12 @@ def makemask():
 
     parser.add_argument("-o","--outmask", type=str, help="name of the output mask ",default='out.mask')
 
-    parser.add_argument("-sf","--SatFile", type=str, help="Saturation DS9 reg file")
+    parser.add_argument("-sf","--SatFile", type=str, help="Saturation DS9 reg file",default='ds9sat.reg')
+
+    #options without arguments
+
+    parser.add_argument("-n","--nodisplay",action="store_true", help="doesn't run DS9")
+
 
     args = parser.parse_args()
 
@@ -38,6 +43,7 @@ def makemask():
     output = args.outmask
     satfile = args.SatFile
     image = args.Image
+    flagds9 = args.nodisplay
 
 
     sexarsort="sexarea.cat"
@@ -48,6 +54,12 @@ def makemask():
 
     (NCol, NRow) = GetAxis(image)
 
+    #check if exits satfile
+
+    if not(os.path.exists(satfile)):
+        with open(satfile, 'x') as f:
+            f.write('box(1,1,0,0,0)') #to avoid empty file
+            f.close()
 
     Total = CatArSort(sexcatalog,scale,offset,sexarsort,NCol,NRow)
    
@@ -62,13 +74,12 @@ def makemask():
     ds9kron(sexcatalog,regoutfile,scale,offset)
 
 
-    print ("Running ds9 ...\n")
-    runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} {} ".format(image,regoutfile,satfile,output)
-    err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  
+    if not(flagds9): 
+        print ("Running ds9 ...\n")
+        runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} {} ".format(image,regoutfile,satfile,output)
+        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  
 
-
-
-
+    print('done') 
 
 
 
