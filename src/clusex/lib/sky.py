@@ -4,7 +4,7 @@ from ellipsect.lib.libs import *
 from ellipsect import *
 
 
-def Sky():
+def compsky():
     """Computes the sky for every object of a sextractor catalog"""
 
     ImageFile, MaskFile,Rinit,width # for gradsky
