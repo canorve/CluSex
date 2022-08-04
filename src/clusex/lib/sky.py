@@ -2,14 +2,10 @@
 from ellipsect.lib.libs import *
 
 from ellipsect import *
-
+import argparse
 
 def compsky():
     """Computes the sky for every object of a sextractor catalog"""
-
-    ImageFile, MaskFile,Rinit,width # for gradsky
-
-    ImageFile,MaskFile,Rinit, box, num, Rmax 
 
 
     parser = argparse.ArgumentParser(description="skysex: computes the sky for every object of a sextractor catalog")
