@@ -117,7 +117,7 @@ def compsky():
             line="using Rinit = {:.2f} width = {}".format(Rinit,width)
             print(line)
 
-            line="using thetadeg = {:.2f} q = {}".format(thetadeg,q)
+            line="using thetadeg = {:.2f} q = {:.2f}".format(thetadeg,q)
             print(line)
         
             line="using xx = {} yy  = {}".format(xx,yy)
