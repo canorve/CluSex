@@ -147,7 +147,7 @@ def compsky():
 
 
     #  random sky method:
-    if params.flagrandboxsky:
+    if method == 2:
 
         # computing sky  using random boxes across the image
         print("computing sky with the random box method")
@@ -192,7 +192,7 @@ def compsky():
             Bkgd[idx] = mean  
             #galpar.randskystd = std
             #galpar.randskymed = median
-            line="{0:.0f} {1} {2} {3} {4} {5} {6} {7} {8:.0f} {9} {10} {11} {12} {13} {14:.0f} \n".format(N[idx], Alpha[idx], Delta[idx], X[idx], Y[idx], Mg[idx], Kr[idx], Fluxr[idx], Isoa[idx], Ai[idx], E[idx], Theta[idx], Bkgd[idx], Idx[idx], Flg[idx])
+            line="{0:.0f} {1} {2} {3} {4} {5} {6} {7} {8:.0f} {9} {10} {11:.2f} {12:.2f} {13} {14:.0f} \n".format(N[idx], Alpha[idx], Delta[idx], X[idx], Y[idx], Mg[idx], Kr[idx], Fluxr[idx], Isoa[idx], Ai[idx], E[idx], Theta[idx], Bkgd[idx], Idx[idx], Flg[idx])
 
 
             f_out.write(line)
