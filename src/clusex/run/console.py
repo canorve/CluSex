@@ -4,12 +4,11 @@ import numpy as np
 import argparse
 import os
 from astropy.io import fits
-
+import subprocess as sp
 
 from clusex.lib.join import joinsexcat 
 from clusex.lib.join import putFlagSat 
 
-from clusex.lib.mask import putFlagSat 
 from clusex.lib.mask import GetAxis
 from clusex.lib.mask import CatArSort
 from clusex.lib.mask import MakeImage 

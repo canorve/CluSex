@@ -2,6 +2,7 @@
 
 import numpy as np
 
+from clusex.lib.check import CheckFlag 
 
 
 def ds9kron(sexfile,regfile,scale,offset):
