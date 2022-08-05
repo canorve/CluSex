@@ -26,7 +26,7 @@ def compsky():
 
     parser.add_argument("-nb","--numBox", type=int, help="number of boxes for the random method. ",default=20)
 
-    parser.add_argument("-sm","--scaleRadMax", type=float, help="factor that multiplies the radius of the catalog objects. For rand sky is the maximum radius of the box around main object. Default = 10",default=10)
+    parser.add_argument("-sm","--scaleRadMax", type=float, help="factor that multiplies the radius of the catalog objects. For rand sky is the maximum radius of the box around main object. Default = 20",default=20)
  
 
     parser.add_argument("-m","--method", type=int, help="method used for compute sky. Grad sky =1, rand sky = 2. Default = 1  ",default=1)
@@ -99,6 +99,14 @@ def compsky():
         tempMask = "tempmask.fits"
         #width = params.skywidth
 
+        hdumask = fits.open(MaskFile)
+        maskimg = hdumask[0].data
+        hdumask.close()
+
+        hdu = fits.open(ImageFile)
+        datimg = hdu[0].data
+        hdu.close()
+
 
        
         for idx, item in enumerate(N):
@@ -120,15 +128,20 @@ def compsky():
             line="using thetadeg = {:.2f} q = {:.2f}".format(thetadeg,q)
             print(line)
         
-            line="using xx = {} yy  = {}".format(xx,yy)
+            line="using x = {} y  = {}".format(xx,yy)
             print(line)
 
-            EraseObjectMask(MaskFile,tempMask,N[idx])
+            #EraseObjectMask(MaskFile,tempMask,N[idx])
+            tempmask=EraseObjectMask2(maskimg,N[idx]) #routine more efficient 
 
 
-            mean,std, median,rad = SkyCal().GetEllipSky(ImageFile,MaskFile,xx,yy,
+            #mean,std, median,rad = SkyCal().GetEllipSky(ImageFile,tempMask,xx,yy,
+            #                                            thetadeg,q,Rinit,width,
+            #                                            "ring.fits","ringmask.fits")
+            mean,std, median,rad = SkyCal().GetEllipSky(datimg,tempmask,xx,yy,
                                                         thetadeg,q,Rinit,width,
                                                         "ring.fits","ringmask.fits")
+
 
             line="Total sky:  mean = {:.2f}; std={:.2f}; median = {:.2f} ".format(mean,std,median)
             print(line)
@@ -139,7 +152,7 @@ def compsky():
             #galpar.gradskymed = median
 
 
-            line="{0:.0f} {1} {2} {3} {4} {5} {6} {7} {8:.0f} {9} {10} {11} {12} {13} {14:.0f} \n".format(N[idx], Alpha[idx], Delta[idx], X[idx], Y[idx], Mg[idx], Kr[idx], Fluxr[idx], Isoa[idx], Ai[idx], E[idx], Theta[idx], Bkgd[idx], Idx[idx], Flg[idx])
+            line="{0:.0f} {1} {2} {3} {4} {5} {6} {7} {8:.0f} {9} {10} {11:.2f} {12:.2f} {13} {14:.0f} \n".format(N[idx], Alpha[idx], Delta[idx], X[idx], Y[idx], Mg[idx], Kr[idx], Fluxr[idx], Isoa[idx], Ai[idx], E[idx], Theta[idx], Bkgd[idx], Idx[idx], Flg[idx])
 
 
             f_out.write(line)
@@ -147,7 +160,7 @@ def compsky():
 
 
     #  random sky method:
-    if method == 2:
+    elif method == 2:
 
         # computing sky  using random boxes across the image
         print("computing sky with the random box method")
@@ -199,6 +212,11 @@ def compsky():
 
 
 
+    else: 
+
+        # computing sky  using random boxes across the image
+        print("method not found. use '-m 1' for grad sky and '-m 2' for random sky")
+
 
 
 
@@ -226,6 +244,18 @@ def EraseObjectMask(MaskFile,tempMask,obj):
     
     hdumask.close()
     
+def EraseObjectMask2(maskimg,obj):
+
+    tempmask=maskimg.copy()
+
+    mask = tempmask == obj
+
+    tempmask[mask] = 0 # removing object from mask
+   
+    return tempmask
+
+   
+
 
 
 class SkyCal:
@@ -765,14 +795,17 @@ class SkyCal:
 
         ###
 
-        hdumask = fits.open(MaskFile)
-        self.maskimg = hdumask[0].data
-        hdumask.close()
+        #hdumask = fits.open(MaskFile)
+        #self.maskimg = hdumask[0].data
+        #hdumask.close()
+        self.maskimg = MaskFile.copy()
 
 
-        hdu = fits.open(ImageFile)
-        self.img = hdu[0].data
-        hdu.close()
+
+        #hdu = fits.open(ImageFile)
+        #self.img = hdu[0].data
+        #hdu.close()
+        self.img = ImageFile.copy()
 
         ####
        
@@ -852,8 +885,8 @@ class SkyCal:
             val += 1 
 
 
-        hdu[0].data=masksky
-        hdu.writeto(self.ringmask,overwrite=True) 
+        #hdu[0].data=masksky
+        #hdu.writeto(self.ringmask,overwrite=True) 
 
         ########################################
         ########################################
@@ -924,8 +957,8 @@ class SkyCal:
                 return 0,0,0,0
 
 
-        hdu[0].data=self.img
-        hdu.writeto(namering,overwrite=True) 
+        #hdu[0].data=self.img
+        #hdu.writeto(namering,overwrite=True) 
 
         finmean,finmedian,finstd,finRad = sky[1:-1][gradmask],skymed[1:-1][gradmask],skystd[1:-1][gradmask],radius[1:-1][gradmask]
 
