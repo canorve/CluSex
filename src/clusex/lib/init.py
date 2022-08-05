@@ -20,7 +20,7 @@ class Params:
 
     run1=run2=1
 
-    create = 0
+    #create = 0 #has moved to makemask
 
 
     satscale=1
@@ -31,7 +31,7 @@ class Params:
 
     regoutfile = "hotcold.reg"
 
-    maskfile="mask.fits"
+    #maskfile="mask.fits"
 
     SexArSort="sortar.cat"
 

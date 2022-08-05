@@ -157,11 +157,11 @@ def readcon(params,confile):
                 flag = True 
 
 
-            if param == "MakeMask":
+            #if param == "MakeMask":
 
-                (create) = val.split()[0]
-                params.create=int(create)
-                flag = True 
+            #    (create) = val.split()[0]
+            #    params.create=int(create)
+            #    flag = True 
 
             if param == "Scale":
 

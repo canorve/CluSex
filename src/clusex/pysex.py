@@ -45,9 +45,9 @@ from clusex.lib.satbox import SatBox
 
 def main():
 
-    #########################################
-    ##### Reading argument parser #######
-    #########################################
+    ######################################
+    ##### Reading argument parser ########
+    ######################################
 
 
     parser = argparse.ArgumentParser(description="CluSex: combines two Sextractor catalogs among other stuff")
@@ -62,9 +62,9 @@ def main():
     confile = args.ConfigFile 
     #image = args.image
 
-    #########################################
-    ##### initial parameters ########
-    #########################################
+    ######################################
+    ##### initial parameters #############
+    ######################################
 
 
     #copying files to actual folder
@@ -86,29 +86,29 @@ def main():
     params=Params()
 
     #########################################
-    ##### Reading paramter file #######
+    ##### Reading paramter file #############
     #########################################
 
     readcon(params,confile)
 
-    ##############################################################
-    ##### Reading and writing sextractor files ########
-    #########################################################
+    ####################################################
+    ##### Reading and writing sextractor files #########
+    ####################################################
 
     wsex(params)
 
-    ##############################################################
-    ##### Running Sextractor ########
-    #########################################################
+    ##################################
+    ##### Running Sextractor #########
+    ##################################
 
 
 
     runsex(params)
 
 
-    #################################################################
-    ##### Correcting radius for large low surface brightness galaxies ################### 
-    #################################################################
+    ######################################################################
+    ### Correcting radius for large low-surface brightness galaxies  ##### 
+    ######################################################################
 
     print("correcting radius of galaxies")
 
@@ -139,7 +139,7 @@ def main():
         print("Unable to correct radius because it needs to run sextractor twice. run = 1 run2 = 1 \n")
 
     #####################################################################
-    ##### joins the two output sextractor files into one single file ############## 
+    ##### joins the two output sextractor files into one single file ####
     #####################################################################
 
 
@@ -185,55 +185,15 @@ def main():
 
         print("CluSex won't run ds9 because DisplayDs9 is set to 0 ")
 
+
     #####################################################################
-    ########### Make masks from output ################################## 
+    ###### Makemask has been moved to an independient routine ###########
     #####################################################################
 
 
-
-    if (params.create == 1):
-
-        print ("Creating masks....\n")
-
-        (NCol, NRow) = GetAxis(params.image)
-
-#        print(output2,scale,SexArSort,NCol,NRow)
-
-        if (run1 == 1 and run2 == 1):
-            Total = CatArSort(params.output2,params.scale,params.offset,params.SexArSort,NCol,NRow)
-        elif(run1 ==1):
-            Total = CatArSort("hot.cat",params.scale,params.offset,params.SexArSort,NCol,NRow)
-        elif(run2==1):
-            Total = CatArSort("cold.cat",params.scale,params.offset,params.SexArSort,NCol,NRow)
+    print("CluSex has finished.")
 
 
-        ##### segmentation mask
-
-        MakeImage(params.maskfile, NCol, NRow)
-
-        MakeMask(params.maskfile, params.SexArSort, params.scale,params.offset,params.satfileout)  # offset set to 0
-        MakeSatBox(params.maskfile, params.satfileout, Total + 1, NCol, NRow)
-
-        print ("Running ds9 ....\n")
-        runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} {} ".format(params.image,params.regoutfile,params.satfileout,params.maskfile)
-        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
-
-    else:
-
-        if (params.run1 == 1 or params.run2 == 1):
-            print ("Running ds9 ....\n")
-            runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} ".format(params.image,params.regoutfile,params.satfileout)
-            err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  # Run GALFIT
-        else:
-            print ("Ds9 can not run because sextractor was not used ")
-
-
-
-
-
-    #########################################################################
-    ########### Computes sky for every object and produces a new catalog ####
-    #######################################################################
 
 
 
