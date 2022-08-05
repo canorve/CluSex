@@ -168,6 +168,19 @@ def compsky():
         ImageFile = image
         MaskFile = mask
 
+        hdu = fits.open(ImageFile)
+        datimg = hdu[0].data
+        hdu.close()
+
+
+        hdumask = fits.open(MaskFile)
+        maskimg = hdumask[0].data
+        hdumask.close()
+
+
+
+
+
         for idx, item in enumerate(N):
 
             xx = X[idx]
@@ -194,9 +207,10 @@ def compsky():
             print(line)
 
 
-            mean,std, median = SkyCal().RandBox(ImageFile,MaskFile,xx,yy,
+           # mean,std, median = SkyCal().RandBox(ImageFile,MaskFile,xx,yy,
+           #                                     thetadeg,q,Rinit,box,numbox,Rmax)
+            mean,std, median = SkyCal().RandBox(datimg,maskimg,xx,yy,
                                                 thetadeg,q,Rinit,box,numbox,Rmax)
-        #
 
             line="Total sky:  mean = {:.2f}; std = {:.2f}; median = {:.2f}".format(mean,std,median)
             print(line)
@@ -279,14 +293,19 @@ class SkyCal:
 
         ###
 
-        hdumask = fits.open(MaskFile)
-        self.maskimg = hdumask[0].data
-        hdumask.close()
+        #hdumask = fits.open(MaskFile)
+        #self.maskimg = hdumask[0].data
+        #hdumask.close()
+
+        self.maskimg = MaskFile 
 
 
-        hdu=fits.open(ImageFile)
-        self.img = hdu[0].data
-        hdu.close()
+        #hdu=fits.open(ImageFile)
+        #self.img = hdu[0].data
+        #hdu.close()
+
+        self.img = ImageFile 
+
 
         ####
         
