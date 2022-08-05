@@ -9,54 +9,6 @@ from clusex.lib.check  import CheckKron
 from clusex.lib.check import CheckFlag 
 from clusex.lib.check import CheckSatReg2
 
-def joincat():
-    """ joins two sextractor catalogs"""
-
-    parser = argparse.ArgumentParser(description="Joincat: quickly combines two Sextractor catalogs")
-
-    # required arguments
-    parser.add_argument("FirstCatalog",help="First sextractor catalog")
-    parser.add_argument("SecondCatalog",help="Second sextractor catalog")
-
-
-    parser.add_argument("-s","--joinscale", type=float, help="factor that multiplies the radius of the First catalog objects. Objects outside of this catalog will be added. Default = 1",default=1)
-
-    parser.add_argument("-o","--output", type=str, help="output catalog ",default='out.cat')
-
-    parser.add_argument("-sf","--SatFile", type=str, help="Saturation DS9 reg file")
-
-    args = parser.parse_args()
-
-    firstsex = args.FirstCatalog
-    secondsex = args.SecondCatalog
-    joinscale = args.joinscale
-    output = args.output
-    satfile = args.SatFile
-
-
-    ##
-    line="joining {} with {} using a scale of {}".format(firstsex,secondsex,joinscale)
-    print(line)
-
-
-    joinsexcat(firstsex,secondsex,output,joinscale)
-
-
-    if satfile:
-
-        print("recomputing saturation flags for catalog")
-        putFlagSat(output,"temp.cat",satfile)
-
-        os.rename("temp.cat",output)
-
-    else:
-
-        print("no saturation DS9 reg file")
-
-    line="joincat finished output file  {} created".format(output)
-    print(line)
-
-
 
 
 def joinsexcat (maincat,secondcat,output,JoinScale):

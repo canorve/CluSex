@@ -12,76 +12,6 @@ from clusex.lib.check import CheckSatReg2
 from clusex.lib.ds9 import ds9kron
 
 
-def makemask():
-    """makes a mask from sextractor catalog"""
-
-    parser = argparse.ArgumentParser(description="MakeMask: Creates mask from sextractor catalog")
-
-    # required arguments
-    parser.add_argument("SexCatalog",help="sextractor catalog")
-    parser.add_argument("Image",help="Fits image of the objects")
-
-    #optional arguments
-    parser.add_argument("-s","--scale", type=float, help="factor that multiplies the radius of the catalog objects. Default = 1",default=1)
-    
-    parser.add_argument("-off","--offset", type=float, help="factor that it is added to the scale times radius of the catalog objects. Default = 0",default=0)
-
-    parser.add_argument("-o","--outmask", type=str, help="name of the output mask ",default='mask.fits')
-
-    parser.add_argument("-sf","--SatFile", type=str, help="Saturation DS9 reg file",default='ds9sat.reg')
-
-    #options without arguments
-
-    parser.add_argument("-n","--nodisplay",action="store_true", help="doesn't run DS9")
-
-
-    args = parser.parse_args()
-
-    sexcatalog = args.SexCatalog
-    scale = args.scale
-    offset = args.offset
-    output = args.outmask
-    satfile = args.SatFile
-    image = args.Image
-    flagds9 = args.nodisplay
-
-
-    sexarsort="sexarea.cat"
-    regoutfile="mask.reg"
-    
-
-    print ("Creating mask....\n")
-
-    (NCol, NRow) = GetAxis(image)
-
-    #check if exits satfile
-
-    if not(os.path.exists(satfile)):
-        with open(satfile, 'x') as f:
-            f.write('box(1,1,0,0,0)') #to avoid empty file
-            f.close()
-
-    Total = CatArSort(sexcatalog,scale,offset,sexarsort,NCol,NRow)
-   
-    ##### segmentation mask
-
-    MakeImage(output, NCol, NRow)
-
-    MakeMask(output, sexarsort, scale, offset, satfile)  # offset set to 0
-    MakeSatBox(output, satfile, Total + 1, NCol, NRow)
-
-    #calling ds9kron to create ds9 reg objects
-    ds9kron(sexcatalog,regoutfile,scale,offset)
-
-
-    if not(flagds9): 
-        print ("Running ds9 ...\n")
-        runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} {} ".format(image,regoutfile,satfile,output)
-        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  
-
-    print('done') 
-
-
 
 def MakeMask(maskimage, catfile, scale, offset, regfile):
     "Create a mask image using ellipses for every Object of catfile. Now includes offset"
@@ -391,6 +321,32 @@ def GetSize(x, y, R, theta, ell, ncol, nrow):
         ymax[mask] = nrow
 
     return (xmin, xmax, ymin, ymax)
+
+
+def EraseObjectMask(MaskFile,tempMask,obj):
+
+    hdumask = fits.open(MaskFile)
+    data = hdumask[0].data
+
+    mask = data == obj
+
+    data[mask] = 0 # removing object from mask
+    
+    hdumask[0].data = data
+
+    hdumask.writeto(tempMask, overwrite=True)
+    
+    hdumask.close()
+    
+def EraseObjectMask2(maskimg,obj):
+
+    tempmask=maskimg.copy()
+
+    mask = tempmask == obj
+
+    tempmask[mask] = 0 # removing object from mask
+   
+    return tempmask
 
 
 
