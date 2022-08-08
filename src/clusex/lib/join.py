@@ -3,6 +3,7 @@
 import numpy as np
 import argparse
 import os
+import sys
 
 from clusex.lib.check  import CheckKron
 
@@ -18,9 +19,12 @@ def joinsexcat (maincat,secondcat,output,JoinScale):
 
     KronScale2 = 1
 
+    try:
     #maincat
-    N,Alpha,Delta,X,Y,Mg,Kr,Fluxr,Isoa,Ai,E,Theta,Bkgd,Idx,Flg=np.genfromtxt(maincat,delimiter="",unpack=True)
-
+        N,Alpha,Delta,X,Y,Mg,Kr,Fluxr,Isoa,Ai,E,Theta,Bkgd,Idx,Flg=np.genfromtxt(maincat,delimiter="",unpack=True)
+    except IOError:
+        print("bad sex file or wrong number of columns ")
+        sys.exit(1)
     AR         = 1 - E
     RKron      = JoinScale * Ai * Kr
 
@@ -46,9 +50,13 @@ def joinsexcat (maincat,secondcat,output,JoinScale):
 
     NewN=total + 1
 
+    try: 
+        #second cat
+        N2,Alpha2,Delta2,X2,Y2,Mg2,Kr2,Fluxr2,Isoa2,Ai2,E2,Theta2,Bkgd2,Idx2,Flg2=np.genfromtxt(secondcat,delimiter="",unpack=True)
+    except:
+        print("bad sextractor file or wrong number of columns ")
+        sys.exit(1)
 
-    #second cat
-    N2,Alpha2,Delta2,X2,Y2,Mg2,Kr2,Fluxr2,Isoa2,Ai2,E2,Theta2,Bkgd2,Idx2,Flg2=np.genfromtxt(secondcat,delimiter="",unpack=True)
 
     AR2         = 1 - E2
     RKron2      = KronScale2 * Ai2 * Kr2
