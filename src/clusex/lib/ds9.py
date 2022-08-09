@@ -73,7 +73,7 @@ def ds9kron(sexfile,regfile,scale,offset):
 
 
 
-    print ("{} objects have  at least one saturated pixels  \n".format(count))
+    print ("{} objects have at least one saturated pixels  \n".format(count))
 
 
     #        f_out.write(line)

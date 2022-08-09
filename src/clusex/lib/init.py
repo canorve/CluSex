@@ -1,4 +1,6 @@
 
+import clusex
+
 class Params:
 
     # class variables
@@ -87,6 +89,22 @@ class Params:
     flagDs9 = 1 
 
 
+
+
+def printWelcome():
+
+
+    print("CluSex: Sextractor on Cluster Galaxies")
+
+    print("Version:",clusex.__version__)
+
+    url = "https://github.com/canorve/CluSex"
+    
+    print("webpage: "+url+"\n")
+
+
+    print("CluSex joins two sextractor catalogs. ")
+    print("It creates masks, finds saturated regions and computes sky background")
 
 
 

@@ -14,6 +14,7 @@ import argparse
 
 
 from clusex.lib.init import Params
+from clusex.lib.init import printWelcome
 
 from clusex.lib.read import readcon 
 from clusex.lib.writesex import wsex
@@ -61,6 +62,9 @@ def main():
 
     confile = args.ConfigFile 
     #image = args.image
+
+    printWelcome()
+
 
     ######################################
     ##### initial parameters #############
@@ -180,6 +184,12 @@ def main():
             print ("{0} is the output catalog  ....\n".format("cold.cat"))
             print ("Creating ds9 check region file....\n")
             ds9kron("cold.cat",params.regoutfile,params.scale,params.offset)
+
+
+        print ("Running ds9 ...\n")
+        runcmd="ds9 -tile column -cmap grey -invert -log -zmax -regions shape box {} -regions {} -regions {} ".format(params.image,params.regoutfile,params.satfileout)
+        err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  
+
 
     else:
 
