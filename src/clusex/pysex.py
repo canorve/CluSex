@@ -50,6 +50,8 @@ def main():
     ##### Reading argument parser ########
     ######################################
 
+    printWelcome()
+
 
     parser = argparse.ArgumentParser(description="CluSex: combines two Sextractor catalogs among other stuff")
 
@@ -63,7 +65,6 @@ def main():
     confile = args.ConfigFile 
     #image = args.image
 
-    printWelcome()
 
 
     ######################################

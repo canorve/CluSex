@@ -9,6 +9,9 @@ import subprocess as sp
 from clusex.lib.join import joinsexcat 
 from clusex.lib.join import putFlagSat 
 
+
+from clusex.lib.init import printWelcome
+
 from clusex.lib.mask import GetAxis
 from clusex.lib.mask import CatArSort
 from clusex.lib.mask import MakeImage 
@@ -32,6 +35,8 @@ from clusex.lib.sky import SkyCal
 
 def joincat():
     """ joins two sextractor catalogs"""
+
+    printWelcome()
 
     parser = argparse.ArgumentParser(description="Joincat: quickly combines two Sextractor catalogs")
 
@@ -80,6 +85,9 @@ def joincat():
 
 def makemask():
     """makes a mask from sextractor catalog"""
+
+
+    printWelcome()
 
     parser = argparse.ArgumentParser(description="MakeMask: Creates mask from sextractor catalog")
 
@@ -152,6 +160,9 @@ def makemask():
 def sex2ds9():
     """creates a ds9 reg file from sextractor catalog"""
 
+    printWelcome()
+
+
     parser = argparse.ArgumentParser(description="sex2ds9: Creates a DS9 reg file from sextractor catalog")
 
     # required arguments
@@ -184,6 +195,7 @@ def sex2ds9():
 def compsky():
     """Computes the sky for every object of a sextractor catalog"""
 
+    printWelcome()
 
     parser = argparse.ArgumentParser(description="skysex: computes the sky for every object of a sextractor catalog")
 

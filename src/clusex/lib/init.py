@@ -103,8 +103,8 @@ def printWelcome():
     print("webpage: "+url+"\n")
 
 
-    print("CluSex joins two sextractor catalogs. ")
-    print("It creates masks, finds saturated regions and computes sky background")
+    #print("CluSex joins two sextractor catalogs. ")
+    #print("It creates masks, finds saturated regions and computes sky background")
 
 
 
