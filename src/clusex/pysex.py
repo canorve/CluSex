@@ -69,10 +69,10 @@ def main():
 
     #copying files to actual folder
 
-    filsex = Path(__file__).parent / "../../def/default.sex"
-    filnnw = Path(__file__).parent / "../../def/default.nnw"
-    filcon = Path(__file__).parent / "../../def/default.conv"
-    filpar = Path(__file__).parent / "../../def/sex.param"
+    filsex = Path(__file__).parent / "config/default.sex"
+    filnnw = Path(__file__).parent / "config/default.nnw"
+    filcon = Path(__file__).parent / "config/default.conv"
+    filpar = Path(__file__).parent / "config/sex.param"
 
     to_des = Path('.')
 
