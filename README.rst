@@ -5,25 +5,99 @@
 CluSex
 =====
 
-What is Clusex?
+What is CluSex?
 --------------
 
-| clusex is a script written in python to combine two Sextractor
-  catalogs.
+CluSex is a set of routines that aids Sextractor 
+to perform on images of cluster galaxies (or high 
+density of objects).  
 
-In this way, this combination allows to extract and estimate the size of
-almost all possible sources in an image.
+More specifically, it joins two `sextractor`_ catalogs,
+ creates masks, finds saturated regions and computes 
+sky background. 
+
+.. _sextractor:https://www.astromatic.net/software/sextractor/
+
+Why CluSex?
+------------
+It is hard to find an effective Sextractor configuration for
+all the objects in the image (check Haussler 2007). Using 
+a configuration to detect large galaxies is unable
+to detect small dim galaxies, and vice versa. In addition
+for regions of high density of objets, Sextractor overestimates 
+the size of low surface brightness galaxies. To see those 
+effects check the image below: 
+
+.. insert images of examples
+
+
+After using CluSex:
+
+
+.. insert images of CluSex
+
+In addition, performance on computation of sky 
+background, creation of masks, and estimation of 
+the area of saturated stars are done poorly in Sextractor. 
+
+How it works
+~~~~~~~~~~
+
+In order to solve these problems, CluSex runs Sextractor with two
+different configuration parameters: the first run detects large bright  
+saturated galaxies  and the second run detects small dim galaxies. 
+The combination of the two catalogs gives a better representation
+of all objects of the image. It also estimates the size of saturated 
+stars in the image. 
+
+To estimate the true size of low surface brightness objects, CluSex 
+compares the sizes of the detected object in each of the two catalogs.
+If the object was detected only for one catalog, it is reduced by 
+a constant factor introduced by the user.
+
+As said by the Sextractor creator, output Check images are bad
+to be used as a masks. In CluSex, masks are created using the 
+data given by sextractor catalog. Ellipses are created for every 
+detected object and these can be enlarged (or shortened) by the user.
+To see the masks included the saturated stars, check the 
+image below. 
+
+
+.. insert images of examples
+
+Sky background can be done poorly if objects's sizes are wrongly 
+estimated or not detected at all. Also it is known (Haussler 2007)
+that Sextractor overestimates the sky background. A wrong sky background 
+value will produce a bad estimation of the Sersic index of the galaxy.
+
+CluSex uses two different methods to compute sky background: 1) gradient sky
+and 2) random boxes around the objects.
+
+Gradient sky method computes the background sky in a ring around the object (check galapagos)
+To locate this ring, Clusex creates concentring rings around the object and 
+detect the background in every ring. When the gradient of ring sky values turns positive,
+clusex stops and measure the sky in that ring. 
+
+In the case of the random box method, clusex creates boxes of the same size located 
+randomly around the object. After a given number of boxes, clusex computes the 
+sky background. 
+
+Requirements
+------------
+
+- astropy
+- numpy
 
 Installation
 ------------
 
-Copy or clone this code. This code is written for python 3.
+just download the code and run
 
-The python libraries need to be installed are: - numpy - sys - os -
-subprocess - astropy - scipy
+::
 
-The main files for this code are: - pysex.py - config.txt - default.conv
-- default.nnw - default.sex - sex.param
+   pip install . 
+
+
 
 Quickstart
 ----------
@@ -32,10 +106,14 @@ To run the code just type in the command line:
 
 ::
 
-   clusex ConfigFile ImageFile
+   clusex ConfigFile 
 
-Where ConfigFile is the configuration parameters filename for pysex, and
-ImageFile is *obviously* the image.
+Where ConfigFile is the configuration parameters filename for pysex
+
+
+.. make another page to create the configfile
+
+
 
 Example of Configuration filename
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -97,7 +175,7 @@ OutCatalog hotcold.cat
 
 RegDs9 hotcold.reg
 
-How pysex works?
+How CluSex works?
 ----------------
 
 Pysex adds all the objects in the catalog of the first Sextractor Run.
@@ -110,23 +188,56 @@ low deblend number and high SNR, and, on the other hand, the second run
 with a high deblend number and low SNR (check manual for details to how
 to do this).
 
-Additional code
----------------
 
-In addition, this code comes with pysex3.py and pysexbcg.py which
-basically do the same as pysex.py but they run Sextractor 3 times for
-more reliability.
 
-More information
-----------------
 
-Check the manual (pysex.pdf) that comes with this distribution.
+Additional features 
+-------------------
+
+Full explanations of the commands below are found in
+
+.. make additional page
+
+
+Joincat 
+~~~~~~~
+
+
+MakeMask
+~~~~~~~
+
+Sky background
+~~~~~~~~~~~~~~
+
+
+sex2ds9
+~~~~~~~
+
+
+
+.. joincat,  makemask, sex2ds9, compsky   
+
+NOTES
+----
+Since CluSex is designed to give 
+the input catalog for my other project, actually, 
+CluSex only works only for the 14 output sextractor columns below:
+
+.. insert columns
+
+Additional columns will be added in the future releases.
+
+API
+----
+
+.. make another webpage for the API 
+
 
 Questions?
 ~~~~~~~~~~
 
-Do you have questions or suggestions? Please send an email to canorve
-[at] gmail [dot] com
+Code is far from perfect, so if you have suggestions or questions
+Please send an email to canorve [at] gmail [dot] com
 
 License
 -------
