@@ -13,81 +13,97 @@ to perform on images of cluster galaxies (or high
 density of objects).  
 
 More specifically, it joins two `sextractor`_ catalogs,
- creates masks, finds saturated regions and computes 
+creates masks, finds saturated regions and computes 
 sky background. 
 
 .. _sextractor:https://www.astromatic.net/software/sextractor/
 
 Why CluSex?
 ------------
+
 It is hard to find an effective Sextractor configuration for
-all the objects in the image (check Haussler 2007). Using 
-a configuration to detect large galaxies is unable
-to detect small dim galaxies, and vice versa. In addition
-for regions of high density of objets, Sextractor overestimates 
-the size of low surface brightness galaxies. To see those 
+all the objects in the image (check Haussler 2007). For example, 
+a sextractor configuration can be optimized to detect large galaxies, 
+but it might be unable to detect small dim galaxies, and vice versa. 
+In addition, Sextractor overestimates the size of low surface brightness 
+galaxies inside regions of high density of objets. To see those 
 effects check the image below: 
 
-.. insert images of examples
+.. insert images of run sextractor  
 
 
-After using CluSex:
+The same image below improved after using CluSex:
 
 
 .. insert images of CluSex
 
-In addition, performance on computation of sky 
+In addition, CluSex improves computation of sky 
 background, creation of masks, and estimation of 
-the area of saturated stars are done poorly in Sextractor. 
+the area of saturated stars. 
 
 How it works
 ~~~~~~~~~~
 
-In order to solve these problems, CluSex runs Sextractor with two
-different configuration parameters: the first run detects large bright  
-saturated galaxies  and the second run detects small dim galaxies. 
+In order to solve these problems, CluSex runs 
+Sextractor twice with different configuration 
+parameters: the first run detects large bright  
+saturated galaxies and the second run detects 
+small dim galaxies. 
 
-Clusex adds all the objects detected in the first Sextractor run.
-Next, it adds the objects of the second Sextractor run if they meet the 
-following condition: For every object, their center must not be
-inside the ellipse of the objects of the first run.
+Clusex adds all the objects detected in the 
+first Sextractor run. Next, it adds the objects 
+of the second Sextractor run if they meet the 
+following condition: For each object, their center 
+must not be inside the ellipse of the objects of 
+the first run.
 
-The combination of the two catalogs gives a better representation
-of all objects of the image. It also estimates the size of saturated 
+The combination of the two catalogs gives a 
+better representation of all objects of the 
+image. It also estimates the area of saturated 
 stars in the image. 
 
-To estimate the true size of low surface brightness objects, CluSex 
-compares the sizes of the detected object in each of the two catalogs.
-If the object was detected only for one catalog, it is reduced by 
-a constant factor introduced by the user.
+Furthermore, to estimate the true size of low surface 
+brightness objects, CluSex compares the sizes 
+of the detected object in each of the two catalogs.
+If the object was detected only for one catalog, 
+it is reduced by a constant factor introduced 
+by the user.
 
-As said by the Sextractor creator, output Check images are bad
-to be used as a masks. In CluSex, masks are created using the 
-data given by sextractor catalog. Ellipses are created for every 
-detected object and these can be enlarged (or shortened) by the user.
+.. add note here for sextractor webpage
+As said by the Sextractor creator, output sextractor 
+check images are bad masks. In contrast, CluSex creates
+masks using the data given by sextractor catalog. Every object
+is represented by a ellipse masks which it can  
+be enlarged (or shortened) by the user.
 To see the masks included the saturated stars, check the 
 image below. 
 
 
-.. insert images of examples
+.. insert images of masks
 
 Sky background can be done poorly if objects's sizes are wrongly 
 estimated or not detected at all. Also it is known (Haussler 2007)
-that Sextractor overestimates the sky background. A wrong sky background 
-value will produce a bad estimation of the Sersic index of the galaxy.
+that Sextractor overestimates the sky background. 
+A wrong sky background value will produce a bad estimation 
+of the Sersic index of the galaxy for fitting surface brightness models.
 
-CluSex uses two different methods to compute sky background: 1) gradient sky
+CluSex uses two different methods to compute 
+sky background: 1) gradient sky
 and 2) random boxes around the objects.
 
 Gradient sky method computes the background sky in a ring around 
-the object (check galapagos) to locate this ring, Clusex creates 
-concentring rings around the object and 
-detect the background in every ring. When the gradient of ring 
-sky values turns positive,
-clusex stops and measure the sky in that ring. 
+the object. To locate this ring, Clusex creates 
+concentring rings around the object and computes the 
+background in every ring. This will create a set of sky values 
+for each ring. The gradient is computed for this set. When 
+the gradient of ring sky values turns positive,
+clusex stops and measure the sky in that ring. A similar approach 
+has been used in Haussler 2007. 
 
-In the case of the random box method, clusex creates boxes of the same size located 
-randomly around the object. After a given number of boxes, clusex computes the 
+On the other hand, for the random box method, 
+clusex creates boxes of the same size located 
+at random positions around the object. After a 
+given number of boxes, clusex computes the 
 sky background. 
 
 Requirements
@@ -99,11 +115,21 @@ Requirements
 Installation
 ------------
 
-just download the code and run
+Install sextractor (if you haven't done yet)
+
+For linux:
+::
+
+   sudo apt install sextractor
+
+
+Once that is done, download the code and run
 
 ::
 
    pip install . 
+
+
 
 
 Quickstart
@@ -118,15 +144,8 @@ To run the code just type in the command line:
 Where ConfigFile is the configuration parameters filename for pysex
 
 
-.. make another page to create the configfile
-
-
-
 Example of Configuration filename
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Check the *config.txt* file that comes with the code. It is displayed
-here:
 
 # params for first run of Sextractor # run with low deblend number and
 high SNR
@@ -183,6 +202,14 @@ OutCatalog hotcold.cat
 RegDs9 hotcold.reg
 
 
+
+Check here for an explanation of every parameter of the config file 
+
+.. make another page to create the configfile
+
+
+
+
 Suggestion
 ~~~~~~~~~~
 
@@ -195,13 +222,11 @@ to how to do this).
 Additional features 
 -------------------
 
-CluSex has other routines to improve Sextractor photometry. They
+CluSex contains other routines to improve Sextractor photometry. They
 include: simple combination of merge two catalogs, creation of masks,
 convertion to ds9 reg file, and sky background computation. 
 
-Full explanations of the commands below are found in
-
-.. make additional page
+.. lastmod
 
 
 Joincat 
@@ -217,6 +242,11 @@ Sky background
 
 sex2ds9
 ~~~~~~~
+
+
+Full explanations of the commands below are found in
+
+.. make additional page
 
 
 
