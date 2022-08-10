@@ -46,6 +46,12 @@ How it works
 In order to solve these problems, CluSex runs Sextractor with two
 different configuration parameters: the first run detects large bright  
 saturated galaxies  and the second run detects small dim galaxies. 
+
+Clusex adds all the objects detected in the first Sextractor run.
+Next, it adds the objects of the second Sextractor run if they meet the 
+following condition: For every object, their center must not be
+inside the ellipse of the objects of the first run.
+
 The combination of the two catalogs gives a better representation
 of all objects of the image. It also estimates the size of saturated 
 stars in the image. 
@@ -73,9 +79,11 @@ value will produce a bad estimation of the Sersic index of the galaxy.
 CluSex uses two different methods to compute sky background: 1) gradient sky
 and 2) random boxes around the objects.
 
-Gradient sky method computes the background sky in a ring around the object (check galapagos)
-To locate this ring, Clusex creates concentring rings around the object and 
-detect the background in every ring. When the gradient of ring sky values turns positive,
+Gradient sky method computes the background sky in a ring around 
+the object (check galapagos) to locate this ring, Clusex creates 
+concentring rings around the object and 
+detect the background in every ring. When the gradient of ring 
+sky values turns positive,
 clusex stops and measure the sky in that ring. 
 
 In the case of the random box method, clusex creates boxes of the same size located 
@@ -96,7 +104,6 @@ just download the code and run
 ::
 
    pip install . 
-
 
 
 Quickstart
@@ -175,24 +182,22 @@ OutCatalog hotcold.cat
 
 RegDs9 hotcold.reg
 
-How CluSex works?
-----------------
 
-Pysex adds all the objects in the catalog of the first Sextractor Run.
-Later, it adds the objects of the second Sextractor Run with the
-following condition: The object center of the second run must not be
-inside within the ellipse of the objects of the first run.
+Suggestion
+~~~~~~~~~~
 
-To make pysex works properly, the first run must be configurated with a
+To make CluSex works properly, the first run must be configurated with a
 low deblend number and high SNR, and, on the other hand, the second run
-with a high deblend number and low SNR (check manual for details to how
-to do this).
-
-
+with a high deblend number and low SNR (check sextractor manual for details 
+to how to do this).
 
 
 Additional features 
 -------------------
+
+CluSex has other routines to improve Sextractor photometry. They
+include: simple combination of merge two catalogs, creation of masks,
+convertion to ds9 reg file, and sky background computation. 
 
 Full explanations of the commands below are found in
 
@@ -221,7 +226,7 @@ NOTES
 ----
 Since CluSex is designed to give 
 the input catalog for my other project, actually, 
-CluSex only works only for the 14 output sextractor columns below:
+CluSex only works for the 14 output sextractor columns below:
 
 .. insert columns
 
