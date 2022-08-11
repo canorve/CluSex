@@ -271,6 +271,9 @@ Full explanations of the commands above are found in
 .. make additional page
 
 
+To see how to run those commands see:
+
+`How to run <docs/howto.rst>`__
 
 .. joincat,  makemask, sex2ds9, compsky   
 
