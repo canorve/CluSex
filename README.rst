@@ -226,25 +226,47 @@ CluSex contains other routines to improve Sextractor photometry. They
 include: simple combination of merge two catalogs, creation of masks,
 convertion to ds9 reg file, and sky background computation. 
 
-.. lastmod
-
+Except for sex2ds9 routine, the use of the routines is suggested 
+in the following order: CluSex, Joincat (if needed), makemask, and
+compsky. Those routines are separated because the user need to be verify 
+that the output is well done before to continue with the next routine.
 
 Joincat 
 ~~~~~~~
+
+Joincat is a small CluSex version. It just joins two 
+existent sextractor catalogs. The aim is that a sextractor 
+catalog can be merged with the output of CluSex. The aim is to 
+detect those objects that were unable to be detected 
+by CluSex. 
+
+The principle is the same as CluSex: objects of the second catalog
+will be added to the first one only if their center is outside the 
+ellipse of the objects of the first catalog. Use it only if it is necessary. 
 
 
 MakeMask
 ~~~~~~~
 
+This routine creates an image containing ellipse masks for every object. 
+It needs the CluSex output catalog and saturated ds9 regions (created by
+CluSex as well)
+
+
 Sky background
 ~~~~~~~~~~~~~~
 
+This routine use two methods (gradient sky and random box) to compute
+sky background for every detected object by CluSex. Output catalog
+is the same as the input catalog but with the background column changed
+to the new values
 
 sex2ds9
 ~~~~~~~
 
+Creates a ds9 region file from the sextractor output catalog
 
-Full explanations of the commands below are found in
+Full explanations of the commands above are found in
 
 .. make additional page
 
@@ -252,15 +274,21 @@ Full explanations of the commands below are found in
 
 .. joincat,  makemask, sex2ds9, compsky   
 
+
 NOTES
 ----
-Since CluSex is designed to give 
-the input catalog for my other project, actually, 
-CluSex only works for the 14 output sextractor columns below:
+CluSex was designed to provide 
+an improved sextractor catalog to my other project (DGCG). 
+Consequently for the current CluSex version, it only works 
+for the 14 output sextractor columns below:
 
 .. insert columns
 
-Additional columns will be added in the future releases.
+Additional columns will be added in future releases.
+
+
+.. lastmod
+
 
 API
 ----
