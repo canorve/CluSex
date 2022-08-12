@@ -70,6 +70,7 @@ it is reduced by a constant factor introduced
 by the user.
 
 .. add note here for sextractor webpage
+
 As said by the Sextractor creator, output sextractor 
 check images are bad masks. In contrast, CluSex creates
 masks using the data given by sextractor catalog. Every object
@@ -205,6 +206,9 @@ RegDs9 hotcold.reg
 
 Check here for an explanation of every parameter of the config file 
 
+`configuration <docs/config.rst>`__
+
+
 .. make another page to create the configfile
 
 
@@ -297,6 +301,12 @@ API
 ----
 
 .. make another webpage for the API 
+
+API:
+
+`API <docs/api.rst>`__
+
+
 
 
 Questions?
