@@ -5,6 +5,8 @@
 CluSex
 =====
 
+**Documentation under construction**
+
 What is CluSex?
 --------------
 
@@ -127,6 +129,12 @@ Install Ds9 (if you haven't done yet)
 
 .. refer to webpage of Ds9 https://sites.google.com/cfa.harvard.edu/saoimageds9/download
 
+Download it and make a symbolic link to the /usr/local/bin or
+make an alias. 
+
+::
+    
+    sudo ln -s /path/to/ds9 /usr/local/bin 
 
 
 
@@ -306,7 +314,6 @@ for the 14 output sextractor columns below:
 Additional columns will be added in future releases.
 
 
-.. lastmod
 
 
 API
