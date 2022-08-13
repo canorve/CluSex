@@ -3,11 +3,11 @@
    :depth: 3
 ..
 
-Configuration File
+Parameter Configuration File
 =====
 
-Here you will find explanation of each of the parameters
-of the config file needed to run CluSex.
+Here you will find the description of each parameter
+of the configuration file needed to run CluSex.
 
 First of all, to run CluSex with 
 the configuration file is as easy as typing: 
@@ -20,15 +20,13 @@ the configuration file is as easy as typing:
 An example of a configuration file is shown below::
 
 
+  
 
+  FirstRun  1  # Enable first run (1 = run)
 
-  # run using low deblend parameters and high SNR
+  SecondRun 1 # enable second run   (1 = run)
 
-  #FirstRun  0  # Enable first run (1 = run)
-
-  #SecondRun 0 # enable second run   (1 = run)
-
-  image A1656.fits
+  Image A1656.fits
 
 
   MAG_ZEROPOINT   28.32
@@ -74,8 +72,6 @@ An example of a configuration file is shown below::
 
   SatOffset  20
 
-  MakeMask  0
-
   OutCatalog  hotcold.cat
 
   RegDs9   hotcold.reg
@@ -102,60 +98,158 @@ An example of a configuration file is shown below::
 Description of the Configuration file parameters
 --------------
 
-Let''s see the explanaiton of the parameters one by one:
+Let's see the explanation of the parameters one by one. 
+Not all the parameters must be in the configuration file.
 
-# params for first run of Sextractor # run with low deblend number and
-high SNR
 
-FirstRun 1 # Enable first run (1 = run)
+FirstRun  
+        Enables to run the first run (Enable it 1; disable with  = 0)
 
-ANALYSIS_THRESH1 20 # or , in mag.arcsec-2
+SecondRun 
+        Enables to run the second run (Enable it 1; disable with  = 0)
 
-DETECT_THRESH1 20 # or , in mag.arcsec-2
 
-DETECT_MINAREA1 10 # minimum number of pixels above threshold
+The previous two routines enable that first catalog 
+or second catalog can run. Enable only one run it is
+the same as just using sextractor alone. This will 
+aid to visualize if the setup of one of the runs is
+working as desire.
 
-DEBLEND_NTHRESH1 64 # Number of deblending sub-thresholds
 
-DEBLEND_MINCONT1 0.001 # Minimum contrast parameter for deblending
+Image 
+    The FITS cluster image.
 
-BACK_SIZE1 100
 
+
+Capital parameters are the same parameters 
+as Sextractor parameters:
+
+MAG_ZEROPOINT   28.32
+GAIN            5.4
+PIXEL_SCALE     0.68
+SATUR_LEVEL     30000
+SEEING_FWHM     1.5
+
+They are needed for Sextractor 
+to run.
+
+For the capital parameters ending 
+with 1 or 2 (like the ones below) 
+refer to the same parameter that
+sextractor has, but the difference 
+is that 1 refer to the first run
+and 2 for the second. 
+
+Parameters of the first run:
+
+DEBLEND_NTHRESH1 64       
+DEBLEND_MINCONT1 0.001   
+
+ANALYSIS_THRESH1 5      
+DETECT_THRESH1   5     
+DETECT_MINAREA1  20   
+
+BACK_SIZE1      100
 BACK_FILTERSIZE1 11
 
-# params for second run of Sextractor # run with high deblend number and
-low SNR
 
-SecondRun 1 # enable second run (1 = run)
+Parameters of the second run:
 
-ANALYSIS_THRESH2 1.5 # or , in mag.arcsec-2
 
-DETECT_THRESH2 1.5 # or , in mag.arcsec-2
+DEBLEND_NTHRESH2 32           # Number of deblending sub-thresholds
+DEBLEND_MINCONT2 .01         # Minimum contrast parapymeter for deblending
 
-DETECT_MINAREA2 10 # minimum number of pixels above threshold
+ANALYSIS_THRESH2 1.5         # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DETECT_THRESH2   1.5         # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DETECT_MINAREA2  20      # minimum number of pixels above threshold
 
-DEBLEND_NTHRESH2 16 # Number of deblending sub-thresholds
+BACK_SIZE2       11
+BACK_FILTERSIZE2 10 
 
-DEBLEND_MINCONT2 0.01 # Minimum contrast parapymeter for deblending
 
-BACK_SIZE2 10
 
-BACK_FILTERSIZE2 2
+Scale and Offset  
 
-# General parameters:
+    CluSex defines the size of every galaxy 
+    drawing a concentric ellipse. The major
+    axis of this ellipse is defined by 
+    Scale * Kron radius  * Ai + Offset. 
+    Kron radius and Ai are parameters given
+    by the output of Sextractor. 
 
-Scale 1 # factor scale which ellipses are enlarged
 
-SatDs9 sat.reg
+SatDs9 
+    The name of the saturation Ds9 region file. CluSex
+    creates a box Ds9 saturation region file 
+    where contains the saturated or bad regions of 
+    the image.
 
-SatScale 3
+SatScale and SatOffset 
 
-SatOffset 1
+    Same as the Scale and Offset parameters but 
+    for the saturated regions
 
-MakeMask 0
+OutCatalog 
 
-OutCatalog hotcold.cat
+    The name of the output CluSex catalog
 
-RegDs9 hotcold.reg
+RegDs9  
+
+    The name of the output Ds9 region file catalog.
+    CluSex creates an ds9 region file from the final catalog. 
+    Consequently, user can visualize the detected objects
+    and their respective sizes. 
+
+MinSatSize 
+
+    In case is needed, user can establish 
+    minimum size for the saturated region. Saturated
+    regions are represented by boxes, hence the value
+    of this parameters represent the side of the box. 
+
+SatQ 
+
+    The value of this parameter set a limit
+    for the axis ratio of the saturated box. Boxes
+    with axis ratio lower than this value will be 
+    break it one horizontal and vertical box to
+    cover the most part of the saturated regions.
+    
+
+SatMethod
+    CluSex have 4 methods to identify the size of
+    saturated regions. Best method is 3 (which is
+    combination of methods 1 and 2), if this 
+    doesn't work for you, try 4. 
+
+ReduCoef
+
+    This value is multiplied to the size of the objects
+    if those objects are just found only in one of the
+    run catalogs. A value of .2 means that the size 
+    is reduced 20%
+  
+
+FracTol 
+
+    CluSex compares the size of the same object found
+    in the two run catalogs. If the difference is greater
+    than this value, CluSex will modify the object size 
+    keeping the smaller size of the two catalogs. A value
+    of FracTol of 0.5 means that only a difference of 50% in
+    radius is allowed.
+
+ScaleCor 
+
+    This parameter is related with the previous one, if the 
+    object size is modified, the value of ScaleCor is multiplied
+    by the final object size. Use it only if you think it is needed.
+
+JoinScale 
+
+    This parameter is the same as Scale, but this is only 
+    used when CluSex will join the two catalogs and it is not
+    used anymore.
+
 
 

@@ -123,6 +123,12 @@ For linux:
 
    sudo apt install sextractor
 
+Install Ds9 (if you haven't done yet) 
+
+.. refer to webpage of Ds9
+
+
+
 
 Once that is done, download the code and run
 

@@ -203,7 +203,7 @@ def readcon(params,confile):
                 flag = True 
 
 
-            if param == "image":
+            if param == "Image":
 
                 (image) = val.split()[0]
                 params.image = str(image)
