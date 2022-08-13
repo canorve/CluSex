@@ -125,7 +125,7 @@ For linux:
 
 Install Ds9 (if you haven't done yet) 
 
-.. refer to webpage of Ds9
+.. refer to webpage of Ds9 https://sites.google.com/cfa.harvard.edu/saoimageds9/download
 
 
 
@@ -135,6 +135,12 @@ Once that is done, download the code and run
 ::
 
    pip install . 
+
+or 
+
+::
+
+   pip install clusex 
 
 
 
