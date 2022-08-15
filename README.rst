@@ -31,17 +31,33 @@ In addition, Sextractor overestimates the size of low surface brightness
 galaxies inside regions of high density of objets. To see those 
 effects check the image below: 
 
-.. insert images of run sextractor  
+.. image:: img/Comarun1.png
+   :alt: Sextractor run for an Abell Cluster. Red ellipses 
+   are galaxies where their size are clearly overestimated. 
+
+.. image:: img/Comarun2.png
+   :alt: Different Sextractor configuration for the same Abell Cluster. Galaxy sizes
+   are better estimated but it is unable to detect (or deblend) all the galaxies.
+
 
 
 The same image below improved after using CluSex:
 
+.. image:: img/Comagood.png
+   :alt: An improved deteccion and size estimation of the objects
+         for the same Abell Cluster using CluSex 
 
-.. insert images of CluSex
 
 In addition, CluSex improves computation of sky 
 background, creation of masks, and estimation of 
 the area of saturated stars. 
+
+Below is shown an estimation of the size of a  region 
+across a bright saturated star:
+
+.. image:: img/SatRegion.png
+   :alt: estimation of the size of a saturated star. 
+
 
 How it works
 ~~~~~~~~~~
