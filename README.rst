@@ -32,20 +32,23 @@ galaxies inside regions of high density of objets. To see those
 effects check the image below: 
 
 .. image:: img/Comarun1.png
-   :alt: Sextractor run for an Abell Cluster. Red ellipses 
-   are galaxies where their size are clearly overestimated. 
+
+Sextractor run for an Abell Cluster. Red ellipses 
+are galaxies where their size are clearly overestimated. 
 
 .. image:: img/Comarun2.png
-   :alt: Different Sextractor configuration for the same Abell Cluster. Galaxy sizes
-   are better estimated but it is unable to detect (or deblend) all the galaxies.
+
+Different Sextractor configuration for the same Abell Cluster. Galaxy sizes
+are better estimated but it is unable to detect (or deblend) all the galaxies.
 
 
 
-The same image below improved after using CluSex:
+The same cluster is shown below improved after using CluSex:
 
 .. image:: img/Comagood.png
-   :alt: An improved deteccion and size estimation of the objects
-         for the same Abell Cluster using CluSex 
+
+An improved deteccion and size estimation of the objects
+for the same Abell Cluster using CluSex 
 
 
 In addition, CluSex improves computation of sky 
@@ -56,7 +59,8 @@ Below is shown an estimation of the size of a  region
 across a bright saturated star:
 
 .. image:: img/SatRegion.png
-   :alt: estimation of the size of a saturated star. 
+
+.. estimation of the size of a saturated star. 
 
 
 How it works
