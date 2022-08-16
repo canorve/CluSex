@@ -3,7 +3,7 @@
 ..
 
 CluSex
-=====
+========
 
 **Documentation under construction**
 
@@ -18,7 +18,7 @@ More specifically, it joins two `sextractor`_ catalogs,
 creates masks, finds saturated regions and computes 
 sky background. 
 
-.. _sextractor:https://www.astromatic.net/software/sextractor/
+.. _sextractor: https://www.astromatic.net/software/sextractor/
 
 Why CluSex?
 ------------
@@ -60,7 +60,6 @@ across a bright saturated star:
 
 .. image:: img/SatRegion.png
 
-.. estimation of the size of a saturated star. 
 
 
 How it works
@@ -91,10 +90,10 @@ If the object was detected only for one catalog,
 it is reduced by a constant factor introduced 
 by the user.
 
-.. add note here for sextractor webpage
-
-As said by the Sextractor creator, output sextractor 
-check images are bad masks. In contrast, CluSex creates
+Check images given by Sextractor can be used 
+for masks, but this is a bad practice specially
+if Sextractor have wrongly computed the background.
+In contrast, CluSex creates
 masks using the data given by sextractor catalog. Every object
 is represented by a ellipse masks which it can  
 be enlarged (or shortened) by the user.
@@ -102,7 +101,14 @@ To see the masks included the saturated stars, check the
 image below. 
 
 
-.. insert images of masks
+.. image:: img/mask.png
+
+
+Every ellipse object mask is filled with the same
+number that it is given in the CluSex catalog. Hence
+any ellipse mask can be easily removed just removing
+all the pixels that have the same value in counts as 
+its Sextractor number catalog. 
 
 Sky background can be done poorly if objects's sizes are wrongly 
 estimated or not detected at all. Also it is known (Haussler 2007)
@@ -145,9 +151,9 @@ For linux:
 
    sudo apt install sextractor
 
-Install Ds9 (if you haven't done yet) 
+Install `Ds9`_ (if you haven't done yet) 
 
-.. refer to webpage of Ds9 https://sites.google.com/cfa.harvard.edu/saoimageds9/download
+.. _Ds9: https://sites.google.com/cfa.harvard.edu/saoimageds9/download
 
 Download it and make a symbolic link to the /usr/local/bin or
 make an alias. 
@@ -249,8 +255,6 @@ Check here for an explanation of every parameter of the config file
 `configuration <docs/config.rst>`__
 
 
-.. make another page to create the configfile
-
 
 
 
@@ -312,14 +316,11 @@ Creates a ds9 region file from the sextractor output catalog
 
 Full explanations of the commands above are found in
 
-.. make additional page
-
 
 To see how to run those commands see:
 
 `How to run <docs/howto.rst>`__
 
-.. joincat,  makemask, sex2ds9, compsky   
 
 
 NOTES
@@ -329,7 +330,37 @@ an improved sextractor catalog to my other project (DGCG).
 Consequently for the current CluSex version, it only works 
 for the 14 output sextractor columns below:
 
-.. insert columns
+
+NUMBER
+
+ALPHA_J2000
+DELTA_J2000
+
+XPEAK_IMAGE
+YPEAK_IMAGE
+
+MAG_BEST
+
+KRON_RADIUS
+
+FLUX_RADIUS
+
+ISOAREA_IMAGE
+A_IMAGE
+ELLIPTICITY
+
+THETA_IMAGE
+
+BACKGROUND
+
+CLASS_STAR
+
+FLAGS
+
+
+Details of these output parameters can be found in
+the Sextractor manual 
+
 
 Additional columns will be added in future releases.
 
@@ -339,7 +370,6 @@ Additional columns will be added in future releases.
 API
 ----
 
-.. make another webpage for the API 
 
 API:
 
