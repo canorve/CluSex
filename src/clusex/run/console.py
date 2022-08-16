@@ -51,6 +51,9 @@ def joincat():
 
     parser.add_argument("-sf","--SatFile", type=str, help="Saturation DS9 reg file")
 
+    parser.add_argument("-i","--include",action="store_true", help="Include all the galaxies from the second catalog that were not in the first catalog ")
+
+
     args = parser.parse_args()
 
     firstsex = args.FirstCatalog
@@ -58,14 +61,14 @@ def joincat():
     joinscale = args.joinscale
     output = args.output
     satfile = args.SatFile
-
+    incFlag = args.include
 
     ##
     line="joining {} with {} using a scale of {}".format(firstsex,secondsex,joinscale)
     print(line)
 
 
-    joinsexcat(firstsex,secondsex,output,joinscale)
+    joinsexcat(firstsex,secondsex,output,joinscale,incFlag)
 
 
     if satfile:

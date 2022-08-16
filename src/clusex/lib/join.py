@@ -12,7 +12,7 @@ from clusex.lib.check import CheckSatReg2
 
 
 
-def joinsexcat (maincat,secondcat,output,JoinScale):
+def joinsexcat (maincat,secondcat,output,JoinScale,incFlag=False):
     "merges two Sextractor catalogs"
 
     f_out = open(output, "w")
@@ -72,29 +72,64 @@ def joinsexcat (maincat,secondcat,output,JoinScale):
     flag1 = False
     flag2 = False
 
+    distmax = 5 # dist max to compare with incFlag=True
+
+    dist = 0
+
+    if incFlag:
+        print("Including all the galaxies from the second catalog that are not in the first catalog" )
+    else:
+        print("Including all the galaxies from the second catalog that are outside from ellipse objects from the first catalog" )
+
     for idx2, item2 in enumerate(N2):
 
-        flagf =False
-        for idx, item in enumerate(N):
+        if incFlag:
+            flagf = True
+            for idx, item in enumerate(N):
+                
+                dx = X[idx]-X2[idx2]
+                dy = Y[idx]-Y2[idx2]
+                dist=np.sqrt( dx**2  + dy**2 )
+
+                if dist < distmax:   
+                    flagf = False 
+                    break
+
+            if flagf:
+                line="{0:.0f} {1} {2} {3} {4} {5} {6} {7} {8:.0f} {9} {10} {11} {12} {13} {14:.0f} \n".format(NewN, Alpha2[idx2], Delta2[idx], X2[idx2], Y2[idx2], Mg2[idx2], Kr2[idx2], Fluxr2[idx2], Isoa2[idx2], Ai2[idx2], E2[idx2], Theta2[idx2], Bkgd2[idx2], Idx2[idx2], Flg2[idx2])
+
+                f_out.write(line)
+
+                NewN+=1
+                count2+=1
+            else:
+                count+=1       
 
 
-            flag1=CheckKron(X2[idx2],Y2[idx2],X[idx],Y[idx],RKron[idx],Theta[idx],AR[idx])
-            #flag2=CheckKron(X[idx],Y[idx],X2[idx2],Y2[idx2],RKron2[idx2],Theta2[idx2],AR2[idx2])
-            flagf=flag1 or flag2
-
-            if flagf:   # boolean value
-                break
-
-        if not flagf:
-
-            line="{0:.0f} {1} {2} {3} {4} {5} {6} {7} {8:.0f} {9} {10} {11} {12} {13} {14:.0f} \n".format(NewN, Alpha2[idx2], Delta2[idx], X2[idx2], Y2[idx2], Mg2[idx2], Kr2[idx2], Fluxr2[idx2], Isoa2[idx2], Ai2[idx2], E2[idx2], Theta2[idx2], Bkgd2[idx2], Idx2[idx2], Flg2[idx2])
-
-            f_out.write(line)
-
-            NewN+=1
-            count2+=1
         else:
-            count+=1       
+
+            flagf =False
+            for idx, item in enumerate(N):
+
+
+                flag1=CheckKron(X2[idx2],Y2[idx2],X[idx],Y[idx],RKron[idx],Theta[idx],AR[idx])
+                #flag2=CheckKron(X[idx],Y[idx],X2[idx2],Y2[idx2],RKron2[idx2],Theta2[idx2],AR2[idx2])
+                flagf=flag1 or flag2
+
+                if flagf:   # boolean value
+                    break
+
+            if not flagf:
+
+                line="{0:.0f} {1} {2} {3} {4} {5} {6} {7} {8:.0f} {9} {10} {11} {12} {13} {14:.0f} \n".format(NewN, Alpha2[idx2], Delta2[idx], X2[idx2], Y2[idx2], Mg2[idx2], Kr2[idx2], Fluxr2[idx2], Isoa2[idx2], Ai2[idx2], E2[idx2], Theta2[idx2], Bkgd2[idx2], Idx2[idx2], Flg2[idx2])
+
+                f_out.write(line)
+
+                NewN+=1
+                count2+=1
+            else:
+                count+=1       
+
     f_out.close()
 
     linout="{} objects from second run rejected ".format(count)
