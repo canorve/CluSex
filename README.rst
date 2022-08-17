@@ -50,6 +50,13 @@ The same cluster is shown below improved after using CluSex:
 An improved deteccion and size estimation of the objects
 for the same Abell Cluster using CluSex 
 
+Below is show an even better catalog using joincat command to 
+detect the small dim objects in the image.
+
+.. image:: img/Comaimproved.png
+
+
+
 
 In addition, CluSex improves computation of sky 
 background, creation of masks, and estimation of 
