@@ -12,7 +12,7 @@ from clusex.lib.check import CheckSatReg2
 
 
 
-def joinsexcat (maincat,secondcat,output,JoinScale,incFlag=False):
+def joinsexcat (maincat,secondcat,output,JoinScale,incFlag=False, red=0.1,minrad = 5):
     "merges two Sextractor catalogs"
 
     f_out = open(output, "w")
@@ -71,8 +71,6 @@ def joinsexcat (maincat,secondcat,output,JoinScale,incFlag=False):
 
     flag1 = False
     flag2 = False
-    red = 0.1  # reduction factor or reduction coefficient 
-    minrad = 5 # minimum radius to apply for reduction factor
  
     distmax = 5 # dist max to compare with incFlag=True
 

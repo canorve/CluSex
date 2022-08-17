@@ -54,6 +54,12 @@ def joincat():
     parser.add_argument("-i","--include",action="store_true", help="Include all the galaxies from the second catalog that were not in the first catalog ")
 
 
+    parser.add_argument("-r","--reduction", type=float, help="Reduction factor for objetc radius for -i option only",default=0.1)
+
+    parser.add_argument("-m","--minrad", type=float, help="minrad for object radius for -i option only ",default=5)
+
+
+
     args = parser.parse_args()
 
     firstsex = args.FirstCatalog
@@ -62,13 +68,16 @@ def joincat():
     output = args.output
     satfile = args.SatFile
     incFlag = args.include
+    minrad= args.minrad
+    red = args.reduction
+
 
     ##
     line="joining {} with {} using a scale of {}".format(firstsex,secondsex,joinscale)
     print(line)
 
 
-    joinsexcat(firstsex,secondsex,output,joinscale,incFlag)
+    joinsexcat(firstsex,secondsex,output,joinscale,incFlag,red=red,minrad=minrad)
 
 
     if satfile:
@@ -82,7 +91,7 @@ def joincat():
 
         print("no saturation DS9 reg file")
 
-    line="joincat finished output file  {} created".format(output)
+    line="joincat finished. output file {} created".format(output)
     print(line)
 
 
