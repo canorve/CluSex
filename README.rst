@@ -115,7 +115,11 @@ Every ellipse object mask is filled with the same
 number that it is given in the CluSex catalog. Hence
 any ellipse mask can be easily removed just removing
 all the pixels that have the same value in counts as 
-its Sextractor number catalog. 
+its Sextractor number catalog. For instance, the 
+large ellipse in the center has been removed using
+the short routine remellmask:
+
+.. image:: img/mask2.png
 
 Sky background can be done poorly if objects's sizes are wrongly 
 estimated or not detected at all. Also it is known (Haussler 2007)
