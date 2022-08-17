@@ -71,7 +71,9 @@ def joinsexcat (maincat,secondcat,output,JoinScale,incFlag=False):
 
     flag1 = False
     flag2 = False
-
+    red = 0.1  # reduction factor or reduction coefficient 
+    minrad = 5 # minimum radius to apply for reduction factor
+ 
     distmax = 5 # dist max to compare with incFlag=True
 
     dist = 0
@@ -96,6 +98,14 @@ def joinsexcat (maincat,secondcat,output,JoinScale,incFlag=False):
                     break
 
             if flagf:
+
+                Kr2[idx2] = red * Kr2[idx2]
+
+                if Kr2[idx2] * Ai2[idx2] < minrad:    
+
+                    Kr2[idx2] = minrad/Ai2[idx2]
+ 
+
                 line="{0:.0f} {1} {2} {3} {4} {5} {6} {7} {8:.0f} {9} {10} {11} {12} {13} {14:.0f} \n".format(NewN, Alpha2[idx2], Delta2[idx], X2[idx2], Y2[idx2], Mg2[idx2], Kr2[idx2], Fluxr2[idx2], Isoa2[idx2], Ai2[idx2], E2[idx2], Theta2[idx2], Bkgd2[idx2], Idx2[idx2], Flg2[idx2])
 
                 f_out.write(line)
