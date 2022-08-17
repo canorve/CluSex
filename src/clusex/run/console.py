@@ -168,6 +168,52 @@ def makemask():
     print('done') 
 
 
+def remellmask():
+    """Removes an ellipse from mask image"""
+
+
+    printWelcome()
+
+    parser = argparse.ArgumentParser(description="remellmask: Removes an ellipse from mask image")
+
+    # required arguments
+    parser.add_argument("mask",help="Fits image of the objects")
+
+    parser.add_argument("number", type=int, help="ellipse number to be removed (or changed check option -f)")
+    
+    #optional arguments
+    parser.add_argument("-f","--fill", type=float, help="Value number to be filled within the ellipse mask. 0 = object removed. Default = 0",default=0)
+
+    parser.add_argument("-o","--outmask", type=str, help="name of the new mask ",default='objmask.fits')
+
+
+    #options without arguments
+
+
+
+    args = parser.parse_args()
+
+    mask = args.mask
+    number = args.number
+    fill = args.fill
+    output = args.outmask
+
+
+    sexarsort="sexarea.cat"
+    regoutfile="mask.reg"
+    
+
+    line="removing ellipse object:{} from mask: {}".format(number,mask)
+
+    print (line)
+
+    EraseObjectMask(mask,output,number,fill)
+
+    print('new mask image:',output) 
+
+    print('done')
+
+
 
 def sex2ds9():
     """creates a ds9 reg file from sextractor catalog"""

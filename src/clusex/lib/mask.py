@@ -323,14 +323,14 @@ def GetSize(x, y, R, theta, ell, ncol, nrow):
     return (xmin, xmax, ymin, ymax)
 
 
-def EraseObjectMask(MaskFile,tempMask,obj):
+def EraseObjectMask(MaskFile,tempMask,obj,fill = 0):
 
     hdumask = fits.open(MaskFile)
     data = hdumask[0].data
 
     mask = data == obj
 
-    data[mask] = 0 # removing object from mask
+    data[mask] = fill # removing object from mask
     
     hdumask[0].data = data
 
