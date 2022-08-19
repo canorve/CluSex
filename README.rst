@@ -8,7 +8,7 @@ CluSex
 **Documentation under construction**
 
 What is CluSex?
---------------
+----------------
 
 CluSex is a set of routines that aids Sextractor 
 to perform on images of cluster galaxies (or high 
@@ -57,7 +57,6 @@ detect the small dim objects in the image.
 
 
 
-
 In addition, CluSex improves computation of sky 
 background, creation of masks, and estimation of 
 the area of saturated stars. 
@@ -68,9 +67,169 @@ across a bright saturated star:
 .. image:: img/SatRegion.png
 
 
+Requirements
+------------
+
+- astropy
+- numpy
+
+Installation
+------------
+
+Install sextractor (if you haven't done yet)
+
+For linux:
+::
+
+   sudo apt install sextractor
+
+Install `Ds9`_ (if you haven't done yet) 
+
+.. _Ds9: https://sites.google.com/cfa.harvard.edu/saoimageds9/download
+
+Download it and make a symbolic link to the /usr/local/bin or
+make an alias. 
+
+::
+    
+    sudo ln -s /path/to/ds9 /usr/local/bin 
+
+
+
+Once that is done, download the code and run
+
+::
+
+   pip install . 
+
+or 
+
+::
+
+   pip install clusex 
+
+USAGE
+--------
+
+
+
+Quickstart
+~~~~~~~~~~
+
+To run the code just type in the command line:
+
+::
+
+   clusex ConfigFile 
+
+Where ConfigFile is the configuration parameters filename for pysex
+
+
+
+Example Configuration file
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here it is shown an example of configuration file::
+
+
+
+  FirstRun  1  # Enable first run (1 = run)
+
+  SecondRun 1 # enable second run   (1 = run)
+
+  Image A1656.fits
+
+
+  MAG_ZEROPOINT   28.32
+  GAIN            5.4
+  PIXEL_SCALE     0.68
+  SATUR_LEVEL     30000
+  SEEING_FWHM     1.5
+
+
+
+  DEBLEND_NTHRESH1 64          # Number of deblending sub-thresholds
+  DEBLEND_MINCONT1 0.001         # Minimum contrast parameter for deblending
+
+  ANALYSIS_THRESH1 5        # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+  DETECT_THRESH1   5          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+  DETECT_MINAREA1  20          # minimum number of pixels above threshold
+
+
+  BACK_SIZE1      100
+  BACK_FILTERSIZE1 11
+
+
+  # params for second run
+  # run with high deblend number and low SNR
+
+  DEBLEND_NTHRESH2 32           # Number of deblending sub-thresholds
+  DEBLEND_MINCONT2 .01         # Minimum contrast parapymeter for deblending
+
+  ANALYSIS_THRESH2 1.5         # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+  DETECT_THRESH2   1.5         # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+  DETECT_MINAREA2  20      # minimum number of pixels above threshold
+
+
+  BACK_SIZE2       11
+  BACK_FILTERSIZE2 10 
+
+
+  Scale  1.5   # factor scale which ellipses are enlarged
+
+  Offset 5
+
+
+  SatDs9 sat.reg
+
+  SatScale 1 
+
+  SatOffset  20
+
+  OutCatalog  hotcold.cat
+
+  RegDs9   hotcold.reg
+
+
+  MinSatSize 20      # min size for sat regions
+
+  SatQ 0.7
+
+
+  SatMethod  3 
+
+
+  ReduCoef 0.2
+
+  FracTol 0.5
+
+
+  JoinScale 2
+
+
+  ScaleCor 1.5 
+
+
+Configuration parameters 
+~~~~~~~~~~~~~~~~~~~~~~~~
+Check here for an explanation of every parameter of the config file 
+
+`configuration <docs/config.rst>`__
+
+
+
+Suggestion
+~~~~~~~~~~
+
+To make CluSex works properly, the first run must be configurated with a
+low deblend number and high SNR, and, on the other hand, the second run
+with a high deblend number and low SNR (check sextractor manual for details 
+to how to do this).
+
+
 
 How it works
-~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 In order to solve these problems, CluSex runs 
 Sextractor twice with different configuration 
@@ -146,137 +305,6 @@ at random positions around the object. After a
 given number of boxes, clusex computes the 
 sky background. 
 
-Requirements
-------------
-
-- astropy
-- numpy
-
-Installation
-------------
-
-Install sextractor (if you haven't done yet)
-
-For linux:
-::
-
-   sudo apt install sextractor
-
-Install `Ds9`_ (if you haven't done yet) 
-
-.. _Ds9: https://sites.google.com/cfa.harvard.edu/saoimageds9/download
-
-Download it and make a symbolic link to the /usr/local/bin or
-make an alias. 
-
-::
-    
-    sudo ln -s /path/to/ds9 /usr/local/bin 
-
-
-
-Once that is done, download the code and run
-
-::
-
-   pip install . 
-
-or 
-
-::
-
-   pip install clusex 
-
-
-
-
-Quickstart
-----------
-
-To run the code just type in the command line:
-
-::
-
-   clusex ConfigFile 
-
-Where ConfigFile is the configuration parameters filename for pysex
-
-
-Example of Configuration filename
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-# params for first run of Sextractor # run with low deblend number and
-high SNR
-
-FirstRun 1 # Enable first run (1 = run)
-
-ANALYSIS_THRESH1 20 # or , in mag.arcsec-2
-
-DETECT_THRESH1 20 # or , in mag.arcsec-2
-
-DETECT_MINAREA1 10 # minimum number of pixels above threshold
-
-DEBLEND_NTHRESH1 64 # Number of deblending sub-thresholds
-
-DEBLEND_MINCONT1 0.001 # Minimum contrast parameter for deblending
-
-BACK_SIZE1 100
-
-BACK_FILTERSIZE1 11
-
-# params for second run of Sextractor # run with high deblend number and
-low SNR
-
-SecondRun 1 # enable second run (1 = run)
-
-ANALYSIS_THRESH2 1.5 # or , in mag.arcsec-2
-
-DETECT_THRESH2 1.5 # or , in mag.arcsec-2
-
-DETECT_MINAREA2 10 # minimum number of pixels above threshold
-
-DEBLEND_NTHRESH2 16 # Number of deblending sub-thresholds
-
-DEBLEND_MINCONT2 0.01 # Minimum contrast parapymeter for deblending
-
-BACK_SIZE2 10
-
-BACK_FILTERSIZE2 2
-
-# General parameters:
-
-Scale 1 # factor scale which ellipses are enlarged
-
-SatDs9 sat.reg
-
-SatScale 3
-
-SatOffset 1
-
-MakeMask 0
-
-OutCatalog hotcold.cat
-
-RegDs9 hotcold.reg
-
-
-
-Check here for an explanation of every parameter of the config file 
-
-`configuration <docs/config.rst>`__
-
-
-
-
-
-Suggestion
-~~~~~~~~~~
-
-To make CluSex works properly, the first run must be configurated with a
-low deblend number and high SNR, and, on the other hand, the second run
-with a high deblend number and low SNR (check sextractor manual for details 
-to how to do this).
-
 
 Additional features 
 -------------------
@@ -325,52 +353,65 @@ sex2ds9
 
 Creates a ds9 region file from the sextractor output catalog
 
+
+
+remellmask
+~~~~~~~~~~
+
+This is a short routine that removes ellipse masks from
+the mask. Useful when a model fitting will be applied
+to the galaxy. 
+
+HOW TO
+-------
+
 Full explanations of the commands above are found in
 
-
-To see how to run those commands see:
 
 `How to run <docs/howto.rst>`__
 
 
-
 NOTES
-----
+------
 CluSex was designed to provide 
 an improved sextractor catalog to my other project (DGCG). 
 Consequently for the current CluSex version, it only works 
-for the 14 output sextractor columns below:
+for the 14 output sextractor columns below::
 
 
-NUMBER
+  NUMBER
 
-ALPHA_J2000
-DELTA_J2000
+  ALPHA_J2000
+  DELTA_J2000
 
-XPEAK_IMAGE
-YPEAK_IMAGE
+  XPEAK_IMAGE
+  YPEAK_IMAGE
 
-MAG_BEST
+  MAG_BEST
 
-KRON_RADIUS
+  KRON_RADIUS
 
-FLUX_RADIUS
+  FLUX_RADIUS
 
-ISOAREA_IMAGE
-A_IMAGE
-ELLIPTICITY
+  ISOAREA_IMAGE
 
-THETA_IMAGE
+  A_IMAGE
 
-BACKGROUND
+  ELLIPTICITY
 
-CLASS_STAR
+  THETA_IMAGE
 
-FLAGS
+  BACKGROUND
+
+  CLASS_STAR
+
+  FLAGS
 
 
 Details of these output parameters can be found in
-the Sextractor manual 
+the Sextractor manual. Obviously some of the output parameters
+can be changed to the other options of Sextractor like MAG_BEST can
+be changed to MAG_AUTO and so.
 
 
 Additional columns will be added in future releases.
