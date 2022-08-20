@@ -10,52 +10,56 @@ CluSex
 What is CluSex?
 ----------------
 
-CluSex is a set of routines that aids Sextractor 
+CluSex is a set of routines that assists Sextractor 
 to perform on images of cluster galaxies (or high 
 density of objects).  
 
-More specifically, it joins two `sextractor`_ catalogs,
-creates masks, finds saturated regions and computes 
+Particularly, it joins two (or more)  `sextractor`_ catalogs,
+creates masks, finds saturated star regions and computes 
 sky background. 
 
 .. _sextractor: https://www.astromatic.net/software/sextractor/
 
+
 Why CluSex?
 ------------
 
-It is hard to find an effective Sextractor configuration for
-all the objects in the image (check Haussler 2007). For example, 
+It is hard to find an satisfactory Sextractor configuration to 
+detect all the objects in the image (see Haussler 2007). For example, 
 a sextractor configuration can be optimized to detect large galaxies, 
 but it might be unable to detect small dim galaxies, and vice versa. 
 In addition, Sextractor overestimates the size of low surface brightness 
 galaxies inside regions of high density of objets. To see those 
-effects check the image below: 
+effects check the image below for a run of Sextractor in 
+an Abell cluster: 
 
 .. image:: img/Comarun1.png
 
-Sextractor run for an Abell Cluster. Red ellipses 
-are galaxies where their size are clearly overestimated. 
+In the previous image,  red ellipses are galaxies where their 
+size are clearly overestimated. Different configuration parameter
+can produce different results. The image below shows a different 
+sextractor configuration for the same image:
 
 .. image:: img/Comarun2.png
 
-Different Sextractor configuration for the same Abell Cluster. Galaxy sizes
-are better estimated but it is unable to detect (or deblend) all the galaxies.
+In this run, galaxy sizes are better estimated but Sextractor 
+is unable to detect (or deblend) all the galaxies.
 
 
-
-The same cluster is shown below improved after using CluSex:
+The same cluster image can be improved after using CluSex. Check
+the image below:
 
 .. image:: img/Comagood.png
 
-An improved deteccion and size estimation of the objects
-for the same Abell Cluster using CluSex 
-
-Below is show an even better catalog using joincat command to 
-detect the small dim objects in the image.
+It shows an improved deteccion and size estimation of the objects
+for the same Abell Cluster. This result can be improved adding
+different Sextractor run with different sextractor configuration. 
+For instance, below is show an even better catalog using joincat 
+command to detect the small dim objects in the image.
 
 .. image:: img/Comaimproved.png
 
-
+.. lastmod
 
 In addition, CluSex improves computation of sky 
 background, creation of masks, and estimation of 
