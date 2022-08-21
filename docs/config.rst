@@ -4,7 +4,7 @@
 ..
 
 Parameter Configuration File
-=====
+===========================
 
 Here you will find the description of each parameter
 of the configuration file needed to run CluSex.
@@ -98,8 +98,7 @@ An example of a configuration file is shown below::
 Description of the Configuration file parameters
 --------------
 
-Let's see the explanation of the parameters one by one. 
-Not all the parameters must be in the configuration file.
+Let's see the explanation of each of the parameters above one by one. 
 
 
 FirstRun  
@@ -252,4 +251,5 @@ JoinScale
     used anymore.
 
 
+Note: Not all the parameters must be in the configuration file.
 

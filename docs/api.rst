@@ -111,7 +111,7 @@ SkyCal
 ------
 
 Gradient sky computation method
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
 
     from clusex import SkyCal

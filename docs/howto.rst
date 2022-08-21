@@ -3,13 +3,13 @@
    :depth: 3
 ..
 
---------------
+----------------------
 
 **How to run**
 =========================
 
 Joincat 
-~~~~~~~
+~~~~~~~~~
 
 Joincat is a small CluSex version. It just joins two 
 existent sextractor catalogs. The aim is that a sextractor 
@@ -42,7 +42,7 @@ of the ellipses of the first catalog.
 
 
 MakeMask
-~~~~~~~
+~~~~~~~~~~
 
 This routine creates an image containing ellipse masks for every object. 
 It needs the CluSex output catalog and saturated ds9 regions (created by
@@ -61,8 +61,9 @@ SATFILE: saturation ds9 region file created by CluSex.
 n: This option will not open Ds9 when the program finish. 
 OUTMASK: output fits mask. 
 
-Sky background
-~~~~~~~~~~~~~~
+
+compsky
+~~~~~~~~~
 
 This routine use two methods (gradient sky and random box) to compute
 sky background for every detected object by CluSex. Output catalog
@@ -105,4 +106,25 @@ SCALE: the factor that will be multiplied to the major axis of the ellipse to in
 decrease) it
 OFFSET: value to be added to the major axis of the ellipse. 
 OUTREG: output Ds9 region file
+
+
+remellmask
+~~~~~~~~~~
+
+This is a short routine that removes ellipse masks from
+the mask. Useful when a model fitting will be applied
+to the galaxy. It needs the image created by makemask 
+
+::
+
+    usage: remellmask [-h] [-f FILL] [-o OUTMASK] mask number
+
+
+
+mask: Fits image of the objects
+number: ellipse number to be removed (or changed check option -f)
+FILL: Value number to be filled within the ellipse mask. 
+      0 = object removed. Default = 0
+OUTMASK: name of the new mask
+
 
