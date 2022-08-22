@@ -2,10 +2,9 @@
    :depth: 3
 ..
 
-CluSex
-========
-
-**Documentation under construction**
+**CluSex**
+===========
+|DOI|
 
 What is CluSex?
 ----------------
@@ -459,3 +458,10 @@ License
 -------
 
 This code is under the license of **GNU**
+
+
+--------
+.. |DOI| image:: https://zenodo.org/badge/130286946.svg
+   :target: https://zenodo.org/badge/latestdoi/130286946
+
+
