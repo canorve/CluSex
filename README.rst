@@ -13,7 +13,7 @@
 
 
 What is CluSex?
-----------------
+-------------------
 
 CluSex is a set of routines that assists Sextractor 
 to perform on images of cluster galaxies (or high 
