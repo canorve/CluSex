@@ -27,7 +27,7 @@ sky background.
 
 
 Why CluSex?
-------------
+--------------
 
 It is hard to find a satisfactory Sextractor configuration to 
 detect all the objects in the image (see Haussler 2007). For instance, 
@@ -75,13 +75,13 @@ across a bright saturated star:
 
 
 Requirements
-------------
+--------------
 
 - astropy
 - numpy
 
 Installation
-------------
+---------------
 
 Install sextractor (if you haven't done so)
 
@@ -122,7 +122,7 @@ USAGE
 
 
 Quickstart
-~~~~~~~~~~
+~~~~~~~~~~~~~
 
 To run the code just type in the command line:
 
@@ -134,8 +134,8 @@ Where ConfigFile is the configuration parameter filename for CluSex
 
 
 
-Example Configuration file
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Example of Configuration file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Here it is shown an example of a CluSex configuration file::
 
@@ -225,7 +225,7 @@ parameter see the section below:
 
 
 Configuration parameters 
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Check the link below for an explanation of the config file:
 
@@ -233,8 +233,8 @@ Check the link below for an explanation of the config file:
 
 
 
-Suggestion
-~~~~~~~~~~
+Tip
+~~~~~~~~
 
 To make CluSex works properly, the first run must be configurated with a
 low deblend number and high SNR, and, on the other hand, the second run
@@ -243,7 +243,7 @@ to how to do this).
 
 
 How it works
-------------
+--------------
 
 In order to solve these problems, CluSex runs 
 Sextractor twice with different configuration 
@@ -300,7 +300,7 @@ removed using the short routine remellmask:
 
 
 Sky Background
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 Sky background can be done poorly if objects's sizes are wrongly 
 estimated or not detected at all. Also it is known 
@@ -329,7 +329,7 @@ sky background.
 
 
 Additional features 
--------------------
+---------------------
 
 CluSex contains other routines to improve Sextractor photometry. They
 include: combination of two catalogs, creation of masks,
@@ -341,7 +341,7 @@ compsky. Those routines are separated because the user need to be verify
 that the output is well done before continuing  with the next routine.
 
 Joincat 
-~~~~~~~
+~~~~~~~~~
 
 Joincat is a small CluSex version. It just joins two 
 existent sextractor catalogs. The aim is that a third Sextractor 
@@ -357,7 +357,7 @@ the object position is not in the other catalog.
 
 
 MakeMask
-~~~~~~~
+~~~~~~~~~
 
 This routine creates an image which contains ellipse masks for every object. 
 It needs the CluSex output catalog and saturated ds9 regions (created by
@@ -365,7 +365,7 @@ CluSex as well)
 
 
 Sky background
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 This routine use two methods (gradient sky and random box) to compute
 sky background for every detected object by CluSex. Output catalog
@@ -373,13 +373,13 @@ is the same as the input catalog but with the background column changed
 to the new values
 
 sex2ds9
-~~~~~~~
+~~~~~~~~~
 
 Creates a ds9 region file from the sextractor output catalog
 
 
 remellmask
-~~~~~~~~~~
+~~~~~~~~~~~~~
 
 This is a short routine that removes ellipse masks from
 the mask. Useful when a model fitting will be applied
@@ -455,13 +455,13 @@ API:
 
 
 Questions?
-~~~~~~~~~~
+~~~~~~~~~~~~
 
 Code is far from perfect, so if you have suggestions or questions
 Please send an email to canorve [at] gmail [dot] com
 
 License
--------
+---------
 
 This code is under the license of **GNU**
 

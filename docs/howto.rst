@@ -92,7 +92,7 @@ SCALERADMAX: factor that multiplies the radius of the
 OUTCAT: output catalog 
 
 sex2ds9
-~~~~~~~
+~~~~~~~~~
 
 Creates a ds9 region file from the sextractor output catalog
 
@@ -109,7 +109,7 @@ OUTREG: output Ds9 region file
 
 
 remellmask
-~~~~~~~~~~
+~~~~~~~~~~~~~
 
 This is a short routine that removes ellipse masks from
 the mask. Useful when a model fitting will be applied

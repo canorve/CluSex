@@ -10,7 +10,7 @@
 
 
 joinsexcat
----------
+------------
 ::
 
     from clusex import joinsexcat 
@@ -27,7 +27,7 @@ joinscale
       the two catalogs
 
 CatArSort
----------
+------------
 ::
 
     from clusex import CatArSort 
@@ -108,10 +108,10 @@ offset
 
 
 SkyCal
-------
+---------
 
 Gradient sky computation method
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
 
     from clusex import SkyCal
@@ -146,7 +146,7 @@ returns:
 
 
 Random box sky computation method
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
