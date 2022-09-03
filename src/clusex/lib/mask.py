@@ -369,7 +369,6 @@ def MakeStamps(image,catalog,maskimage,frac,skyoff,dpi,cmap,scale,offset):
 
 
 
-
     for idx, item in enumerate(N):
 
         objimg = objimage.copy() # a new objimg for every new stamp 
@@ -403,14 +402,12 @@ def MakeStamps(image,catalog,maskimage,frac,skyoff,dpi,cmap,scale,offset):
 
         imgstmp = "obj-" + str(N) + ".png"
 
-        #lastmod
-        ShowImg(stamp[ymin-1:ymax-1,xmin-1:xmax-1],imgstmp)
+        ShowImg(stamp[ymin-1:ymax-1,xmin-1:xmax-1],imgstmp, X, Y, dpival=dpi, cmap = cmap)
 
-        #move to folder 
+        #move to folder change this for an function o os library
         runcmd = "mv  {}  stamps/{}".format(imgstmp,imgstmp)
         errmv = sp.run([runcmd], shell=True, stdout=sp.PIPE,
                            stderr=sp.PIPE, universal_newlines=True)
-
 
 
 
@@ -425,83 +422,35 @@ def MakeObjImg(image,mask):
     return objimg
 
 
-class ShowImg:
-
-    def __init__(self, cubeimg: str,namepng="obj.png",dpival=100,frac= 0.2,cmap='viridis',ellipse=[]):
-        """
-        This routine shows the image 
-        """
+def ShowImg(cubeimg: str,namepng="obj.png",xc,yc, dpival=100,cmap='viridis'):
+    """This routine shows the image"""
 
         
-        hdu = fits.open(cubeimg)
-        data = (hdu[1].data.copy()).astype(float)
-        #model = (hdu[2].data.copy()).astype(float)
-        #residual = (hdu[3].data.copy()).astype(float)
-        hdu.close()
-
-        objname = 'object'
-
-        #flatmodimg=model.flatten()  
-        #flatresimg=residual.flatten()  
-
-        #flatmodimg.sort()
-        #flatresimg.sort()
-
-        #restot=len(flatresimg)
-
-        #restop=round(.9*restot)
-        #resbot=round(.1*restot)
-
-        #modimgpatch=flatmodimg#[modbot:modtop]
-        #resimgpatch=flatresimg[resbot:restop]
-
-        #modmin = np.min(modimgpatch)
-        #modmax = np.max(modimgpatch)
-
-        #if frac  < 1:
-        #    modmin = (1-frac)*modmin 
-        #    modmax = frac*modmax
+    hdu = fits.open(cubeimg)
+    data = (hdu[1].data.copy()).astype(float)
+    hdu.close()
 
 
-        #if (modmin > modmax):
-        #    modmin, modmax = modmax, modmin
+    root_ext = os.path.splitext(galpar.outimage)
+
+    objname = root_ext[0]
 
 
-        #resmin = np.min(resimgpatch)
-        #resmax = np.max(resimgpatch)
-
-
-        mask=data < 0 
-        data[mask] = 1 # avoids problems in log
+    mask=data < 0 
+    data[mask] = 1 # avoids problems in log
      
-        fig, ax1 = plt.subplots(figsize=(5, 5) )
-        fig.subplots_adjust(left=0.04, right=0.98, bottom=0.02, top=0.98)
+    fig, ax1 = plt.subplots(figsize=(5, 5) ) #check if this works 
+    fig.subplots_adjust(left=0.04, right=0.98, bottom=0.02, top=0.98)
 
-        #ax1.imshow(data, origin='lower',vmin=modmin, vmax=modmax,cmap=cmap)
-        ax1.imshow(data, origin='lower',norm=colors.LogNorm(vmin=modmin, vmax=modmax),cmap=cmap)
-        ax1.set_title(objname)
+            
+    # cappellari routine check if this works
+    ax1.imshow(np.log(data.clip(data[xc, yc]/1e4)), cmap=cmap,
+                       origin='lower', interpolation='nearest')
 
-
-        #for ell in ellipse:
-        #    ax1.add_patch(ell)
-
-
-        #ax2.imshow(model, origin='lower',norm=colors.LogNorm(vmin=modmin, vmax=modmax),cmap=cmap)
-        #ax2.imshow(model, origin='lower',vmin=modmin, vmax=modmax,cmap=cmap)
-        #ax2.set_title('GALFIT Model')
-
-        #ax3.imshow(residual, origin='lower',vmin=resmin, vmax=resmax,cmap=cmap)
-        #ax3.set_title('Residual')
-
-        plt.savefig(namepng,dpi=dpival)
+    ax1.set_title(objname)
+    plt.savefig(namepng,dpi=dpival)
      
-        #plt.show()
-
-
-
-
-
-
+    plt.close()
 
 
 
