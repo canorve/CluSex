@@ -18,6 +18,7 @@ from clusex.lib.mask import MakeImage
 from clusex.lib.mask import MakeMask
 from clusex.lib.mask import MakeSatBox 
 from clusex.lib.mask import MakeStamps
+from clusex.lib.mask import MakeObjImg
 
 
 from clusex.lib.ds9 import ds9kron
@@ -311,8 +312,47 @@ def sex2ds9():
     
 
 
+def makeobjimg():
+    """Make objects image """
 
 
+    printWelcome()
+
+    parser = argparse.ArgumentParser(description="Make object image")
+
+    # required arguments
+    parser.add_argument("image",help="Fits image of the objects")
+    parser.add_argument("mask",help="Fits image mask (created with makemask) ")
+
+    parser.add_argument("-o","--outimage", type=str, help="name of the output obj image file ",default='objects.fits')
+
+    args = parser.parse_args()
+
+    image= args.image
+    maskimage = args.mask
+    outimage = args.outimage
+ 
+
+
+    hdu = fits.open(image)
+    img = hdu[0].data
+
+    hdumask = fits.open(maskimage)
+    mask = hdumask[0].data
+    hdumask.close()
+
+
+    objimage = MakeObjImg(img, mask)
+
+
+    hdu[0].data = objimage 
+    hdu.writeto(outimage, overwrite=True)
+    hdu.close()
+
+
+    print('new objects image:',outimage) 
+
+    print("done")
 
 
 def compsky():
