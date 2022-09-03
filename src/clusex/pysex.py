@@ -45,10 +45,10 @@ from clusex.lib.join import joinsexcat
 from clusex.lib.ds9 import ds9kron
 
 
-from clusex.lib.mask import MakeMask 
-from clusex.lib.mask import MakeImage
-from clusex.lib.mask import MakeSatBox 
-from clusex.lib.mask import CatArSort
+from clusex.lib.make import MakeMask 
+from clusex.lib.make import MakeImage
+from clusex.lib.make import MakeSatBox 
+from clusex.lib.make import CatArSort
 
 
 from clusex.lib.radcor import RadMod

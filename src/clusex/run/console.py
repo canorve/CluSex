@@ -13,18 +13,18 @@ from clusex.lib.join import putFlagSat
 from clusex.lib.init import printWelcome
 
 from clusex.lib.check import GetAxis
-from clusex.lib.mask import CatArSort
-from clusex.lib.mask import MakeImage 
-from clusex.lib.mask import MakeMask
-from clusex.lib.mask import MakeSatBox 
-from clusex.lib.mask import MakeStamps
-from clusex.lib.mask import MakeObjImg
+from clusex.lib.make import CatArSort
+from clusex.lib.make import MakeImage 
+from clusex.lib.make import MakeMask
+from clusex.lib.make import MakeSatBox 
+from clusex.lib.make import MakeStamps
+from clusex.lib.make import MakeObjImg
 
 
 from clusex.lib.ds9 import ds9kron
 
-from clusex.lib.mask import EraseObjectMask2
-from clusex.lib.mask import EraseObjectMask
+from clusex.lib.make import EraseObjectMask2
+from clusex.lib.make import EraseObjectMask
 
 
 from clusex.lib.sky import SkyCal 
@@ -311,10 +311,8 @@ def sex2ds9():
     print("done.")
     
 
-
 def makeobjimg():
     """Make objects image """
-
 
     printWelcome()
 
