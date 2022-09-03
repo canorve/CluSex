@@ -9,6 +9,7 @@ import subprocess as sp
 
 from clusex.lib.check import CheckFlag 
 from clusex.lib.check import CheckSatReg2
+from clusex.lib.check import GetAxis 
 from clusex.lib.ds9 import ds9kron
 
 
@@ -204,17 +205,6 @@ def MakeImage(newfits, sizex, sizey):
     return True
 
 
-def GetAxis(Image):
-    # k Check
-    "Get number of rows and columns from the image"
-
-    hdu = fits.open(Image)
-    ncol = hdu[0].header["NAXIS1"]
-    nrow = hdu[0].header["NAXIS2"]
-    hdu.close()
-    return ncol, nrow
-
-
 def CatArSort(SexCat,scale,offset,SexArSort,NCol,NRow):
     # k Check
 
@@ -347,6 +337,172 @@ def EraseObjectMask2(maskimg,obj):
     tempmask[mask] = 0 # removing object from mask
    
     return tempmask
+
+
+def MakeStamps(image,catalog,maskimage,frac,skyoff,dpi,cmap,scale,offset):
+
+
+    hdu = fits.open(image)
+    img = hdu[0].data
+    hdu.close()
+
+
+    hdu = fits.open(maskimage)
+    mask = hdu[0].data
+    hdu.close()
+
+
+    NCol, NRow = GetAxis(image)
+
+
+    STRETCH_CONST = 3   #for stamps sizes
+
+    objimage = MakeObjImg(img,mask)
+
+
+    N,Alpha,Delta,X,Y,Mg,Kr,Fluxr,Isoa,Ai,E,Theta,Bkgd,Idx,Flg=np.genfromtxt(catalog,delimiter="",unpack=True)
+
+
+    if not os.path.exists("stamps"):
+        print("Creating directory for stamps ... ")
+        os.makedirs("stamps")
+
+
+
+
+    for idx, item in enumerate(N):
+
+        objimg = objimage.copy() # a new objimg for every new stamp 
+
+        Rkron = scale * Ai[idx] * Kr[idx] + offset
+
+       
+
+        if Rkron == 0:
+
+            Rkron = 1
+
+
+        Rkron = Rkron * STRETCH_CONST    
+
+        q = (1 - E)
+        bim = q * Rkron
+
+
+        (xmin, xmax, ymin, ymax) = GetSize(X, Y, Rkron, Theta, E, NCol, NRow) #size of every object
+
+
+        objmask = N == mask
+        objimg[objmask]=0
+ 
+        objmask2 = (mask != N) & (mask != 0)
+
+        objimg[objmask2] -= Bkgd
+
+        stamp = img - objimg
+
+        imgstmp = "obj-" + str(N) + ".png"
+
+        #lastmod
+        ShowImg(stamp[ymin-1:ymax-1,xmin-1:xmax-1],imgstmp)
+
+        #move to folder 
+        runcmd = "mv  {}  stamps/{}".format(imgstmp,imgstmp)
+        errmv = sp.run([runcmd], shell=True, stdout=sp.PIPE,
+                           stderr=sp.PIPE, universal_newlines=True)
+
+
+
+
+def MakeObjImg(image,mask):
+    """make object image """
+    objimg = image.copy()
+
+    zero_pix = mask == 0 
+
+    objimg[zero_pix]  = 0
+
+    return objimg
+
+
+class ShowImg:
+
+    def __init__(self, cubeimg: str,namepng="obj.png",dpival=100,frac= 0.2,cmap='viridis',ellipse=[]):
+        """
+        This routine shows the image 
+        """
+
+        
+        hdu = fits.open(cubeimg)
+        data = (hdu[1].data.copy()).astype(float)
+        #model = (hdu[2].data.copy()).astype(float)
+        #residual = (hdu[3].data.copy()).astype(float)
+        hdu.close()
+
+        objname = 'object'
+
+        #flatmodimg=model.flatten()  
+        #flatresimg=residual.flatten()  
+
+        #flatmodimg.sort()
+        #flatresimg.sort()
+
+        #restot=len(flatresimg)
+
+        #restop=round(.9*restot)
+        #resbot=round(.1*restot)
+
+        #modimgpatch=flatmodimg#[modbot:modtop]
+        #resimgpatch=flatresimg[resbot:restop]
+
+        #modmin = np.min(modimgpatch)
+        #modmax = np.max(modimgpatch)
+
+        #if frac  < 1:
+        #    modmin = (1-frac)*modmin 
+        #    modmax = frac*modmax
+
+
+        #if (modmin > modmax):
+        #    modmin, modmax = modmax, modmin
+
+
+        #resmin = np.min(resimgpatch)
+        #resmax = np.max(resimgpatch)
+
+
+        mask=data < 0 
+        data[mask] = 1 # avoids problems in log
+     
+        fig, ax1 = plt.subplots(figsize=(5, 5) )
+        fig.subplots_adjust(left=0.04, right=0.98, bottom=0.02, top=0.98)
+
+        #ax1.imshow(data, origin='lower',vmin=modmin, vmax=modmax,cmap=cmap)
+        ax1.imshow(data, origin='lower',norm=colors.LogNorm(vmin=modmin, vmax=modmax),cmap=cmap)
+        ax1.set_title(objname)
+
+
+        #for ell in ellipse:
+        #    ax1.add_patch(ell)
+
+
+        #ax2.imshow(model, origin='lower',norm=colors.LogNorm(vmin=modmin, vmax=modmax),cmap=cmap)
+        #ax2.imshow(model, origin='lower',vmin=modmin, vmax=modmax,cmap=cmap)
+        #ax2.set_title('GALFIT Model')
+
+        #ax3.imshow(residual, origin='lower',vmin=resmin, vmax=resmax,cmap=cmap)
+        #ax3.set_title('Residual')
+
+        plt.savefig(namepng,dpi=dpival)
+     
+        #plt.show()
+
+
+
+
+
+
+
 
 
 

@@ -12,11 +12,12 @@ from clusex.lib.join import putFlagSat
 
 from clusex.lib.init import printWelcome
 
-from clusex.lib.mask import GetAxis
+from clusex.lib.check import GetAxis
 from clusex.lib.mask import CatArSort
 from clusex.lib.mask import MakeImage 
 from clusex.lib.mask import MakeMask
 from clusex.lib.mask import MakeSatBox 
+from clusex.lib.mask import MakeStamps
 
 
 from clusex.lib.ds9 import ds9kron
@@ -177,7 +178,7 @@ def remellmask():
     parser = argparse.ArgumentParser(description="remellmask: Removes an ellipse from mask image")
 
     # required arguments
-    parser.add_argument("mask",help="Fits image of the objects")
+    parser.add_argument("mask",help="Fits mask image of the objects")
 
     parser.add_argument("number", type=int, help="ellipse number to be removed (or changed check option -f)")
     
@@ -214,6 +215,66 @@ def remellmask():
     print('done')
 
 
+def makestamps():
+    """Make image stamps for each object"""
+
+
+    printWelcome()
+
+    parser = argparse.ArgumentParser(description="Make image stamps for every object in the catalog")
+
+    # required arguments
+    parser.add_argument("image",help="Fits image of the objects")
+    parser.add_argument("catalog",help="sextractor catalog of the objects")
+    parser.add_argument("mask",help="Fits image mask (created with makemask) ")
+
+    #optional arguments
+    parser.add_argument("-fr","--frac", type=float, help="value to use as a fraction to change the value of vmin, vmax of imshow for the image",default=0.2)
+
+    parser.add_argument("-so","--skyoff", type=str, help="sky offset to be added the value of the mean sky ",default=1)
+
+
+    parser.add_argument("-dp","--dpi", type=float, help="dots per inch resolution for image stamps",default=100)
+
+    parser.add_argument("-cm","--cmap", type=float, help="color map",default='viridis')
+
+
+    parser.add_argument("-s","--scale", type=float, help="factor that multiplies the radius of the catalog objects. Default = 1",default=1)
+    
+    parser.add_argument("-off","--offset", type=float, help="factor that it is added to the scale times radius of the catalog objects. Default = 0",default=0)
+
+
+
+
+
+
+    args = parser.parse_args()
+
+    image= args.image
+    catalog= args.catalog
+    mask = args.mask
+    frac = args.frac
+    skyoff = args.skyoff
+    dpi= args.dpi
+    cmap = args.cmap
+
+    scale = args.scale
+    offset  = args.offset
+
+    
+
+    line="Creating image stamps for the every object of the catalog"
+
+    print (line)
+
+    MakeStamps(image,catalog,mask,frac,skyoff,dpi,cmap,scale,offset)
+
+    print('image stamps created in stamps folder') 
+
+    print('done')
+
+
+
 
 def sex2ds9():
     """creates a ds9 reg file from sextractor catalog"""
@@ -248,6 +309,10 @@ def sex2ds9():
 
     print("done.")
     
+
+
+
+
 
 
 def compsky():

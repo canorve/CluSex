@@ -41,7 +41,6 @@ from clusex.lib.writesex import runsex
 from clusex.lib.join import joinsexcat 
 
 
-from clusex.lib.check  import GetAxis
 
 from clusex.lib.ds9 import ds9kron
 
