@@ -3,6 +3,7 @@
 import numpy as np
 import os
 from astropy.io import fits
+import matplotlib.pyplot as plt
 
 import argparse
 import subprocess as sp
@@ -280,7 +281,7 @@ def GetSize(x, y, R, theta, ell, ncol, nrow):
 
     theta = theta * (np.pi / 180)  # rads!!
 
-# getting size
+    # getting size
 
     xmin = x - np.sqrt((R**2) * (np.cos(theta))**2 +
                        (bim**2) * (np.sin(theta))**2)
@@ -293,6 +294,8 @@ def GetSize(x, y, R, theta, ell, ncol, nrow):
 
     ymax = y + np.sqrt((R**2) * (np.sin(theta))**2 +
                        (bim**2) * (np.cos(theta))**2)
+
+
 
     mask = xmin < 1
     if mask.any():
@@ -310,7 +313,12 @@ def GetSize(x, y, R, theta, ell, ncol, nrow):
     if mask.any():
         ymax[mask] = nrow
 
-    return (xmin, xmax, ymin, ymax)
+    xmin = np.rint(xmin)
+    ymin = np.rint(ymin)
+    xmax = np.rint(xmax)
+    ymax = np.rint(ymax)
+
+    return (xmin.astype(int), xmax.astype(int), ymin.astype(int), ymax.astype(int))
 
 
 def EraseObjectMask(MaskFile,tempMask,obj,fill = 0):
@@ -369,40 +377,47 @@ def MakeStamps(image,catalog,maskimage,frac,skyoff,dpi,cmap,scale,offset):
 
 
 
+    Rkron = scale * Ai * Kr + offset
+
+    maskron = Rkron == 0 
+    if maskron.any():
+        Rkron[maskron] = 1
+
+
+    Rkron = Rkron * STRETCH_CONST    
+
+    q = (1 - E)
+    bim = q * Rkron
+
+
+    (xmin, xmax, ymin, ymax) = GetSize(X, Y, Rkron, Theta, E, NCol, NRow) #size of every object
+
+
     for idx, item in enumerate(N):
 
         objimg = objimage.copy() # a new objimg for every new stamp 
 
-        Rkron = scale * Ai[idx] * Kr[idx] + offset
-
-       
-
-        if Rkron == 0:
-
-            Rkron = 1
 
 
-        Rkron = Rkron * STRETCH_CONST    
-
-        q = (1 - E)
-        bim = q * Rkron
-
-
-        (xmin, xmax, ymin, ymax) = GetSize(X, Y, Rkron, Theta, E, NCol, NRow) #size of every object
-
-
-        objmask = N == mask
+        objmask = N[idx] == mask
         objimg[objmask]=0
  
         objmask2 = (mask != N) & (mask != 0)
 
-        objimg[objmask2] -= Bkgd
+
+        objimg[objmask2] = objimg[objmask2] - Bkgd[idx]
 
         stamp = img - objimg
 
-        imgstmp = "obj-" + str(N) + ".png"
+        imgstmp = "obj-" + str(round(N[idx])) + ".png"
 
-        ShowImg(stamp[ymin-1:ymax-1,xmin-1:xmax-1],imgstmp, X, Y, dpival=dpi, cmap = cmap)
+
+        yy = int(X[idx]) - xmin[idx]  #interchange because numpy arrays 
+
+        xx = int(Y[idx]) - ymin[idx] 
+
+
+        ShowImg(stamp[ymin[idx]-1:ymax[idx]-1,xmin[idx]-1:xmax[idx]-1], xx, yy,imgstmp, dpival=dpi, cmap = cmap)
 
         #move to folder change this for an function o os library
         runcmd = "mv  {}  stamps/{}".format(imgstmp,imgstmp)
@@ -422,16 +437,17 @@ def MakeObjImg(image,mask):
     return objimg
 
 
-def ShowImg(cubeimg: str,namepng="obj.png",xc,yc, dpival=100,cmap='viridis'):
+def ShowImg(img: np.array ,xc: int, yc: int ,namepng="obj.png", dpival=100,cmap='viridis'):
     """This routine shows the image"""
 
         
-    hdu = fits.open(cubeimg)
-    data = (hdu[1].data.copy()).astype(float)
-    hdu.close()
+    #hdu = fits.open(cubeimg)
+    #data = (hdu[1].data.copy()).astype(float)
+    #hdu.close()
 
+    data=img
 
-    root_ext = os.path.splitext(galpar.outimage)
+    root_ext = os.path.splitext(namepng)
 
     objname = root_ext[0]
 
@@ -442,10 +458,14 @@ def ShowImg(cubeimg: str,namepng="obj.png",xc,yc, dpival=100,cmap='viridis'):
     fig, ax1 = plt.subplots(figsize=(5, 5) ) #check if this works 
     fig.subplots_adjust(left=0.04, right=0.98, bottom=0.02, top=0.98)
 
-            
+
+
+    #import pdb;pdb.set_trace()
+
     # cappellari routine check if this works
     ax1.imshow(np.log(data.clip(data[xc, yc]/1e4)), cmap=cmap,
                        origin='lower', interpolation='nearest')
+
 
     ax1.set_title(objname)
     plt.savefig(namepng,dpi=dpival)

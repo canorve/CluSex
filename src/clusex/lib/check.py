@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 import numpy as np
-
+from astropy.io import fits
 
 def CheckFlag(val,check):
    "Check for flag contained in $val, returns 1 if found "
