@@ -230,7 +230,7 @@ def makestamps():
     parser.add_argument("mask",help="Fits image mask (created with makemask) ")
 
     #optional arguments
-    parser.add_argument("-fr","--frac", type=float, help="value to use as a fraction to change the value of vmin, vmax of imshow for the image",default=0.2)
+    parser.add_argument("-sr","--stretch", type=float, help="stretch factor to enlarge the stamps",default=3)
 
     parser.add_argument("-so","--skyoff", type=float, help="sky offset to be added the value of the mean sky ",default=1)
 
@@ -254,7 +254,7 @@ def makestamps():
     image= args.image
     catalog= args.catalog
     mask = args.mask
-    frac = args.frac
+    stretch = args.stretch
     skyoff = args.skyoff
     dpi= args.dpi
     cmap = args.cmap
@@ -268,7 +268,7 @@ def makestamps():
 
     print (line)
 
-    MakeStamps(image,catalog,mask,frac,skyoff,dpi,cmap,scale,offset)
+    MakeStamps(image,catalog,mask,stretch,skyoff,dpi,cmap,scale,offset)
 
     print('image stamps created in stamps folder') 
 

@@ -347,7 +347,7 @@ def EraseObjectMask2(maskimg,obj):
     return tempmask
 
 
-def MakeStamps(image,catalog,maskimage,frac,skyoff,dpi,cmap,scale,offset):
+def MakeStamps(image,catalog,maskimage,stretch,skyoff,dpi,cmap,scale,offset):
 
 
     hdu = fits.open(image)
@@ -363,7 +363,7 @@ def MakeStamps(image,catalog,maskimage,frac,skyoff,dpi,cmap,scale,offset):
     NCol, NRow = GetAxis(image)
 
 
-    STRETCH_CONST = 3   #for stamps sizes
+    STRETCH_CONST = stretch #for stamps sizes
 
     objimage = MakeObjImg(img,mask)
 
