@@ -230,14 +230,14 @@ def makestamps():
     parser.add_argument("mask",help="Fits image mask (created with makemask) ")
 
     #optional arguments
-    parser.add_argument("-sr","--stretch", type=float, help="stretch factor to enlarge the stamps",default=3)
+    parser.add_argument("-sr","--stretch", type=float, help="stretch factor to enlarge the stamps",default=5)
 
     parser.add_argument("-so","--skyoff", type=float, help="sky offset to be added the value of the mean sky ",default=1)
 
 
     parser.add_argument("-dp","--dpi", type=float, help="dots per inch resolution for image stamps",default=100)
 
-    parser.add_argument("-cm","--cmap", type=str, help="color map",default='viridis')
+    parser.add_argument("-cm","--cmap", type=str, help="color map",default='gray_r')
 
 
     parser.add_argument("-s","--scale", type=float, help="factor that multiplies the radius of the catalog objects. Default = 1",default=1)
@@ -245,7 +245,9 @@ def makestamps():
     parser.add_argument("-off","--offset", type=float, help="factor that it is added to the scale times radius of the catalog objects. Default = 0",default=0)
 
 
+    parser.add_argument("-br","--bright", type=float, help="brightness of the image. Default = 33",default=33)
 
+    parser.add_argument("-co","--contrast", type=float, help="contrast of the image. Default = 0.98",default=0.98)
 
 
 
@@ -261,14 +263,20 @@ def makestamps():
 
     scale = args.scale
     offset  = args.offset
+    bright = args.bright
+    contrast = args.contrast
 
-    
+    #bri = 33 # brightness, source: docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
+    #con = 0.98 # contrast, > 0
+
+
 
     line="Creating image stamps for the every object of the catalog"
 
     print (line)
 
-    MakeStamps(image,catalog,mask,stretch,skyoff,dpi,cmap,scale,offset)
+    MakeStamps(image, catalog, mask, stretch, skyoff, dpi, cmap, 
+                scale, offset, bright, contrast)
 
     print('image stamps created in stamps folder') 
 

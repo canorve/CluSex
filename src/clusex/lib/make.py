@@ -8,10 +8,21 @@ import matplotlib.pyplot as plt
 import argparse
 import subprocess as sp
 
-from clusex.lib.check import CheckFlag 
+
 from clusex.lib.check import CheckSatReg2
 from clusex.lib.check import GetAxis 
+from clusex.lib.check import CheckFlag 
+from clusex.lib.check import GetWCS 
+from clusex.lib.check import GetCounts
 from clusex.lib.ds9 import ds9kron
+
+import matplotlib.colors as colors
+
+#from astropy.utils.data import get_pkg_data_filename
+#from astropy.wcs import WCS
+from matplotlib.colors import LogNorm
+
+
 
 
 
@@ -347,7 +358,8 @@ def EraseObjectMask2(maskimg,obj):
     return tempmask
 
 
-def MakeStamps(image,catalog,maskimage,stretch,skyoff,dpi,cmap,scale,offset):
+def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi, 
+                cmap, scale, offset, bright, contrast):
 
 
     hdu = fits.open(image)
@@ -363,9 +375,18 @@ def MakeStamps(image,catalog,maskimage,stretch,skyoff,dpi,cmap,scale,offset):
     NCol, NRow = GetAxis(image)
 
 
+
+    wcs = GetWCS(image)
+    counts = GetCounts(image)
+
+
+
     STRETCH_CONST = stretch #for stamps sizes
 
+    flagsat=4      ## flag value when object is saturated (or close to)
+
     objimage = MakeObjImg(img,mask)
+
 
 
     N,Alpha,Delta,X,Y,Mg,Kr,Fluxr,Isoa,Ai,E,Theta,Bkgd,Idx,Flg=np.genfromtxt(catalog,delimiter="",unpack=True)
@@ -393,37 +414,59 @@ def MakeStamps(image,catalog,maskimage,stretch,skyoff,dpi,cmap,scale,offset):
     (xmin, xmax, ymin, ymax) = GetSize(X, Y, Rkron, Theta, E, NCol, NRow) #size of every object
 
 
+    num = 0
+
     for idx, item in enumerate(N):
 
-        objimg = objimage.copy() # a new objimg for every new stamp 
+
+        check = CheckFlag(Flg[idx],flagsat)  ## check if object doesn't has saturated regions
 
 
-
-        objmask = N[idx] == mask
-        objimg[objmask]=0
- 
-        objmask2 = (mask != N) & (mask != 0)
+        if  (check == False):
 
 
-        objimg[objmask2] = objimg[objmask2] - Bkgd[idx]
-
-        stamp = img - objimg
-
-        imgstmp = "obj-" + str(round(N[idx])) + ".png"
+            objimg = objimage.copy() # a new objimg for every new stamp 
 
 
-        yy = int(X[idx]) - xmin[idx]  #interchange because numpy arrays 
+            objmask = N[idx] == mask
+            objimg[objmask]=0
+     
+            objmask2 = (mask != N) & (mask != 0)
 
-        xx = int(Y[idx]) - ymin[idx] 
+
+            objimg[objmask2] = objimg[objmask2] - Bkgd[idx]
+
+            stamp = img - objimg
+
+            imgstmp = "obj-" + str(round(N[idx])) + ".png"
 
 
-        ShowImg(stamp[ymin[idx]-1:ymax[idx]-1,xmin[idx]-1:xmax[idx]-1], xx, yy,imgstmp, dpival=dpi, cmap = cmap)
+            yy = int(X[idx]) - xmin[idx]  #interchange because numpy arrays 
 
-        #move to folder change this for an function o os library
-        runcmd = "mv  {}  stamps/{}".format(imgstmp,imgstmp)
-        errmv = sp.run([runcmd], shell=True, stdout=sp.PIPE,
-                           stderr=sp.PIPE, universal_newlines=True)
+            xx = int(Y[idx]) - ymin[idx] 
 
+            #if quick:
+
+
+            ShowImg(stamp[ymin[idx]-1:ymax[idx]-1,xmin[idx]-1:xmax[idx]-1], 
+                        xx, yy, wcs, imgstmp, dpival = dpi, sky = Bkgd[idx], 
+                        cmap = cmap, bri = bright, con = contrast)
+
+            #slow routine
+
+            #GetPng(stamp[ymin[idx]-1:ymax[idx]-1,xmin[idx]-1:xmax[idx]-1], 
+            #        counts, wcs, dpi=dpi, cmap = cmap, namepng = imgstmp, 
+            #        bri = bright, con = contrast)
+
+            #move to folder change this for an function o os library
+            runcmd = "mv  {}  stamps/{}".format(imgstmp,imgstmp)
+            errmv = sp.run([runcmd], shell=True, stdout=sp.PIPE,
+                               stderr=sp.PIPE, universal_newlines=True)
+        else:
+
+            num +=1
+
+    print ("{} objects rejected because they have at least one saturated pixel  \n".format(num))
 
 
 def MakeObjImg(image,mask):
@@ -437,7 +480,8 @@ def MakeObjImg(image,mask):
     return objimg
 
 
-def ShowImg(img: np.array ,xc: int, yc: int ,namepng="obj.png", dpival=100,cmap='viridis'):
+def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png", 
+            dpival=100, sky=1, cmap='viridis', bri = 33, con = 0.98):
     """This routine shows the image"""
 
         
@@ -455,17 +499,45 @@ def ShowImg(img: np.array ,xc: int, yc: int ,namepng="obj.png", dpival=100,cmap=
     mask=data < 0 
     data[mask] = 1 # avoids problems in log
      
-    fig, ax1 = plt.subplots(figsize=(5, 5) ) #check if this works 
+    fig, ax1 = plt.subplots(figsize=(7, 7)) 
     fig.subplots_adjust(left=0.04, right=0.98, bottom=0.02, top=0.98)
 
+    ax1=fig.add_subplot(projection=wcs)
+
+    flatdata=data.flatten()  
+
+    flatdata.sort()
 
 
-    #import pdb;pdb.set_trace()
+    tot=len(flatdata)
 
-    # cappellari routine check if this works
-    ax1.imshow(np.log(data.clip(data[xc, yc]/1e4)), cmap=cmap,
-                       origin='lower', interpolation='nearest')
+    top=round(.9*tot)
+    bot=round(.1*tot)
 
+    imgpatch=flatdata#[bot:top]
+
+    galmin = np.min(imgpatch)
+    galmin = sky 
+    galmax = np.max(imgpatch)
+
+    #if frac  < 1:
+    #    galmin = (1-frac)*galmin 
+    #    galmax = frac*galmax
+
+
+    #if (galmin > galmax):
+    #    galmin, galmax = galmax, galmin
+
+
+
+    #my routine
+    ax1.imshow(con*data+bri, origin = 'lower', norm
+                = colors.LogNorm(vmin = galmin, vmax = galmax), cmap = cmap)
+
+
+    ax1.set_xlabel('Right Ascension')
+    ax1.set_ylabel('Declination')
+    ax1.grid(color='black', ls='solid', alpha=0.1)
 
     ax1.set_title(objname)
     plt.savefig(namepng,dpi=dpival)
@@ -473,5 +545,31 @@ def ShowImg(img: np.array ,xc: int, yc: int ,namepng="obj.png", dpival=100,cmap=
     plt.close()
 
 
+def GetPng(data, counts, wcs, dpi=200, cmap='gray_r',namepng="obj.png", bri = 33, con = 0.98):
+    "Converts image into a PNG image with axis coordinates, inverted colormap, log/zmax style"
+
+    #filename = get_pkg_data_filename(Image)
+
+    #hdu = fits.open(filename)[0]
+
+    n, bins, patches = plt.hist(counts, bins=512, range=(min(counts), max(counts)), color='black')
+    n_max = np.argsort(n)[::-1]
+    n_idx = n_max[0:20]
+    lim_min = min(bins[n_idx])
+    lim_max = max(bins[n_idx])
+
+    #bri = 33 # brightness, source: docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
+    #con = 0.98 # contrast, > 0
+
+    plt.subplot(projection=wcs)
+    plt.imshow(con*data+bri, cmap=cmap, norm=LogNorm(lim_min, lim_max))
+
+    plt.xlabel('Right Ascension')
+    plt.ylabel('Declination')
+    plt.grid(color='black', ls='solid', alpha=0.1)
+    plt.title(namepng)
+    plt.tight_layout()
+    #plt.savefig('%s.png' % (Image), bbox_inches='tight', dpi=dpi)
+    plt.savefig(namepng, bbox_inches='tight', dpi=dpi)
 
 

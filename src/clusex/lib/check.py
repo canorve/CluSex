@@ -2,6 +2,8 @@
 
 import numpy as np
 from astropy.io import fits
+from astropy.wcs import WCS
+#from astropy.utils.data import get_pkg_data_filename
 
 def CheckFlag(val,check):
    "Check for flag contained in $val, returns 1 if found "
@@ -123,6 +125,24 @@ def GetAxis(Image):
     nrow = hdu[0].header["NAXIS2"]
     hdu.close()
     return ncol, nrow
+
+def GetWCS(Image):
+    # k Check
+    "Get World Cordinate System info"
+    hdu = fits.open(Image)[0]
+    wcs = WCS(hdu.header)
+
+    return wcs 
+
+def GetCounts(Image):
+    # k Check
+    "Get Counts from Image"
+
+    hdu = fits.open(Image)[0]
+    counts = hdu.data.ravel()
+
+    return counts
+
 
 
 
