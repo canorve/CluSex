@@ -60,7 +60,7 @@ def MakeMask(maskimage, catfile, scale, offset, regfile):
         checkflag = CheckFlag(flg[idx], flagsat)
         # check if object is inside of a saturaded box region indicated by
         # user in ds9
-#        regflag = CheckSatReg(xx[idx], yy[idx], Rkron[idx], theta[idx], e[idx],regfile)
+        #regflag = CheckSatReg(xx[idx], yy[idx], Rkron[idx], theta[idx], e[idx],regfile)
         regflag = CheckSatReg2(xx[idx], yy[idx],regfile)
 
 
@@ -383,7 +383,9 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
 
     flagsat=4      ## flag value when object is saturated (or close to)
 
-    objimage = MakeObjImg(img,mask)
+    #creates a object image: same image but counts = 0 for regions where 
+    #there is no objets
+    objimage = MakeObjImg(img,mask) 
 
 
 
@@ -428,17 +430,18 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
 
 
             objmask = N[idx] == mask
-            objimg[objmask]=0
+            objimg[objmask] = 0 # removing main object from object image 
      
             objmask2 = (mask != N) & (mask != 0)
 
+            # removing background for all the objects in the object image  
+            objimg[objmask2] = objimg[objmask2] - Bkgd[idx] 
 
-            objimg[objmask2] = objimg[objmask2] - Bkgd[idx]
+            # removes all the objects except the main target.
+            stamp = img - objimg 
 
-            stamp = img - objimg
-
-            # the line below is incorrect but helps to increase the contrast
-            stamp[objmask] = stamp[objmask] - Bkgd[idx] #consider to remove if this doesn't work 
+            # the line below is incorrect but it helps to increase the contrast
+            stamp[objmask] = stamp[objmask] - Bkgd[idx] #consider to remove 
 
             imgstmp = "obj-" + str(round(N[idx])) + ".png"
 
@@ -448,7 +451,6 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
             xx = int(Y[idx]) - ymin[idx] 
 
             #if quick:
-
 
             ShowImg(stamp[ymin[idx]-1:ymax[idx]-1,xmin[idx]-1:xmax[idx]-1], 
                         xx, yy, wcs, imgstmp, dpival = dpi, sky = Bkgd[idx], 
