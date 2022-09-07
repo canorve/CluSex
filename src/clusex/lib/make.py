@@ -375,10 +375,8 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
     NCol, NRow = GetAxis(image)
 
 
-
     wcs = GetWCS(image)
-    counts = GetCounts(image)
-
+    #counts = GetCounts(image)
 
 
     STRETCH_CONST = stretch #for stamps sizes
