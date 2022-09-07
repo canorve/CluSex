@@ -8,6 +8,15 @@
 **How to run**
 =========================
 
+Below is explained how to use
+each terminal routine of CluSex. 
+They are independent routines, but 
+it is recommended to be used from 
+top to bottom after clusex has 
+been executed
+
+
+
 Joincat 
 ~~~~~~~~~
 
@@ -126,5 +135,59 @@ number: ellipse number to be removed (or changed check option -f)
 FILL: Value number to be filled within the ellipse mask. 
       0 = object removed. Default = 0
 OUTMASK: name of the new mask
+
+makeobjimg
+~~~~~~~~~~~~~
+
+This is a short routine that makes a objects image, i.e. 
+it is the same input image but the regions where there is not
+any detected object have a value of 0 counts. 
+
+::
+
+    usage: makeobjimg [-h] [-o OUTIMAGE] image mask
+
+
+
+image: the Fits image
+mask: Fits image of the objects
+OUTIMAGE: name of the new output image
+
+
+makestamps
+~~~~~~~~~~~~
+
+This routine creates image stamps for every object. The 
+stamps includes only the main object, everything else is removed.
+Those stamps can be used to classify the galaxies either manual or
+throught neural networks. 
+
+
+
+
+::
+
+      usage: makestamps [-h] [-sr STRETCH] [-so SKYOFF] [-dp DPI] [-cm CMAP] [-s SCALE]
+                  [-off OFFSET] [-br BRIGHT] [-co CONTRAST] [-gc GALCLASS]
+                  image catalog mask
+
+image: the Fits image
+mask: Fits image of the objects
+catalog: Sextractor catalog
+DPI: number of dots per inch. 
+CMAP: color map used for the images.
+SCALE: the factor that will be multiplied to the
+      major axis of the ellipse to increase (or decrease) it
+OFFSET: value to be added to the major axis of the ellipse. 
+SKYOFF: value to be added to the mean of the sky background
+STRETCH:  stretch factor to enlarge the stamps
+BRIGHT: brightness of the image. 
+CONTRAST: contrast of the image.
+GALCLASS: galaxy/star sextractor classification limit. 
+          Sextractor Classification 1 = Star. 0 = galaxy. 
+          Sextractor Class above this value will be reject to be in 
+          the stamps
+
+
 
 
