@@ -235,7 +235,7 @@ def makestamps():
     parser.add_argument("-so","--skyoff", type=float, help="sky offset to be added the value of the mean sky ",default=1)
 
 
-    parser.add_argument("-dp","--dpi", type=float, help="dots per inch resolution for image stamps",default=100)
+    parser.add_argument("-dp","--dpi", type=int, help="dots per inch resolution for image stamps",default=100)
 
     parser.add_argument("-cm","--cmap", type=str, help="color map",default='gray_r')
 
@@ -250,6 +250,7 @@ def makestamps():
     parser.add_argument("-co","--contrast", type=float, help="contrast of the image. Default = 0.98",default=0.98)
 
 
+    parser.add_argument("-gc","--galclass", type=float, help="galaxy/star sextractor classification limit. Sextractor Classification  1 = Star. 0 = galaxy",default=1)
 
     args = parser.parse_args()
 
@@ -265,20 +266,17 @@ def makestamps():
     offset  = args.offset
     bright = args.bright
     contrast = args.contrast
-
-    #bri = 33 # brightness, source: docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
-    #con = 0.98 # contrast, > 0
+    galclass= args.galclass
 
 
 
-    line="Creating image stamps for the every object of the catalog"
+    line="Creating image stamps for every object of the catalog"
 
     print (line)
 
     MakeStamps(image, catalog, mask, stretch, skyoff, dpi, cmap, 
-                scale, offset, bright, contrast)
+                scale, offset, bright, contrast, galclass)
 
-    print('image stamps created in stamps folder') 
 
     print('done')
 

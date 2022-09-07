@@ -359,7 +359,7 @@ def EraseObjectMask2(maskimg,obj):
 
 
 def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi, 
-                cmap, scale, offset, bright, contrast):
+                cmap, scale, offset, bright, contrast, galclass):
 
 
     hdu = fits.open(image)
@@ -389,7 +389,7 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
 
 
 
-    N,Alpha,Delta,X,Y,Mg,Kr,Fluxr,Isoa,Ai,E,Theta,Bkgd,Idx,Flg=np.genfromtxt(catalog,delimiter="",unpack=True)
+    N,Alpha,Delta,X,Y,Mg,Kr,Fluxr,Isoa,Ai,E,Theta,Bkgd,Class,Flg=np.genfromtxt(catalog,delimiter="",unpack=True)
 
 
     if not os.path.exists("stamps"):
@@ -416,13 +416,14 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
 
     num = 0
 
+    num_stamps = 0
     for idx, item in enumerate(N):
 
 
         check = CheckFlag(Flg[idx],flagsat)  ## check if object doesn't has saturated regions
 
 
-        if  (check == False):
+        if  ((check == False) and (Class[idx] < galclass)):
 
 
             objimg = objimage.copy() # a new objimg for every new stamp 
@@ -437,6 +438,9 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
             objimg[objmask2] = objimg[objmask2] - Bkgd[idx]
 
             stamp = img - objimg
+
+            # the line below is incorrect but helps to increase the contrast
+            stamp[objmask] = stamp[objmask] - Bkgd[idx] #consider to remove if this doesn't work 
 
             imgstmp = "obj-" + str(round(N[idx])) + ".png"
 
@@ -462,11 +466,14 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
             runcmd = "mv  {}  stamps/{}".format(imgstmp,imgstmp)
             errmv = sp.run([runcmd], shell=True, stdout=sp.PIPE,
                                stderr=sp.PIPE, universal_newlines=True)
+
+            num_stamps +=1
         else:
 
             num +=1
 
-    print ("{} objects rejected because they have at least one saturated pixel  \n".format(num))
+    print ("{} objects rejected because they have saturated pixels or are classified as stars  \n".format(num))
+    print ("{} stamps created  \n".format(num_stamps))
 
 
 def MakeObjImg(image,mask):
