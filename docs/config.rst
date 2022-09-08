@@ -9,8 +9,8 @@ Parameter Configuration File
 Here you will find the description of each parameter
 of the configuration file needed to run CluSex.
 
-First of all, to run CluSex with 
-the configuration file is as easy as typing: 
+To run CluSex with the configuration 
+file is as easy as typing: 
 
 ::
 

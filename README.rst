@@ -20,8 +20,8 @@ to perform on images of cluster galaxies (or high
 density of objects).  
 
 Particularly, it joins two (or more)  `sextractor`_ catalogs,
-creates masks, finds saturated star regions and computes 
-sky background. 
+creates masks, finds saturated star regions, computes 
+sky background and makes stamps for every detected object. 
 
 .. _sextractor: https://www.astromatic.net/software/sextractor/
 

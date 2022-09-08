@@ -5,6 +5,9 @@ import os
 from astropy.io import fits
 import matplotlib.pyplot as plt
 
+from matplotlib.colors import LogNorm
+import matplotlib.colors as colors
+
 import argparse
 import subprocess as sp
 
@@ -15,13 +18,6 @@ from clusex.lib.check import CheckFlag
 from clusex.lib.check import GetWCS 
 from clusex.lib.check import GetCounts
 from clusex.lib.ds9 import ds9kron
-
-import matplotlib.colors as colors
-
-#from astropy.utils.data import get_pkg_data_filename
-#from astropy.wcs import WCS
-from matplotlib.colors import LogNorm
-
 
 
 
@@ -554,6 +550,8 @@ def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png",
 
 def GetPng(data, counts, wcs, dpi=200, cmap='gray_r',namepng="obj.png", bri = 33, con = 0.98):
     "Converts image into a PNG image with axis coordinates, inverted colormap, log/zmax style"
+
+    #Slow routine, it was avoided
 
     #filename = get_pkg_data_filename(Image)
 

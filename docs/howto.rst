@@ -9,11 +9,13 @@
 =========================
 
 Below is explained how to use
-each terminal routine of CluSex. 
-They are independent routines, but 
+each routine of CluSex. Every 
+routine below is a command in 
+the shell (bash). They are independent 
+routines, but 
 it is recommended to be used from 
-top to bottom after clusex has 
-been executed
+top to bottom after clusex command has 
+been executed.
 
 
 
@@ -161,8 +163,6 @@ This routine creates image stamps for every object. The
 stamps includes only the main object, everything else is removed.
 Those stamps can be used to classify the galaxies either manual or
 throught neural networks. 
-
-
 
 
 ::
