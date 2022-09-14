@@ -373,6 +373,13 @@ def compsky():
     parser.add_argument("MaskFile",help="Fits mask image. File created with makemask")
 
 
+    # optional arguments
+    parser.add_argument("-cr","--changeRad",action="store_true", 
+                        help="Change the Ai sex column for the radius found in grad sky. Only for the grad sky method")
+
+
+    # arguments with inputs
+
     parser.add_argument("-s","--scaleRadius", type=float, help="factor that multiplies the radius of the catalog objects. For grad sky it is the Inital radius. For rand sky is the minimum radius of the box around main object. Default = 1",default=1)
    
     parser.add_argument("-w","--width", type=int, help="width of the ring for the grad method. ",default=20)
@@ -411,8 +418,14 @@ def compsky():
     output = args.outcat
 
 
+    changeRad = args.changeRad
+
+
     ##end input
 
+
+    if changeRad:
+        print('Ai will be changed by the one found in grad sky in such a way that Ai*Kron = skyrad') 
 
 
 
@@ -506,6 +519,8 @@ def compsky():
             #galpar.gradskystd = std
             #galpar.gradskymed = median
 
+            if changeRad:
+                Ai[idx] = rad / Kr[idx]
 
             line="{0:.0f} {1} {2} {3} {4} {5} {6} {7} {8:.0f} {9} {10} {11:.2f} {12:.2f} {13} {14:.0f} \n".format(N[idx], Alpha[idx], Delta[idx], X[idx], Y[idx], Mg[idx], Kr[idx], Fluxr[idx], Isoa[idx], Ai[idx], E[idx], Theta[idx], Bkgd[idx], Idx[idx], Flg[idx])
 
