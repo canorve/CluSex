@@ -355,7 +355,7 @@ def EraseObjectMask2(maskimg,obj):
 
 
 def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi, 
-                cmap, scale, offset, bright, contrast, galclass):
+                cmap, scale, offset, bright, contrast, frac, galclass):
 
 
     hdu = fits.open(image)
@@ -437,7 +437,7 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
             stamp = img - objimg 
 
             # the line below is incorrect but it helps to increase the contrast
-            stamp[objmask] = stamp[objmask] - Bkgd[idx] #consider to remove 
+            #stamp[objmask] = stamp[objmask] - Bkgd[idx] #consider to remove 
 
             imgstmp = "obj-" + str(round(N[idx])) + ".png"
 
@@ -450,7 +450,7 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
 
             ShowImg(stamp[ymin[idx]-1:ymax[idx]-1,xmin[idx]-1:xmax[idx]-1], 
                         xx, yy, wcs, imgstmp, dpival = dpi, sky = Bkgd[idx], 
-                        cmap = cmap, bri = bright, con = contrast)
+                        cmap = cmap, bri = bright, con = contrast, frac = frac)
 
             #slow routine
 
@@ -484,7 +484,7 @@ def MakeObjImg(image,mask):
 
 
 def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png", 
-            dpival=100, sky=1, cmap='viridis', bri = 33, con = 0.98):
+            dpival=100, sky=1, cmap='viridis', bri = 33, con = 0.98, frac = 1):
     """This routine shows the image"""
 
         
@@ -523,13 +523,13 @@ def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png",
     galmin = sky 
     galmax = np.max(imgpatch)
 
-    #if frac  < 1:
-    #    galmin = (1-frac)*galmin 
-    #    galmax = frac*galmax
+    if frac  < 1:
+        #galmin = (1-frac)*galmin 
+        galmax = frac*galmax
 
 
-    #if (galmin > galmax):
-    #    galmin, galmax = galmax, galmin
+    if (galmin > galmax):
+        galmin, galmax = galmax, galmin
 
 
 
