@@ -410,8 +410,12 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
     (xmin, xmax, ymin, ymax) = GetSize(X, Y, Rkron, Theta, E, NCol, NRow) #size of every object
 
 
-    num = 0
 
+    line="Creating image stamps for every object of the catalog"
+    print (line)
+
+
+    num = 0
     num_stamps = 0
     for idx, item in enumerate(N):
 
@@ -431,23 +435,18 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
             objmask2 = (mask != N) & (mask != 0)
 
             # removing background for all the objects in the object image  
-            objimg[objmask2] = objimg[objmask2] - Bkgd[idx] 
+            #objimg[objmask2] = objimg[objmask2] - Bkgd[idx] 
 
             # removes all the objects except the main target.
             stamp = img - objimg 
 
-            # the line below is incorrect but it helps to increase the contrast
-            #stamp[objmask] = stamp[objmask] - Bkgd[idx] #consider to remove 
-
             imgstmp = "obj-" + str(round(N[idx])) + ".png"
-
 
             yy = int(X[idx]) - xmin[idx]  #interchange because numpy arrays 
 
             xx = int(Y[idx]) - ymin[idx] 
 
-            #if quick:
-
+            #quick routine:
             ShowImg(stamp[ymin[idx]-1:ymax[idx]-1,xmin[idx]-1:xmax[idx]-1], 
                         xx, yy, wcs, imgstmp, dpival = dpi, sky = Bkgd[idx], 
                         cmap = cmap, bri = bright, con = contrast, frac = frac)
@@ -458,7 +457,8 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
             #        counts, wcs, dpi=dpi, cmap = cmap, namepng = imgstmp, 
             #        bri = bright, con = contrast)
 
-            #move to folder change this for an function o os library
+
+            #move to folder change this for an function of os library
             runcmd = "mv  {}  stamps/{}".format(imgstmp,imgstmp)
             errmv = sp.run([runcmd], shell=True, stdout=sp.PIPE,
                                stderr=sp.PIPE, universal_newlines=True)
@@ -511,7 +511,6 @@ def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png",
 
     flatdata.sort()
 
-
     tot=len(flatdata)
 
     top=round(.9*tot)
@@ -519,23 +518,28 @@ def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png",
 
     imgpatch=flatdata#[bot:top]
 
+
+
     galmin = np.min(imgpatch)
     galmin = sky 
     galmax = np.max(imgpatch)
 
-    if frac  < 1:
-        #galmin = (1-frac)*galmin 
-        galmax = frac*galmax
+ 
+    median=np.median(imgpatch)
+
+    #galmin = (1-frac)*galmin 
+    galmin = (frac)*galmin 
+    #galmax = frac*galmax
 
 
-    if (galmin > galmax):
+    if (galmin > galmax): #to prevent from failing
         galmin, galmax = galmax, galmin
-
-
 
     #my routine
     ax1.imshow(con*data+bri, origin = 'lower', norm
-                = colors.LogNorm(vmin = galmin, vmax = galmax), cmap = cmap)
+                = colors.LogNorm(vmin = galmin, vmax = galmax), 
+                cmap = cmap, interpolation='nearest')
+
 
 
     ax1.set_xlabel('Right Ascension')

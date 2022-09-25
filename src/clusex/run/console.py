@@ -273,10 +273,6 @@ def makestamps():
 
 
 
-    line="Creating image stamps for every object of the catalog"
-
-    print (line)
-
     MakeStamps(image, catalog, mask, stretch, skyoff, dpi, cmap, 
                 scale, offset, bright, contrast, frac, galclass)
 
