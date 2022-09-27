@@ -355,7 +355,7 @@ def EraseObjectMask2(maskimg,obj):
 
 
 def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi, 
-                cmap, scale, offset, bright, contrast, frac, galclass):
+                cmap, scale, offset, bright, contrast, frac, fracmax, galclass):
 
 
     hdu = fits.open(image)
@@ -410,7 +410,6 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
     (xmin, xmax, ymin, ymax) = GetSize(X, Y, Rkron, Theta, E, NCol, NRow) #size of every object
 
 
-
     line="Creating image stamps for every object of the catalog"
     print (line)
 
@@ -434,9 +433,6 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
      
             objmask2 = (mask != N) & (mask != 0)
 
-            # removing background for all the objects in the object image  
-            #objimg[objmask2] = objimg[objmask2] - Bkgd[idx] 
-
             # removes all the objects except the main target.
             stamp = img - objimg 
 
@@ -449,7 +445,8 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
             #quick routine:
             ShowImg(stamp[ymin[idx]-1:ymax[idx]-1,xmin[idx]-1:xmax[idx]-1], 
                         xx, yy, wcs, imgstmp, dpival = dpi, sky = Bkgd[idx], 
-                        cmap = cmap, bri = bright, con = contrast, frac = frac)
+                        cmap = cmap, bri = bright, con = contrast, 
+                        frac = frac, fracmax = fracmax)
 
             #slow routine
 
@@ -484,7 +481,8 @@ def MakeObjImg(image,mask):
 
 
 def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png", 
-            dpival=100, sky=1, cmap='viridis', bri = 33, con = 0.98, frac = 1):
+            dpival=100, sky=1, cmap='viridis', bri = 33, con = 0.98, 
+            frac = 1, fracmax = 1):
     """This routine shows the image"""
 
         
@@ -503,7 +501,7 @@ def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png",
     data[mask] = 1 # avoids problems in log
      
     fig, ax1 = plt.subplots(figsize=(7, 7)) 
-    fig.subplots_adjust(left=0.04, right=0.98, bottom=0.02, top=0.98)
+    fig.subplots_adjust(left=0.08, right=0.94, bottom=0.04, top=0.94)
 
     ax1=fig.add_subplot(projection=wcs)
 
@@ -527,9 +525,8 @@ def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png",
  
     median=np.median(imgpatch)
 
-    #galmin = (1-frac)*galmin 
     galmin = (frac)*galmin 
-    #galmax = frac*galmax
+    galmax = fracmax*galmax
 
 
     if (galmin > galmax): #to prevent from failing

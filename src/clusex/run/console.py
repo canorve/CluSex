@@ -249,7 +249,9 @@ def makestamps():
 
     parser.add_argument("-co","--contrast", type=float, help="contrast of the image. Default = 0.98",default=0.98)
 
-    parser.add_argument("-fr","--frac", type=float, help="fraction of the maximum count to be used as vmax of imshow for the stamps. Default = 1",default=1)
+    parser.add_argument("-fr","--frac", type=float, help="fraction of the minimum count to be used as vmim of imshow for the stamps. vmin = sky value. Default = 1",default=1)
+
+    parser.add_argument("-frm","--fracmax", type=float, help="fraction of the maximum count to be used as vmax of imshow for the stamps. vmax = max count value. Default = 1",default=1)
 
 
     parser.add_argument("-gc","--galclass", type=float, help="galaxy/star sextractor classification limit. Sextractor Classification  1 = Star. 0 = galaxy",default=1)
@@ -270,11 +272,12 @@ def makestamps():
     contrast = args.contrast
     galclass = args.galclass
     frac = args.frac
+    fracmax = args.fracmax
 
 
 
     MakeStamps(image, catalog, mask, stretch, skyoff, dpi, cmap, 
-                scale, offset, bright, contrast, frac, galclass)
+                scale, offset, bright, contrast, frac, fracmax, galclass)
 
 
     print('done')
