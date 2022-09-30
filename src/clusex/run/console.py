@@ -29,6 +29,7 @@ from clusex.lib.make import EraseObjectMask
 
 from clusex.lib.sky import SkyCal 
 
+from clusex.lib.cgpng import cgPNG
 
 
 #console scripts
@@ -614,6 +615,32 @@ def compsky():
     #######################################
     ############## SKY End ################
     #######################################
+
+
+
+
+
+def guiclass():
+    """ classify png galaxy images"""
+
+    printWelcome()
+
+    parser = argparse.ArgumentParser(description="guiclass: classify galaxies from list")
+
+    # required arguments
+    parser.add_argument("pnglist",help="list of the png files to classify. It can be created with ls command")
+    parser.add_argument("pngout",help="name of the output file. It is the same as pnglist but a column of morphology is added ")
+
+
+    args = parser.parse_args()
+
+    pnglist = args.pnglist
+    pngout = args.pngout
+
+
+
+    cgPNG(pnglist, pngout)
+
 
 
 
