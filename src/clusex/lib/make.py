@@ -500,7 +500,11 @@ def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png",
     mask=data < 0 
     data[mask] = 1 # avoids problems in log
      
-    fig, ax1 = plt.subplots(figsize=(7, 7)) 
+    #fig, ax1 = plt.subplots(figsize=(7, 7)) 
+    fig, ax1 = plt.subplots(figsize=(700/dpival, 700/dpival),dpi=dpival) 
+    #plt.figure(figsize = (800 / my_dpi, 800 / my_dpi), dpi = my_dpi)
+
+
     fig.subplots_adjust(left=0.08, right=0.94, bottom=0.04, top=0.94)
 
     ax1=fig.add_subplot(projection=wcs)
