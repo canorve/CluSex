@@ -500,8 +500,8 @@ def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png",
     mask=data < 0 
     data[mask] = 1 # avoids problems in log
      
-    #fig, ax1 = plt.subplots(figsize=(7, 7)) 
-    fig, ax1 = plt.subplots(figsize=(700/dpival, 700/dpival),dpi=dpival) 
+    fig, ax1 = plt.subplots(figsize=(8, 8)) 
+    #fig, ax1 = plt.subplots(figsize=(700/dpival, 700/dpival),dpi=dpival) 
     #plt.figure(figsize = (800 / my_dpi, 800 / my_dpi), dpi = my_dpi)
 
 
