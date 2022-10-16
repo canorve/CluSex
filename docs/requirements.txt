@@ -8,8 +8,10 @@ astropy>=4.0.2
 importlib-metadata
 matplotlib>=3.5.2
 pandas>=1.3.4
-tkinter>=8.6
-PIL>=8.4.0
+tk>=0.1.0
+Pillow>=8.4.0
+pytest>=6.2.4
+pytest-cov>=3.0.0
 
 
 

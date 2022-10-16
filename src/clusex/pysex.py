@@ -24,7 +24,6 @@ import os
 import subprocess as sp
 from astropy.io import fits
 import os.path
-import scipy
 
 from pathlib import Path
 import shutil
