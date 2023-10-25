@@ -443,10 +443,17 @@ def MakeStamps(image, catalog, maskimage, stretch, skyoff, dpi,
             xx = int(Y[idx]) - ymin[idx] 
 
             #quick routine:
+            #ShowImg(stamp[ymin[idx]-1:ymax[idx]-1,xmin[idx]-1:xmax[idx]-1], 
+            #            xx, yy, wcs, imgstmp, dpival = dpi, sky = Bkgd[idx], 
+            #            cmap = cmap, bri = bright, con = contrast, 
+            #            frac = frac, fracmax = fracmax)
+
             ShowImg(stamp[ymin[idx]-1:ymax[idx]-1,xmin[idx]-1:xmax[idx]-1], 
-                        xx, yy, wcs, imgstmp, dpival = dpi, sky = Bkgd[idx], 
+                        wcs, imgstmp, dpival = dpi, sky = Bkgd[idx], 
                         cmap = cmap, bri = bright, con = contrast, 
                         frac = frac, fracmax = fracmax)
+
+
 
             #slow routine
 
@@ -481,7 +488,7 @@ def MakeObjImg(image,mask):
 
 
 def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png", 
-            dpival=100, sky=1, cmap='viridis', bri = 33, con = 0.98, 
+            dpival=100, sky=1, cmap='viridis', bri = 0, con = 1, 
             frac = 1, fracmax = 1):
     """This routine shows the image"""
 
@@ -490,14 +497,39 @@ def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png",
     #data = (hdu[1].data.copy()).astype(float)
     #hdu.close()
 
-    data=img
+    data =  (img.copy()).astype(float)
 
     root_ext = os.path.splitext(namepng)
 
     objname = root_ext[0]
 
+    #flatten image
 
-    mask=data < 0 
+    flatdatimg = data.flatten()  
+
+    flatdatimg.sort()
+
+    datimgpatch = flatdatimg#[modbot:modtop]
+
+    datmin = np.min(datimgpatch)
+    datmax = np.max(datimgpatch)
+
+
+    data = data.clip(datmax/1e4, datmax)
+
+    datmin = datmax/1e4
+
+
+    middle = (datmax -datmin)/2
+
+   #brightness auto-adjust according to the contrast value 
+
+    Autobri = middle*(con -1) + modmin*(1-con) 
+
+    #user can re-adjust according to the contrast value
+    newdata = con*(data - middle) + middle + Autobri + bri*(datmax-middle)
+
+    mask = data < 0 
     data[mask] = 1 # avoids problems in log
      
     fig, ax1 = plt.subplots(figsize=(8, 8)) 
@@ -507,40 +539,41 @@ def ShowImg(img: np.array ,xc: int, yc: int, wcs, namepng="obj.png",
 
     fig.subplots_adjust(left=0.08, right=0.94, bottom=0.04, top=0.94)
 
-    ax1=fig.add_subplot(projection=wcs)
+    ax1 = fig.add_subplot(projection=wcs)
 
-    flatdata=data.flatten()  
+    #flatdata = data.flatten()  
 
-    flatdata.sort()
+    #flatdata.sort()
 
-    tot=len(flatdata)
+    #tot=len(flatdata)
 
-    top=round(.9*tot)
-    bot=round(.1*tot)
+    #top=round(.9*tot)
+    #bot=round(.1*tot)
 
-    imgpatch=flatdata#[bot:top]
-
-
-
-    galmin = np.min(imgpatch)
-    galmin = sky 
-    galmax = np.max(imgpatch)
-
- 
-    median=np.median(imgpatch)
-
-    galmin = (frac)*galmin 
-    galmax = fracmax*galmax
+    #imgpatch=flatdata#[bot:top]
 
 
-    if (galmin > galmax): #to prevent from failing
-        galmin, galmax = galmax, galmin
+    #galmin = np.min(imgpatch)
+    #galmin = sky 
+    #galmax = np.max(imgpatch)
 
-    #my routine
-    ax1.imshow(con*data+bri, origin = 'lower', norm
-                = colors.LogNorm(vmin = galmin, vmax = galmax), 
-                cmap = cmap, interpolation='nearest')
+    #median=np.median(imgpatch)
 
+    #galmin = (frac)*galmin 
+    #galmax = fracmax*galmax
+
+
+    #if (galmin > galmax): #to prevent from failing
+    #    galmin, galmax = galmax, galmin
+
+    #my old routine
+    #ax1.imshow(con*data+bri, origin = 'lower', norm
+    #            = colors.LogNorm(vmin = galmin, vmax = galmax), 
+    #            cmap = cmap, interpolation='nearest')
+
+
+    im = ax1.imshow(newdata, origin ='lower', interpolation='nearest', norm 
+                    = colors.LogNorm(vmin=datmin, vmax=datmax), cmap = cmap)
 
 
     ax1.set_xlabel('Right Ascension')
