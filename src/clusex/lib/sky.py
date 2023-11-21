@@ -363,14 +363,19 @@ class SkyCal:
 
         totmean = np.mean(sky)
         # to compute standard deviation:
-        for idx, item in enumerate(range(cont)):
+        #for idx, item in enumerate(range(cont)):
 
-            bimg=boximg[idx]
+        #    bimg=boximg[idx]
 
             # not quite the var of the box, but it is needed to compute the TOTAL std:
-            skyvar =  ((bimg-totmean)**2).sum() 
+        #    skyvar =  ((bimg-totmean)**2).sum() 
 
-            skystd=np.append(skystd,skyvar)
+        #    skystd=np.append(skystd,skyvar)
+
+        # new way to compute sky
+        sky = np.mean(boximg) 
+        skystd = np.std(boximg)
+        skymed = np.median(boximg)
 
 
         return sky,skystd,skymed,N
