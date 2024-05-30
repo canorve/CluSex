@@ -4,305 +4,249 @@ import sys
 import os.path
 
 
+import configparser
 
 
 def readcon(params,confile):
 
-    if not os.path.exists(confile):
-        print ('%s: filename does not exist!' %sys.argv[1])
-        sys.exit()
 
+    convalues = read_config(confile)
 
-    with open(confile) as f_in:
 
-        lines = (line.rstrip() for line in f_in) # All lines including the blank ones
-        lines = (line.split('#', 1)[0] for line in lines) #remove comments
-        lines = (line for line in lines if line) # Non-blank lines
 
+    if convalues.get('run1'):
+        params.run1 = convalues['run1']
 
-        for line2 in lines:
 
-            (param,val)=line2.split()
+    if convalues.get('deblend_nthresh1'):
+        params.dn1 = convalues['deblend_nthresh1']
 
-            # param 1
-            flag = False
+    if convalues.get('deblend_mincont1'):
+        params.dm1 = convalues['deblend_mincont1']
 
-            if param == "FirstRun":
+    if convalues.get('analysis_thresh1'):
+        params.at1 = convalues['analysis_thresh1']
 
-                (run1) = val.split()[0]
-                params.run1=int(run1)
+    if convalues.get('detect_thresh1'):
+        params.dt1 = convalues['detect_thresh1']
 
-                flag = True 
+    if convalues.get('detect_minarea1'):
+        params.da1 = convalues['detect_minarea1']
 
-            if param == "DEBLEND_NTHRESH1":
-                (dn1) = val.split()[0]
-                params.dn1=int(dn1)
-                flag = True 
+    if convalues.get('back_size1'):
+        params.bs1 = convalues['back_size1']
 
-            if param == "DEBLEND_MINCONT1":
-                (dm1) = val.split()[0]
-                params.dm1=float(dm1)
-                flag = True 
+    if convalues.get('run2'):
+        params.run2 = convalues['run2']
 
+    if convalues.get('deblend_nthresh2'):
+        params.dn2 = convalues['deblend_nthresh2']
 
-            if param == "ANALYSIS_THRESH1":
+    if convalues.get('deblend_mincont2'):
+        params.dm2 = convalues['deblend_mincont2']
 
-                (at1) = val.split()[0]
-                params.at1=float(at1)
-                flag = True 
+    if convalues.get('analysis_thresh2'):
+        params.at2 = convalues['analysis_thresh2']
 
+    if convalues.get('detect_thresh2'):
+        params.dt2 = convalues['detect_thresh2']
 
-            if param == "DETECT_THRESH1":
+    if convalues.get('detect_minarea2'):
+        params.da2 = convalues['detect_minarea2']
 
-                (dt1) = val.split()[0]
-                params.dt1= float(dt1)
-                flag = True 
+    if convalues.get('back_size2'):
+        params.bs2 = convalues['back_size2']
 
-            if param == "DETECT_MINAREA1":
+    if convalues.get('back_filtersize2'):
+        params.bf2 = convalues['back_filtersize2']
 
-                (da1) = val.split()[0]
-                params.da1=int(da1)
-                flag = True 
 
-            if param == "BACK_SIZE1":
+    if convalues.get('SatDs9'):
+        params.satfileout = convalues['SatDs9']
 
-                (bs1) = val.split()[0]
-                params.bs1= float(bs1)
-                flag = True 
 
-            if param == "BACK_FILTERSIZE1":
+    if convalues.get('SatScale'):
+        params.satscale = convalues['SatScale']
 
-                (bf1) = val.split()[0]
-                params.bf1=int(bf1)
-                flag = True 
+    if convalues.get('SatOffset'):
+        params.satoffset = convalues['SatOffset']
 
-             #  param2
+    if convalues.get('satlevel'):
+        params.satlevel = convalues['satlevel']
 
-            if param == "SecondRun":
 
-                (run2) = val.split()[0]
-                params.run2=int(run2)
-                flag = True 
+    if convalues.get('makemask'):
+        params.create = convalues['makemask']
 
+    if convalues.get('scale'):
+        params.scale = convalues['scale']
 
-            if param == "DEBLEND_NTHRESH2":
 
-                (dn2) = val.split()[0]
-                params.dn2=float(dn2)
-                flag = True 
+    if convalues.get('offset'):
+        params.offset = convalues['offset']
 
 
-            if param == "DEBLEND_MINCONT2":
 
-                (dm2) = val.split()[0]
-                params.dm2=float(dm2)
-                flag = True 
+    if convalues.get('OutCatalog'):
+        params.output2 = convalues['OutCatalog']
 
 
-            if param == "ANALYSIS_THRESH2":
+    if convalues.get('MinSatSize'):
+        params.minsatsize = convalues['MinSatSize']
 
-                (at2) = val.split()[0]
-                params.at2=float(at2)
-                flag = True 
 
+    if convalues.get('SatQ'):
+        params.satq = convalues['SatQ']
 
-            if param == "DETECT_THRESH2":
 
-                (dt2) = val.split()[0]
-                params.dt2=float(dt2)
-                flag = True 
+    if convalues.get('image'):
+        params.image = convalues['image']
 
-            if param == "DETECT_MINAREA2":
 
-                (da2) = val.split()[0]
-                params.da2=int(da2)
-                flag = True 
+    if convalues.get('FracTol'):
+        params.tol = convalues['FracTol']
 
-            if param == "BACK_SIZE2":
+    if convalues.get('ReduCoef'):
+        params.red = convalues['ReduCoef']
 
-                (bs2) = val.split()[0]
-                params.bs2= float(bs2)
-                flag = True 
+    if convalues.get('SatMethod'):
+        params.satmethod = convalues['SatMethod']
 
-            if param == "BACK_FILTERSIZE2":
+    if convalues.get('magzpt'):
+        params.zpt = convalues['magzpt']
 
-                (bf2) = val.split()[0]
-                params.bf2=int(bf2)
-                flag = True 
 
+    if convalues.get('gain'):
+        params.gain = convalues['gain']
 
 
-    # other options
+    if convalues.get('pixscale'):
+        params.plate = convalues['pixscale']
 
-            if param == "SatDs9":
-                (satfileout) = val.split()[0]
-                params.satfileout=str(satfileout)
-                flag = True 
 
-            if param == "SatScale":
-                (satscale) = val.split()[0]
-                params.satscale=float(satscale)
-                flag = True 
+    if convalues.get('seeing'):
+        params.seeing = convalues['seeing']
 
-            if param == "SatOffset":
 
-                (satoffset) = val.split()[0]
-                params.satoffset=int(satoffset)
-                flag = True 
+    if convalues.get('JoinScale'):
+        params.joinscale = convalues['joinScale']
 
-            if param == "SATUR_LEVEL":
 
-                (satlevel) = val.split()[0]
-                params.satlevel=int(satlevel)
-                flag = True 
+    if convalues.get('ScaleCor'):
+        params.scalecor = convalues['ScaleCor']
 
 
-            #if param == "MakeMask":
+    if convalues.get('RegDs9'):
+        params.regoutfile = convalues['RegDs9']
 
-            #    (create) = val.split()[0]
-            #    params.create=int(create)
-            #    flag = True 
 
-            if param == "Scale":
+    
 
-                (scale) = val.split()[0]
-                params.scale=float(scale)
-                flag = True 
 
-            if param == "Offset":
 
-                (offset) = val.split()[0]
-                params.offset=int(offset)
-                flag = True 
 
+def read_config(confile):
 
+	# Create a ConfigParser object
+	config = configparser.ConfigParser()
 
-            if param == "Scale2":
+	# Read the configuration file
+	config.read(confile)
 
-                (scale2) = val.split()[0]
-                params.scale2=float(scale2)
-                flag = True 
+    # Access values from the configuration file
+	image = config.get('General', 'image')
+	magzpt = config.getfloat('General', 'MAG_ZEROPOINT')
+	gain = config.getfloat('General', 'GAIN')
+	pixscale= config.getfloat('General', 'PIXEL_SCALE')
+	seeing = config.getfloat('General', 'SEEING_FWHM')
+	makemask = config.getboolean('General', 'MakeMask')
+	OutCatalog = config.get('General', 'OutCatalog')
+	RegDs9 = config.get('General', 'RegDs9')
 
 
-            if param == "OutCatalog":
+	run1 = config.getboolean('Run1', 'run1')
+	deblend_nthresh1 = config.getfloat('Run1', 'DEBLEND_NTHRESH1')
+	deblend_mincont1 = config.getfloat('Run1', 'DEBLEND_MINCONT1')
+	analysis_thresh1 = config.getfloat('Run1', 'ANALYSIS_THRESH1')
+	detect_thresh1 = config.getfloat('Run1', 'DETECT_THRESH1')
+	detect_minarea1 = config.getfloat('Run1', 'DETECT_MINAREA1')
+	back_size1 = config.getfloat('Run1', 'BACK_SIZE1')
+	back_filtersize1 = config.getfloat('Run1', 'BACK_FILTERSIZE1')
 
-                (output2) = val.split()[0]
-                params.output2=str(output2)
-                flag = True 
 
-            if param == "MinSatSize":   # min size for sat regions
+	run2 = config.getboolean('Run2', 'run2')
+	deblend_nthresh2 = config.getfloat('Run2', 'DEBLEND_NTHRESH2')
+	deblend_mincont2 = config.getfloat('Run2', 'DEBLEND_MINCONT2')
+	analysis_thresh2 = config.getfloat('Run2', 'ANALYSIS_THRESH2')
+	detect_thresh2 = config.getfloat('Run2', 'DETECT_THRESH2')
+	detect_minarea2 = config.getfloat('Run2', 'DETECT_MINAREA2')
+	back_size2 = config.getfloat('Run2', 'BACK_SIZE2')
+	back_filtersize2 = config.getfloat('Run2', 'BACK_FILTERSIZE2')
 
-                (minsatsize) = val.split()[0]
-                params.minsatsize=int(minsatsize)
-                flag = True 
 
-            if param == "SatQ":
+	scale = config.getfloat('Sizes', 'Scale')
+	ReduCoef = config.getfloat('Sizes', 'ReduCoef')
+	FracTol = config.getfloat('Sizes', 'FracTol')
+	JoinScale = config.getfloat('Sizes', 'JoinScale')
+	ScaleCor = config.getfloat('Sizes', 'ScaleCor')
 
-                (satq) = val.split()[0]
-                params.satq=float(satq)
-                flag = True 
 
+	satlevel = config.getfloat('Saturation', 'SATUR_LEVEL')
+	SatDs9 = config.get('Saturation', 'SatDs9')
+	SatScale = config.getfloat('Saturation', 'SatScale')
+	SatOffset = config.getfloat('Saturation', 'SatOffset')
+	MinSatSize = config.getfloat('Saturation', 'MinSatSize')
+	SatQ = config.getfloat('Saturation', 'SatQ')
+	SatMethod = config.getint('Saturation', 'SatMethod')
 
-            if param == "Image":
 
-                (image) = val.split()[0]
-                params.image = str(image)
-                flag = True 
+	# Return a dictionary with the retrieved values
+	config_values = {
+		'image': image,
+		'magzpt': magzpt,
+		'gain': gain,
+		'pixscale': pixscale,
+		'seeing': seeing,
+		'makemask': makemask,
+		'OutCatalog': OutCatalog,
+		'RegDs9': RegDs9,
 
+		'run1': run1,
+		'deblend_nthresh1': deblend_nthresh1,
+		'deblend_mincont1': deblend_mincont1,
+		'analysis_thresh1': analysis_thresh1,
+		'detect_thresh1': detect_thresh1,
+		'detect_minarea1': detect_minarea1,
+		'back_size1': back_size1,
+		'back_filtersize1': back_filtersize1,
 
-            if param == "FracTol":   # proportion tolerance
+		'run2': run2,
+		'deblend_nthresh2': deblend_nthresh2,
+		'deblend_mincont2': deblend_mincont2,
+		'analysis_thresh2': analysis_thresh2,
+		'detect_thresh2': detect_thresh2,
+		'detect_minarea2': detect_minarea2,
+		'back_size2': back_size2,
+		'back_filtersize2': back_filtersize2,
 
-                (tol) = val.split()[0]
-                params.tol=float(tol)
-                flag = True 
+		'scale': scale,
+		'ReduCoef': ReduCoef,
+		'FracTol': FracTol,
+		'JoinScale': JoinScale,
+		'ScaleCor': ScaleCor,
 
+		'satlevel': satlevel, 
+		'SatDs9': SatDs9, 
+		'SatScale': SatScale, 
+		'SatOffset': SatOffset, 
+		'MinSatSize': MinSatSize, 
+		'SatQ': SatQ, 
+		'SatMethod': SatMethod, 
 
-            if param == "ReduCoef":  #reduction factor
 
-                (red) = val.split()[0]
-                params.red =float(red)
-                flag = True 
 
-            if param == "MinRad":  #reduction factor
+	}
 
-                (minrad) = val.split()[0]
-                params.minrad =float(minrad)
-                params.flagminrad = True
-                flag = True 
-
-
-
-            if param == "SatMethod":   #   method for detecting very bright saturated stars 
-
-                (satmethod) = val.split()[0]
-                params.satmethod=int(satmethod)
-                flag = True 
-
-
-        # SExtractor configuration parameters
-
-            if param == "MAG_ZEROPOINT":  # zpt for sextractor  
-
-                (zpt) = val.split()[0]
-                params.zpt=float(zpt)
-                flag = True 
-
-
-            if param == "GAIN":   
-
-                (gain) = val.split()[0]
-                params.gain=float(gain)
-                flag = True 
-
-            if param == "PIXEL_SCALE":   
-
-                (plate) = val.split()[0]
-                params.plate=float(plate)
-                flag = True 
-
-
-            if param == "SEEING_FWHM":   
-
-                (seeing) = val.split()[0]
-                params.seeing=float(seeing)
-                flag = True 
-
-
-
-            if param == "JoinScale":
-                (joinscale) = val.split()[0]
-                params.joinscale=float(joinscale)
-                flag = True 
-
-
-            if param == "ScaleCor":
-
-                (scalecor) = val.split()[0]
-                params.scalecor=float(scalecor)
-                flag = True 
-
-
-
-            if param == "DisplayDs9":
-
-                (ds9) = val.split()[0]
-                params.flagDs9=int(ds9)
-                flag = True 
-
-            if param == "RegDs9":
-
-                (regds9) = val.split()[0]
-                params.regoutfile=str(regds9)
-                flag = True 
-
-
-            
-            if flag == False: #parameter not recognized 
-
-                msg="{} parameter not recognized".format(param) 
-                print(msg)                 
-
-
-
+	return config_values
 
 
