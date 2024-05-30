@@ -137,8 +137,10 @@ Where ConfigFile is the configuration parameter filename for CluSex
 Example of Configuration file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-below it is shown an example of a CluSex configuration file (it follows
-the format of configparser library)  
+below it is shown an example of a CluSex configuration 
+file (it follows the format of configparser library):
+
+
 
 ::
 
