@@ -20,79 +20,70 @@ file is as easy as typing:
 An example of a configuration file is shown below::
 
 
-  
+    [General]
+    image = A671.fits
+    MAG_ZEROPOINT =  29.17    
+    GAIN        =    5.6     
+    PIXEL_SCALE =    0.68   
+    SEEING_FWHM =    1.5   
 
-  FirstRun  1  # Enable first run (1 = run)
+    MakeMask = False 
+    OutCatalog =  hotcold.cat
+    RegDs9 =   hotcold.reg
 
-  SecondRun 1 # enable second run   (1 = run)
+    run1 = True 
+    run2 = True
 
-  Image A1656.fits
+    [Run1]
+    DEBLEND_NTHRESH1 = 64 
+    DEBLEND_MINCONT1 = 0.01 
 
+    ANALYSIS_THRESH1 = 10  
+    DETECT_THRESH1   = 10 
+    DETECT_MINAREA1  = 10
 
-  MAG_ZEROPOINT   28.32
-  GAIN            5.4
-  PIXEL_SCALE     0.68
-  SATUR_LEVEL     30000
-  SEEING_FWHM     1.5
-
-
-
-  DEBLEND_NTHRESH1 64          # Number of deblending sub-thresholds
-  DEBLEND_MINCONT1 0.001         # Minimum contrast parameter for deblending
-
-  ANALYSIS_THRESH1 5        # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
-  DETECT_THRESH1   5          # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
-  DETECT_MINAREA1  20          # minimum number of pixels above threshold
-
-  BACK_SIZE1      100
-  BACK_FILTERSIZE1 11
+    BACK_SIZE1     = 100
+    BACK_FILTERSIZE1  = 11
 
 
-  # params for second run
-  # run with high deblend number and low SNR
+    [Run2]
+    DEBLEND_NTHRESH2 = 16
+    DEBLEND_MINCONT2 = .1 
 
-  DEBLEND_NTHRESH2 32           # Number of deblending sub-thresholds
-  DEBLEND_MINCONT2 .01         # Minimum contrast parapymeter for deblending
-
-  ANALYSIS_THRESH2 1.5         # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
-  DETECT_THRESH2   1.5         # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
-  DETECT_MINAREA2  20      # minimum number of pixels above threshold
-
-  BACK_SIZE2       11
-  BACK_FILTERSIZE2 10 
-
-  Scale  1.5   # factor scale which ellipses are enlarged
-
-  Offset 5
+    ANALYSIS_THRESH2 = 1.2 
+    DETECT_THRESH2  = 1.2 
+    DETECT_MINAREA2 = 10 
 
 
-  SatDs9 sat.reg
-
-  SatScale 1 
-
-  SatOffset  20
-
-  OutCatalog  hotcold.cat
-
-  RegDs9   hotcold.reg
-
-  MinSatSize 20      # min size for sat regions
-
-  SatQ 0.7
-
-  SatMethod  3 
-
-  ReduCoef 0.2
-
-  FracTol 0.5
+    BACK_SIZE2      = 10
+    BACK_FILTERSIZE2 = 2
 
 
-  JoinScale 2
+    [Sizes]
+
+    Scale =  1.5 
+    Offset = 5
+    ReduCoef = 0.2
+    FracTol = 0.5
+    JoinScale = 1.5 
+    ScaleCor = 1.5 
 
 
-  ScaleCor 0.7 
+    [Saturation]
 
-  ScaleCor 1.5 
+    SATUR_LEVEL =    30000 
+    SatDs9 = sat.reg
+    SatScale = 1.7
+    SatOffset =  20
+    MinSatSize  = 20     
+    SatQ = 0.7
+    SatMethod =  3 
+
+
+
+
+
+
 
 
 Description of the Configuration file parameters
@@ -101,10 +92,10 @@ Description of the Configuration file parameters
 Let's see the explanation of each of the parameters above one by one. 
 
 
-FirstRun  
+run1
         Enables to run the first run (Enable it 1; disable with  = 0)
 
-SecondRun 
+run2
         Enables to run the second run (Enable it 1; disable with  = 0)
 
 

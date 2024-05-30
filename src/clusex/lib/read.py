@@ -82,9 +82,8 @@ def readcon(params,confile):
         params.scale = convalues['scale']
 
 
-    if convalues.get('offset'):
-        params.offset = convalues['offset']
-
+    if convalues.get('Offset'):
+        params.offset = convalues['Offset']
 
 
     if convalues.get('OutCatalog'):
@@ -162,9 +161,10 @@ def read_config(confile):
 	makemask = config.getboolean('General', 'MakeMask')
 	OutCatalog = config.get('General', 'OutCatalog')
 	RegDs9 = config.get('General', 'RegDs9')
+	run1 = config.getboolean('General', 'run1')
+	run2 = config.getboolean('General', 'run2')
 
 
-	run1 = config.getboolean('Run1', 'run1')
 	deblend_nthresh1 = config.getfloat('Run1', 'DEBLEND_NTHRESH1')
 	deblend_mincont1 = config.getfloat('Run1', 'DEBLEND_MINCONT1')
 	analysis_thresh1 = config.getfloat('Run1', 'ANALYSIS_THRESH1')
@@ -174,7 +174,6 @@ def read_config(confile):
 	back_filtersize1 = config.getfloat('Run1', 'BACK_FILTERSIZE1')
 
 
-	run2 = config.getboolean('Run2', 'run2')
 	deblend_nthresh2 = config.getfloat('Run2', 'DEBLEND_NTHRESH2')
 	deblend_mincont2 = config.getfloat('Run2', 'DEBLEND_MINCONT2')
 	analysis_thresh2 = config.getfloat('Run2', 'ANALYSIS_THRESH2')
@@ -185,6 +184,7 @@ def read_config(confile):
 
 
 	scale = config.getfloat('Sizes', 'Scale')
+	Offset = config.getfloat('Sizes', 'Offset')
 	ReduCoef = config.getfloat('Sizes', 'ReduCoef')
 	FracTol = config.getfloat('Sizes', 'FracTol')
 	JoinScale = config.getfloat('Sizes', 'JoinScale')
@@ -230,6 +230,7 @@ def read_config(confile):
 		'back_filtersize2': back_filtersize2,
 
 		'scale': scale,
+		'Offset': Offset,
 		'ReduCoef': ReduCoef,
 		'FracTol': FracTol,
 		'JoinScale': JoinScale,
