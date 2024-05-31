@@ -128,7 +128,7 @@ def readcon(params,confile):
 
 
     if convalues.get('JoinScale'):
-        params.joinscale = convalues['joinScale']
+        params.joinscale = convalues['JoinScale']
 
 
     if convalues.get('ScaleCor'):
