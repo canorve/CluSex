@@ -401,7 +401,7 @@ def compsky():
     parser.add_argument("-o","--outcat", type=str, help="name of the output catalog ",default='out.cat')
 
 
-
+    parser.add_argument("-ol","--outliers",action="store_true", help="Removes top 80% and bottom 20% of the pixels values before to make sky computation")
 
     args = parser.parse_args()
 
@@ -422,6 +422,7 @@ def compsky():
 
 
     changeRad = args.changeRad
+    outliers = args.outliers
 
 
     ##end input
@@ -511,7 +512,7 @@ def compsky():
             #                                            "ring.fits","ringmask.fits")
             mean,std, median,rad = SkyCal().GetEllipSky(datimg,tempmask,xx,yy,
                                                         thetadeg,q,Rinit,width,
-                                                        "ring.fits","ringmask.fits")
+                                                        "ring.fits","ringmask.fits",outliers=outliers)
 
 
             line="Total sky:  mean = {:.2f}; std={:.2f}; median = {:.2f} ".format(mean,std,median)
@@ -583,7 +584,7 @@ def compsky():
            # mean,std, median = SkyCal().RandBox(ImageFile,MaskFile,xx,yy,
            #                                     thetadeg,q,Rinit,box,numbox,Rmax)
             mean,std, median = SkyCal().RandBox(datimg,maskimg,xx,yy,
-                                                thetadeg,q,Rinit,box,numbox,Rmax)
+                                                thetadeg,q,Rinit,box,numbox,Rmax, outliers=outliers)
 
             line="Total sky:  mean = {:.2f}; std = {:.2f}; median = {:.2f}".format(mean,std,median)
             print(line)

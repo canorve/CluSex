@@ -10,7 +10,7 @@ import numpy as np
 class SkyCal:
     "This class compute the sky using two methods: random boxes and sky gradient"
 
-    def RandBox(self,ImageFile,MaskFile,xx,yy,thetadeg,q,Rinit,box,num,Rmax,outliers=True):
+    def RandBox(self,ImageFile,MaskFile,xx,yy,thetadeg,q,Rinit,box,num,Rmax,outliers=False):
         "random box method to compute sky"
 
         self.xx = xx 
@@ -537,7 +537,7 @@ class SkyCal:
         ######
 
 
-    def GetEllipSky(self, ImageFile, MaskFile, xx, yy, thetadeg, q, Rinit, width,namering,ringmask,outliers=True):
+    def GetEllipSky(self, ImageFile, MaskFile, xx, yy, thetadeg, q, Rinit, width,namering,ringmask,outliers=False):
         "Gradient sky method"
 
         self.xx = xx 
