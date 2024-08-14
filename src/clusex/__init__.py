@@ -1,15 +1,5 @@
 import sys
 
-
-
-from clusex.lib.join import joinsexcat 
-from clusex.lib.make import CatArSort
-from clusex.lib.make import MakeMask
-from clusex.lib.make import MakeSatBox 
-
-from clusex.lib.ds9 import ds9kron
-from clusex.lib.sky import SkyCal 
-
 if sys.version_info[:2] >= (3, 8):
     # TODO: Import directly (no need for conditional) when `python_requires = >= 3.8`
     from importlib.metadata import PackageNotFoundError, version  # pragma: no cover
