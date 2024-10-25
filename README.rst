@@ -2,14 +2,25 @@
    :depth: 3
 ..
 
-
---------------
-
-**CluSex**
-===========
+---------
 
 .. image:: https://zenodo.org/badge/130286946.svg
    :target: https://zenodo.org/badge/latestdoi/130286946
+
+
+.. image:: https://img.shields.io/pypi/v/CluSex.svg
+    :alt: PyPI-Server
+    :target: https://pypi.org/project/CluSex/
+
+.. image:: https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold
+    :alt: Project generated with PyScaffold
+    :target: https://pyscaffold.org/
+
+
+===========
+
+**CluSex**
+===========
 
 
 What is CluSex?
@@ -103,17 +114,18 @@ make an alias.
 
 
 
-Once that is done, download the code and run
+Once that is done, install it using pip:
+
+::
+
+    pip install CluSex
+
+
+another option is to download the code and run
 
 ::
 
    pip install . 
-
-or 
-
-::
-
-   pip install clusex 
 
 
 
