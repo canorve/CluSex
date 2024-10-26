@@ -2,7 +2,7 @@
    :depth: 3
 ..
 
----------
+=============
 
 .. image:: https://zenodo.org/badge/130286946.svg
    :target: https://zenodo.org/badge/latestdoi/130286946
@@ -17,10 +17,11 @@
     :target: https://pyscaffold.org/
 
 
-===========
 
 **CluSex**
 ===========
+
+
 
 
 What is CluSex?
@@ -35,6 +36,11 @@ creates masks, finds saturated star regions, computes
 sky background and makes stamps for every detected object. 
 
 .. _sextractor: https://www.astromatic.net/software/sextractor/
+
+
+
+
+--------------
 
 
 Why CluSex?
@@ -85,11 +91,17 @@ across a bright saturated star:
 .. image:: img/SatRegion.png
 
 
+
+--------------
+
 Requirements
 --------------
 
 - astropy
 - numpy
+
+
+--------------
 
 Installation
 ---------------
@@ -128,6 +140,7 @@ another option is to download the code and run
    pip install . 
 
 
+--------------
 
 USAGE
 ------
@@ -241,6 +254,7 @@ low deblend number and high SNR, and, on the other hand, the second run
 with a high deblend number and low SNR (check sextractor manual for details 
 to how to do this).
 
+--------------
 
 How it works
 --------------
@@ -328,6 +342,8 @@ given number of boxes, clusex computes the
 sky background. 
 
 
+--------------
+
 Additional features 
 ---------------------
 
@@ -386,6 +402,7 @@ the mask. Useful when a model fitting will be applied
 to the galaxy. 
 
 
+--------------
 
 HOW TO
 -------
@@ -395,6 +412,7 @@ Full explanations of the commands above are found in
 
 `How to run <docs/howto.rst>`__
 
+--------------
 
 NOTES
 ------
@@ -442,6 +460,7 @@ be changed to MAG_AUTO and so.
 Additional columns will be added in future releases.
 
 
+--------------
 
 API
 ----
@@ -453,6 +472,8 @@ API:
 
 
 
+--------------
+
 Cite as
 -----------
 
@@ -461,11 +482,16 @@ If you find this code useful, please cite as:
 Añorve, C., Orlando Gutiérrez, & López-Cruz, O. (2024). 
 canorve/CluSex: CluSex v2.4.1 (v2.4.1). Zenodo. https://doi.org/10.5281/zenodo.13994345
 
+
+--------------
+
 Questions?
-~~~~~~~~~~~~
+--------------
 
 Code is far from perfect, so if you have suggestions or questions
 Please send an email to canorve [at] gmail [dot] com
+
+--------------
 
 License
 ---------
