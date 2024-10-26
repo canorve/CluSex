@@ -453,6 +453,13 @@ API:
 
 
 
+Cite as
+-----------
+
+If you find this code useful, please cite as:
+
+Añorve, C., Orlando Gutiérrez, & López-Cruz, O. (2024). 
+canorve/CluSex: CluSex v2.4.1 (v2.4.1). Zenodo. https://doi.org/10.5281/zenodo.13994345
 
 Questions?
 ~~~~~~~~~~~~
