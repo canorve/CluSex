@@ -54,7 +54,7 @@ def ds9kron(sexfile,regfile,scale,offset):
             f_out.write(line)
 
 
-            line2="point({0},{1}) # point=boxcircle font=\"times 10 bold\" text={2} {3} {4} \n".format(X[idx],Y[idx],"{",np.int(N[idx]),"}")
+            line2="point({0},{1}) # point=boxcircle font=\"times 10 bold\" text={2} {3} {4} \n".format(X[idx],Y[idx],"{",int(N[idx]),"}")
 
             f_out.write(line2)
 
@@ -66,7 +66,7 @@ def ds9kron(sexfile,regfile,scale,offset):
             #f_out.write(line)
 
 
-            line2="point({0},{1}) # point=boxcircle color=red font=\"times 10 bold\" text={2} {3} {4} \n".format(X[idx],Y[idx],"{",np.int(N[idx]),"}")
+            line2="point({0},{1}) # point=boxcircle color=red font=\"times 10 bold\" text={2} {3} {4} \n".format(X[idx],Y[idx],"{",int(N[idx]),"}")
 
             f_out.write(line2)
 

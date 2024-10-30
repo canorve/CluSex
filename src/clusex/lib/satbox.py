@@ -171,7 +171,7 @@ class SatBox:
 
                 ##########
 
-                line2="point({0},{1}) # color=red point=boxcircle font=\"times 10 bold\" text={{ {2} }} \n".format(xcent,ycent,np.int32(N[idx]))
+                line2="point({0},{1}) # color=red point=boxcircle font=\"times 10 bold\" text={{ {2} }} \n".format(xcent,ycent,int(N[idx]))
 
                 f_out.write(line2)
 
@@ -433,10 +433,10 @@ class SatBox:
             ymin= Y - sidey / 2
             ymax= Y + sidey / 2
 
-            xmin=np.int32(np.round(xmin))
-            xmax=np.int32(np.round(xmax))
-            ymin=np.int32(np.round(ymin))
-            ymax=np.int32(np.round(ymax))
+            xmin=int(np.round(xmin))
+            xmax=int(np.round(xmax))
+            ymin=int(np.round(ymin))
+            ymax=int(np.round(ymax))
 
 
             return (xmin,xmax,ymin,ymax)
@@ -474,8 +474,8 @@ class SatBox:
             ycent = ymin + sidey/2
 
 
-            xcent=np.int32(np.round(xcent))
-            ycent=np.int32(np.round(ycent))
+            xcent=int(np.round(xcent))
+            ycent=int(np.round(ycent))
     
 
             return (xcent,ycent,sidex,sidey)
@@ -670,8 +670,8 @@ class SatBox:
                 if Rkrony <= minsatsize:
                     Rkrony = minsatsize
 
-                Rkronx=np.int32(np.round(Rkronx))
-                Rkrony=np.int32(np.round(Rkrony))
+                Rkronx=int(np.round(Rkronx))
+                Rkrony=int(np.round(Rkrony))
 
 
                 xmin,xmax,ymin,ymax = self.BoxSide2Corners(X[idx],Y[idx], Rkronx, Rkrony)

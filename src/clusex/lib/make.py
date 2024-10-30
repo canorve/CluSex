@@ -86,10 +86,10 @@ def MakeKron(imagemat, idn, x, y, R, theta, ell, xmin, xmax, ymin, ymax):
 
 # Check
 
-    xmin = np.int(xmin)
-    xmax = np.int(xmax)
-    ymin = np.int(ymin)
-    ymax = np.int(ymax)
+    xmin = int(xmin)
+    xmax = int(xmax)
+    ymin = int(ymin)
+    ymax = int(ymax)
 
     q = (1 - ell)
     bim = q * R
@@ -269,8 +269,8 @@ def CatArSort(SexCat,scale,offset,SexArSort,NCol,NRow):
     index = Area.argsort()
     for i in index:
 
-        line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}\n".format(n[i], alpha[i], delta[i], xx[i], yy[i], mg[i], kr[i], fluxrad[i], ia[i], ai[i], e[i], theta[i], bkgd[i], idx[i], flg[i], np.int(
-            np.round(sxmin[i])), np.int(np.round(sxmax[i])), np.int(np.round(symin[i])), np.int(np.round(symax[i])), np.int(np.round(sxsmin[i])), np.int(np.round(sxsmax[i])), np.int(np.round(sysmin[i])), np.int(np.round(sysmax[i])))
+        line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}\n".format(n[i], alpha[i], delta[i], xx[i], yy[i], mg[i], kr[i], fluxrad[i], ia[i], ai[i], e[i], theta[i], bkgd[i], idx[i], flg[i], int(
+            np.round(sxmin[i])), int(np.round(sxmax[i])), int(np.round(symin[i])), int(np.round(symax[i])), int(np.round(sxsmin[i])), int(np.round(sxsmax[i])), int(np.round(sysmin[i])), int(np.round(sysmax[i])))
 
         f_out.write(line)
 

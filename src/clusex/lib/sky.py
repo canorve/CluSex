@@ -185,13 +185,13 @@ class SkyCal:
             else:
                 ymax =self.nrow
 
-        xmin=np.int32(np.round(xmin))
-        ymin=np.int32(np.round(ymin))
-        xmax=np.int32(np.round(xmax))
-        ymax=np.int32(np.round(ymax))
+        xmin=int(np.round(xmin))
+        ymin=int(np.round(ymin))
+        xmax=int(np.round(xmax))
+        ymax=int(np.round(ymax))
 
 
-        return (xmin,xmax,ymin,ymax,np.int32(R))
+        return (xmin,xmax,ymin,ymax,int(R))
 
     def GetRandBoxSky(self, Rinit, Rmax):
         '''compute mean, std, and median from random selected boxes'''
@@ -409,10 +409,10 @@ class SkyCal:
     def MakeKron(self,imagemat, idn, x, y, R, theta, q, xmin, xmax, ymin, ymax):
         "This subroutine create a Kron ellipse within a box defined by: xmin, xmax, ymin, ymax"
 
-        xmin = np.int(xmin)
-        xmax = np.int(xmax)
-        ymin = np.int(ymin)
-        ymax = np.int(ymax)
+        xmin = int(xmin)
+        xmax = int(xmax)
+        ymin = int(ymin)
+        ymax = int(ymax)
 
         bim = q * R
 
@@ -496,10 +496,10 @@ class SkyCal:
             else:
                 ymax = nrow
 
-        xmin=np.int32(np.round(xmin))
-        ymin=np.int32(np.round(ymin))
-        xmax=np.int32(np.round(xmax))
-        ymax=np.int32(np.round(ymax))
+        xmin=int(np.round(xmin))
+        ymin=int(np.round(ymin))
+        xmax=int(np.round(xmax))
+        ymax=int(np.round(ymax))
 
 
         return (xmin, xmax, ymin, ymax)
