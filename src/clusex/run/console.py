@@ -401,7 +401,7 @@ def compsky():
     parser.add_argument("-o","--outcat", type=str, help="name of the output catalog ",default='out.cat')
 
 
-    parser.add_argument("-ol","--outliers",action="store_true", help="Removes top 80% and bottom 20% of the pixels values before to make sky computation")
+    parser.add_argument("-ol","--outliers",action="store_true", help="Removes top 80%% and bottom 20%% of the pixels values before to make sky computation")
 
     args = parser.parse_args()
 
