@@ -94,15 +94,6 @@ across a bright saturated star:
 
 --------------
 
-Requirements
---------------
-
-- astropy
-- numpy
-
-
---------------
-
 Installation
 ---------------
 
@@ -322,8 +313,8 @@ that Sextractor overestimates the sky background (Haussler 2007).
 A wrong sky background value will produce a bad computation 
 of Sersic index for model fitting.
 
-CluSex uses two different methods to compute 
-sky background: 1) gradient sky
+CluSex uses two different methods through *compsky* command to 
+compute the sky background: 1) gradient sky
 and 2) random boxes around the objects.
 
 Gradient sky method computes the background sky in a ring around 
