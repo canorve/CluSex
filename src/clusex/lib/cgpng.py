@@ -68,7 +68,7 @@ class GUI:
         plt.savefig(img_data)
         
         load = Image.open(img_data)
-        resized = load.resize((520, 380),Image.ANTIALIAS)
+        resized = load.resize((520, 380),Image.Resampling.LANCZOS)
         render = ImageTk.PhotoImage(resized)
         Image_Plot = tk.Label(master, image = render)
         Image_Plot.image = render 
@@ -173,7 +173,7 @@ class GUI:
             plt.savefig(img_data)
             
             load = Image.open(img_data)
-            resized = load.resize((520, 380),Image.ANTIALIAS)
+            resized = load.resize((520, 380),Image.Resampling.LANCZOS )
             render = ImageTk.PhotoImage(resized)
             Image_Plot = tk.Label(self.master, image = render)
             Image_Plot.image = render 
