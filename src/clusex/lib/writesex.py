@@ -139,9 +139,9 @@ def runsex(params):
 
     if (params.run1 == 1):
         print("Running hot.sex ")
-        print("sex -c {} {} \n".format(params.outhot,params.image))
-        runcmd="sex -c {} {} ".format(params.outhot,params.image)
-        # Run GALFIT
+        print("source-extractor -c {} {} \n".format(params.outhot,params.image))
+        runcmd="source-extractor -c {} {} ".format(params.outhot,params.image)
+        # Run Sextractor 
         err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  
         if err.returncode != 0:
             print("error: ",err.returncode,err.stderr)
@@ -149,9 +149,9 @@ def runsex(params):
 
     if (params.run2 == 1):
         print("Running cold.sex ")
-        print("sex -c {} {} \n".format(params.outcold,params.image))
-        runcmd="sex -c {} {} ".format(params.outcold,params.image)
-        # Run GALFIT
+        print("source-extractor -c {} {} \n".format(params.outcold,params.image))
+        runcmd="source-extractor -c {} {} ".format(params.outcold,params.image)
+        # Run Sextractor 
         err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True) 
         if err.returncode != 0:
             print("error: ",err.returncode,err.stderr)
