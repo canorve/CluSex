@@ -203,6 +203,7 @@ file (it follows the format of configparser library):
     [Sizes]
 
     Scale =  1.5 
+    Offset = 0
     ReduCoef = 0.2
     FracTol = 0.5
     JoinScale = 1.5 
