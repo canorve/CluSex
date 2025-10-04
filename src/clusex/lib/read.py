@@ -183,8 +183,8 @@ def read_config(confile):
 	back_filtersize2 = config.getfloat('Run2', 'BACK_FILTERSIZE2')
 
 
-	scale = config.getfloat('Sizes', 'Scale')
-	Offset = config.getfloat('Sizes', 'Offset')
+	scale = config.getfloat('Sizes', 'Scale', fallback=1)
+	Offset = config.getfloat('Sizes', 'Offset', fallback=0)
 	ReduCoef = config.getfloat('Sizes', 'ReduCoef')
 	FracTol = config.getfloat('Sizes', 'FracTol')
 	JoinScale = config.getfloat('Sizes', 'JoinScale')
