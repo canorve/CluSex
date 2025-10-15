@@ -22,6 +22,9 @@ from clusex.lib.make import MakeObjImg
 
 from clusex.lib.galaxypng import downloadDesi
 
+from clusex.lib.maskellipse import maskimage 
+
+from clusex.lib.joinfiles import joinclass 
 
 from clusex.lib.ds9 import ds9kron
 
@@ -33,6 +36,7 @@ from clusex.lib.sky import SkyCal
 
 from clusex.lib.cgpng import cgPNG
 
+from clusex_test.lib.cgpng import cgPNG
 
 #console scripts
 
@@ -623,27 +627,6 @@ def compsky():
 
 
 
-def guiclass():
-    """ classify png galaxy images"""
-
-    printWelcome()
-
-    parser = argparse.ArgumentParser(description="guiclass: classify galaxies from list")
-
-    # required arguments
-    parser.add_argument("pnglist",help="list of the png files to classify. It can be created with ls command")
-    parser.add_argument("pngout",help="name of the output file. It is the same as pnglist but a column of morphology is added ")
-
-
-    args = parser.parse_args()
-
-    pnglist = args.pnglist
-    pngout = args.pngout
-
-
-
-    cgPNG(pnglist, pngout)
-
 
 
 def getDesiParser():
@@ -676,6 +659,61 @@ def getDesiParser():
 
     downloadDesi(args.sexcat, args.dir, args.scale, args.offset, args.desi_pixscale, 
                 args.image_plate, args.max_mag, args.class_star)
+
+
+
+def guiclass():
+    """ classify png galaxy images """
+    printWelcome()
+
+    parser = argparse.ArgumentParser(description="guiclass: classify galaxies from list")
+
+    # required arguments
+    parser.add_argument("pnglist", help="list of the png files to classify. It can be created with ls command")
+    parser.add_argument("pngout", help="name of the output file. It is the same as pnglist but a column of morphology is added ")
+
+    args = parser.parse_args()
+
+    pnglist = args.pnglist
+    pngout = args.pngout
+
+    cgPNG(pnglist, pngout, include_header=True)
+
+
+def maskArgParser():
+    """
+    Function for argument parsing
+    """
+
+    parser = argparse.ArgumentParser(description="maskImage: Apply a mask for the downloaded png images from DESI")
+
+    # required arguments
+    parser.add_argument("sexcat", help="Sextractor catalog")
+    parser.add_argument("paths", type=str,  help="Text file with image paths, one per line.")
+    parser.add_argument("-s","--scale",type=float, default=1, help="Scaling factor applied to enlarge the galaxies to apply mask. Default = .7")
+    parser.add_argument("-off","--offset", type=float, default=0, help="adding/substract constant applied to enlarged galaxies. Default= 0")
+    parser.add_argument("-desi","--desi_pixscale",type=float, default=0.262, 
+            help="Desi pixel scale default=0.262 (value of DESI). Changing this value will zoom in or zoom out the image")
+    parser.add_argument("-plate","--image_plate",type=float, default=0.68 , 
+            help="Plate scale of the original image where the catalog (sexcat) was extracted. Default = 0.68")
+
+
+    parser.add_argument("-od","--out_dir", type=str, default="masked_images", help="Directory where the output images are saved")
+
+    args = parser.parse_args()
+
+    maskImage(args.sexcat, args.paths, args.scale, args.offset, args.desi_pixscale, 
+                args.image_plate, args.out_dir)
+
+
+def joinparser():
+    p = argparse.ArgumentParser(description="Join class from file1 to data from file2 using ID from image name.")
+    p.add_argument("file1", help="file with columns: image_path  class")
+    p.add_argument("file2", help="numeric file, first column  = ID")
+    p.add_argument("-o", "--output", default="output_merged.tsv", help="output file (Default: output_merged.tsv)")
+    args = p.parse_args()
+    joinclass(args.file1, args.file2, args.output)
+
 
 
 
