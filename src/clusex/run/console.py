@@ -20,6 +20,8 @@ from clusex.lib.make import MakeSatBox
 from clusex.lib.make import MakeStamps
 from clusex.lib.make import MakeObjImg
 
+from clusex.lib.galaxypng import downloadDesi
+
 
 from clusex.lib.ds9 import ds9kron
 
@@ -642,6 +644,38 @@ def guiclass():
 
     cgPNG(pnglist, pngout)
 
+
+
+def getDesiParser():
+    """
+    Function for argument parsing
+    """
+
+    parser = argparse.ArgumentParser(description="downloadDesi: Download png images from DESI given a Sextractor Catalog")
+
+    # required arguments
+    parser.add_argument("sexcat", help="Sextractor catalog")
+    parser.add_argument("-s","--scale",type=float, default=1, help="Scaling factor applied to enlarge the galaxies. Default = 1")
+    parser.add_argument("-off","--offset", type=float, default=0, help="adding constant applied to enlarge the galaxies. Default= 0")
+    parser.add_argument("-desi","--desi_pixscale",type=float, default=0.262, 
+            help="Desi pixel scale default=0.262 (value of DESI). Changing this value will zoom in or zoom out the image")
+    parser.add_argument("-plate","--image_plate",type=float, default=0.68 , 
+            help="Plate scale of the original image where the catalog (sexcat) was extracted. Default = 0.68")
+
+    parser.add_argument("-mag","--max_mag",type=float, default=18 , 
+            help="Maximum allowed galaxy magnitude for downloading. Default = 18")
+
+    parser.add_argument("-clas","--class_star",type=float, default=0.6, 
+            help="Upper limit of the SExtractor class_star parameter used for downloading (to ensure galaxies) Default = 0.6")
+
+
+
+    parser.add_argument("-d","--dir", type=str, default="desi_images", help="name of the output directory where the images will be stored")
+
+    args = parser.parse_args()
+
+    downloadDesi(args.sexcat, args.dir, args.scale, args.offset, args.desi_pixscale, 
+                args.image_plate, args.max_mag, args.class_star)
 
 
 
