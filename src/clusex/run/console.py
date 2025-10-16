@@ -224,7 +224,11 @@ def remellmask():
 
 
 def makestamps():
-    """Make image stamps for each object"""
+    """Make image stamps for each object
+        This function is OBSOLETE
+        will be deleted in future versions
+    
+    """
 
 
     printWelcome()
@@ -331,7 +335,7 @@ def makeobjimg():
 
     printWelcome()
 
-    parser = argparse.ArgumentParser(description="Make object image")
+    parser = argparse.ArgumentParser(description="Make object image: returns an image of the objects without sky background")
 
     # required arguments
     parser.add_argument("image",help="Fits image of the objects")

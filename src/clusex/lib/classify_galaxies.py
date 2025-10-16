@@ -81,7 +81,7 @@ def file_to_data_url(path: str) -> str:
         elif ext == ".gif":
             mime = "image/gif"
         else:
-            raise ValueError(f"No se reconoce el tipo MIME de: {path}")
+            raise ValueError(f"MIME is not recognized: {path}")
     with open(path, "rb") as f:
         b64 = base64.b64encode(f.read()).decode("utf-8")
     return f"data:{mime};base64,{b64}"
@@ -117,12 +117,12 @@ def build_messages_for_batch(image_paths: List[str]) -> List[Dict[str, Any]]:
 
 def ensure_list_of_dicts(obj: Any, expected_len: int) -> List[Dict[str, Any]]:
     if not isinstance(obj, list):
-        raise ValueError("La salida no es una lista JSON.")
+        raise ValueError("output is not a JSON. list ")
     if len(obj) != expected_len:
-        raise ValueError(f"Tamaño de salida inesperado: {len(obj)} != {expected_len}")
+        raise ValueError(f"output size unexpected: {len(obj)} != {expected_len}")
     for i, it in enumerate(obj):
         if not isinstance(it, dict):
-            raise ValueError(f"Elemento {i} no es un objeto JSON.")
+            raise ValueError(f"Element {i} is not an object JSON.")
     return obj
 
 
@@ -140,10 +140,11 @@ def _get_client():
 )
 def call_api(client, model: str, messages: List[Dict[str, Any]], response_format: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Estrategia Opción A:
-    1) Intenta con response_format (salida validada).
-    2) Si el SDK no acepta ese argumento (TypeError), reintenta sin response_format.
-       Luego extrae el primer bloque JSON del texto y lo parsea.
+    Calling API:
+    Try using response_format (validated output).
+
+    If the SDK does not accept that argument (TypeError), retry without response_format,
+    then extract the first JSON block from the text and parse it.”
     """
     import re
 
@@ -172,18 +173,18 @@ def call_api(client, model: str, messages: List[Dict[str, Any]], response_format
         m = re.search(r'(\{.*\}|\[.*\])', raw, re.S)
         if not m:
             raise RuntimeError(
-                "No se encontró JSON en la salida del modelo (fallback sin response_format). "
-                f"Primeros 200 chars: {raw[:200]!r}"
+                "No JSON was found in the model output (fallback sin response_format). "
+                f"First 200 chars: {raw[:200]!r}"
             )
         return json.loads(m.group(1))
 
 
 def classify():
-    parser = argparse.ArgumentParser(description="Clasificación morfológica de galaxias (Opción A: fallback sin response_format).")
-    parser.add_argument("--paths-file", required=True, help="Archivo de texto con rutas de imágenes, una por línea.")
-    parser.add_argument("--out", required=True, help="Ruta del CSV de salida.")
-    parser.add_argument("--batch-size", type=int, default=8, help="Imágenes por solicitud (≤10 recomendado).")
-    parser.add_argument("--model", default="gpt-4.1-mini", help="Modelo de visión, p.ej. gpt-4.1-mini.")
+    parser = argparse.ArgumentParser(description="Morphologic galaxy classification with chatGPT.")
+    parser.add_argument("--paths-file", required=True, help="text file with image paths, one per row. It can be created with ls")
+    parser.add_argument("--out", required=True, help="CSV output file.")
+    parser.add_argument("--batch-size", type=int, default=8, help="Images per request (≤10 recommended)")
+    parser.add_argument("--model", default="gpt-4.1-mini", help="vision model, example: gpt-4.1-mini.")
     args = parser.parse_args()
 
     ensure_api_key()
@@ -191,11 +192,11 @@ def classify():
 
     image_paths = load_paths(args.paths_file)
     if not image_paths:
-        print("No se encontraron rutas en el archivo de paths.")
+        print("No paths were found in the paths file")
         return
 
     rows = []
-    for batch_paths in tqdm(list(chunked(image_paths, args.batch_size)), desc="Procesando lotes"):
+    for batch_paths in tqdm(list(chunked(image_paths, args.batch_size)), desc="Processing batches"):
         # Construcción del mensaje
         try:
             messages = build_messages_for_batch(batch_paths)
@@ -203,7 +204,7 @@ def classify():
             for p in batch_paths:
                 rows.append({
                     "path": p, "class": "", "bar": "", "ring": "",
-                    "inclination_deg": "", "confidence": "", "notes": f"ERROR EN LECTURA/ENCODE: {repr(e)}"
+                    "inclination_deg": "", "confidence": "", "notes": f"ERROR IN LECTURE/ENCODE: {repr(e)}"
                 })
             continue
 
@@ -237,7 +238,7 @@ def classify():
             for p in batch_paths:
                 rows.append({
                     "path": p, "class": "", "bar": "", "ring": "",
-                    "inclination_deg": "", "confidence": "", "notes": f"FORMATO INVALIDO: {repr(e)}"
+                    "inclination_deg": "", "confidence": "", "notes": f"INVALID FORMAT: {repr(e)}"
                 })
 
     # Escritura CSV
@@ -256,7 +257,7 @@ def classify():
     except Exception:
         pass
 
-    print(f"Done. Results en: {args.out}")
+    print(f"Done. Results in: {args.out}")
 
 
 if __name__ == "__main__":
