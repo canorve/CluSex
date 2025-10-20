@@ -7,6 +7,8 @@ import csv
 import json
 import mimetypes
 import os
+import re
+import shutil
 from pathlib import Path
 from typing import List, Dict, Any
 
@@ -19,11 +21,20 @@ def ensure_api_key():
     key = os.environ.get("OPENAI_API_KEY")
     if not key:
         raise RuntimeError(
-            "OPENAI_API_KEY it is not defined\n"
-            "Export key before continue:\n"
+            "OPENAI_API_KEY is not defined.\n"
+            "Export the key before run:\n"
             '  export OPENAI_API_KEY="sk-..."'
         )
 
+
+def load_textfile(path: str) -> str:
+    p = Path(path)
+    if not p.is_file():
+        raise FileNotFoundError(f"prompt file was not found: {path}")
+    txt = p.read_text(encoding="utf-8").strip()
+    if not txt:
+        raise ValueError("prompt file is empty")
+    return txt
 
 
 SCHEMA = {
@@ -36,25 +47,16 @@ SCHEMA = {
             "properties": {
                 "class": {
                     "type": "string",
-                    "description": "Main morphological class",
-                    "enum": ["E", "S0", "Sa", "Sb", "Sc", "Irr", "Uncertain"]
+                    "description": "Morphologic class",
+                    "enum": ["E","S0","S0-","S0/a","Sa","Sab","Sb","Sbc",
+                             "Sc","Scd","Sd","Sdm","Sm","Im","Unknown",
+                             "S","Irr","Uncertain"]
                 },
-                "bar": {"type": "boolean", "description": "Bar present?"},
-                "ring": {"type": "boolean", "description": "Ring present?"},
-                "inclination_deg": {
-                    "type": "number",
-                    "description": "Estimated disk inclination in degrees (0=face-on, 90=edge-on)"
-                },
-                "confidence": {
-                    "type": "number",
-                    "minimum": 0.0,
-                    "maximum": 1.0,
-                    "description": "Global confidence (0–1)"
-                },
-                "notes": {
-                    "type": "string",
-                    "description": "Brief rationale (e.g., low S/N, edge-on dust lane, interacting)"
-                }
+                "bar": {"type": "boolean"},
+                "ring": {"type": "boolean"},
+                "inclination_deg": {"type": "number"},
+                "confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+                "notes": {"type": "string"}
             },
             "required": ["class", "bar", "ring", "inclination_deg", "confidence", "notes"],
             "additionalProperties": False
@@ -81,10 +83,10 @@ def file_to_data_url(path: str) -> str:
         elif ext == ".gif":
             mime = "image/gif"
         else:
-            raise ValueError(f"MIME is not recognized: {path}")
-    with open(path, "rb") as f:
-        b64 = base64.b64encode(f.read()).decode("utf-8")
-    return f"data:{mime};base64,{b64}"
+            raise ValueError(f"MIME type is not recognized: {path}")
+    b = Path(path).read_bytes()
+    import base64 as _b64
+    return f"data:{mime};base64,{_b64.b64encode(b).decode('utf-8')}"
 
 
 def chunked(lst: List[Any], n: int):
@@ -92,41 +94,26 @@ def chunked(lst: List[Any], n: int):
         yield lst[i:i + n]
 
 
-
-def build_messages_for_batch(image_paths: List[str]) -> List[Dict[str, Any]]:
+def build_messages_for_batch(image_paths: List[str], instruction_text: str) -> List[Dict[str, Any]]:
     content = []
     for p in image_paths:
         data_url = file_to_data_url(p)
         content.append({"type": "input_image", "image_url": data_url})
-
-    instruction = (
-        "Task: morphological classification of each galaxy image.\n"
-        "Output requirements (CRITICAL):\n"
-        "• Return ONLY a strict JSON list with one object per image, in the same order.\n"
-        "• Each object MUST include ALL fields: class, bar, ring, inclination_deg, confidence, notes.\n"
-        "• If information is insufficient or ambiguous, use class='Uncertain', set bar=false, ring=false, "
-        "  set confidence ≤ 0.4, and explain briefly in notes (e.g., 'low S/N', 'very small', 'saturated').\n"
-        "• Do NOT leave any field empty. Do NOT output extra text outside the JSON.\n"
-        "• Classes allowed: E, S0, Sa, Sb, Sc, Irr, Uncertain.\n"
-        "• inclination_deg: numeric in [0,90].\n"
-        "• Keep answers concise.\n"
-    )
-    content.append({"type": "input_text", "text": instruction})
+    content.append({"type": "input_text", "text": instruction_text})
     return [{"role": "user", "content": content}]
 
 
 def ensure_list_of_dicts(obj: Any, expected_len: int) -> List[Dict[str, Any]]:
     if not isinstance(obj, list):
-        raise ValueError("output is not a JSON. list ")
+        raise ValueError("output is not a JSON list.")
     if len(obj) != expected_len:
         raise ValueError(f"output size unexpected: {len(obj)} != {expected_len}")
     for i, it in enumerate(obj):
         if not isinstance(it, dict):
-            raise ValueError(f"Element {i} is not an object JSON.")
+            raise ValueError(f"Element {i} is not an JSON object.")
     return obj
 
 
-# --- Cliente tardío para permitir tests sin importar si falta la key.
 def _get_client():
     from openai import OpenAI
     return OpenAI()
@@ -140,15 +127,10 @@ def _get_client():
 )
 def call_api(client, model: str, messages: List[Dict[str, Any]], response_format: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Calling API:
-    Try using response_format (validated output).
-
-    If the SDK does not accept that argument (TypeError), retry without response_format,
-    then extract the first JSON block from the text and parse it.”
+    Option:
+      1) Try with response_format (esqueme validation).
+      2) If SDK does not admit these argument, fallback without response_format + parsing JSON.
     """
-    import re
-
-    # Intento moderno
     try:
         resp = client.responses.create(
             model=model,
@@ -160,8 +142,7 @@ def call_api(client, model: str, messages: List[Dict[str, Any]], response_format
 
     except TypeError as e:
         if "unexpected keyword argument 'response_format'" not in str(e):
-            raise  # otro TypeError
-
+            raise
         # Fallback sin response_format
         resp = client.responses.create(
             model=model,
@@ -169,43 +150,99 @@ def call_api(client, model: str, messages: List[Dict[str, Any]], response_format
             temperature=0.2,
         )
         raw = resp.output_text or ""
-        # Busca el primer objeto o arreglo JSON.
         m = re.search(r'(\{.*\}|\[.*\])', raw, re.S)
         if not m:
             raise RuntimeError(
-                "No JSON was found in the model output (fallback sin response_format). "
+                "JSON was not found in output (fallback without response_format). "
                 f"First 200 chars: {raw[:200]!r}"
             )
         return json.loads(m.group(1))
 
 
+# -------- Copia/renombrado --------
+
+def sanitize_label(label: str) -> str:
+    """Convert the class in a fragment for file names"""
+    lab = re.sub(r'[^A-Za-z0-9]+', '-', str(label).strip())
+    return lab.strip('-') or "Unknown"
+
+
+def build_name_suffix(cls: str, bar: bool, include_bar: bool) -> str:
+    """
+    Returns sufix for the name: _<CLASS> o _<CLASS>_<BAR|NOBAR>.
+    """
+    base = sanitize_label(cls)
+    if include_bar:
+        return f"{base}_{'BAR' if bar else 'NOBAR'}"
+    return base
+
+
+def copy_with_label(src_path: str, out_dir: Path, cls: str, bar: bool, include_bar: bool) -> Path:
+    """
+    Copy the image to out_dir with suffix _<CLASS>[_BAR|_NOBAR] before the file extension.
+    Avoid overwriting.
+    """
+    out_dir.mkdir(parents=True, exist_ok=True)
+    p = Path(src_path)
+    stem = p.stem
+    ext = p.suffix
+    suffix = build_name_suffix(cls, bar, include_bar)
+    target = out_dir / f"{stem}_{suffix}{ext}"
+    idx = 1
+    while target.exists():
+        target = out_dir / f"{stem}_{suffix}_{idx}{ext}"
+        idx += 1
+    shutil.copy2(p, target)
+    return target
+
+
+# -------- main function --------
+
 def classify():
-    parser = argparse.ArgumentParser(description="Morphologic galaxy classification with chatGPT.")
-    parser.add_argument("--paths-file", required=True, help="text file with image paths, one per row. It can be created with ls")
-    parser.add_argument("--out", required=True, help="CSV output file.")
-    parser.add_argument("--batch-size", type=int, default=8, help="Images per request (≤10 recommended)")
-    parser.add_argument("--model", default="gpt-4.1-mini", help="vision model, example: gpt-4.1-mini.")
+    parser = argparse.ArgumentParser(
+        description="Morphologic classification (extern prompt, fallback without response_format) + copy/rename optional."
+    )
+    parser.add_argument("--paths-file", required=True, help="text file with images paths, one per line")
+    parser.add_argument("--prompt-file", required=True, help="File .txt with the prompt instruction.")
+    parser.add_argument("--out", required=True, help="CSV file output.")
+    parser.add_argument("--batch-size", type=int, default=8, help="Images per batch (≤10 recomended).")
+    parser.add_argument("--model", default="gpt-4.1-mini", help="Vision model, example: gpt-4.1-mini.")
+    parser.add_argument("--copy-dir", default=None, help="If activated, it will copy each image renamed to this directory.")
+    parser.add_argument("--bar-in-name", action="store_true",
+                        help="If it is used with --copy-dir, adds _BAR or _NOBAR to the name of the copy.")
     args = parser.parse_args()
 
     ensure_api_key()
+    instruction_text = load_textfile(args.prompt_file)
     client = _get_client()
 
     image_paths = load_paths(args.paths_file)
     if not image_paths:
-        print("No paths were found in the paths file")
+        print("Paths were not found in the file.")
         return
 
+    
+    copy_dir = Path(args.copy_dir) if args.copy_dir else None   # <-- CORRECTA
+    # Corrección del guion en acceso:
+    copy_dir = Path(args.copy_dir) if args.copy_dir else None
+
     rows = []
-    for batch_paths in tqdm(list(chunked(image_paths, args.batch_size)), desc="Processing batches"):
+    for batch_paths in tqdm(list(chunked(image_paths, args.batch_size)), desc="Procesing batch"):
         # Construcción del mensaje
         try:
-            messages = build_messages_for_batch(batch_paths)
+            messages = build_messages_for_batch(batch_paths, instruction_text)
         except Exception as e:
             for p in batch_paths:
-                rows.append({
-                    "path": p, "class": "", "bar": "", "ring": "",
-                    "inclination_deg": "", "confidence": "", "notes": f"ERROR IN LECTURE/ENCODE: {repr(e)}"
-                })
+                row = {
+                    "path": p, "class": "Unknown", "bar": False, "ring": False,
+                    "inclination_deg": 0, "confidence": 0.2, "notes": f"ERROR IN LECTURE/ENCODE: {repr(e)}"
+                }
+                rows.append(row)
+                if copy_dir:
+                    try:
+                        copy_with_label(p, copy_dir, row["class"], row["bar"], args.bar_in_name)
+                    except Exception:
+                        pass
             continue
 
         # Llamada a la API (con fallback)
@@ -213,33 +250,51 @@ def classify():
             result = call_api(client, args.model, messages, SCHEMA)
         except Exception as e:
             for p in batch_paths:
-                rows.append({
-                    "path": p, "class": "", "bar": "", "ring": "",
-                    "inclination_deg": "", "confidence": "", "notes": f"ERROR API: {repr(e)}"
-                })
+                row = {
+                    "path": p, "class": "Unknown", "bar": False, "ring": False,
+                    "inclination_deg": 0, "confidence": 0.2, "notes": f"ERROR API: {repr(e)}"
+                }
+                rows.append(row)
+                if copy_dir:
+                    try:
+                        copy_with_label(p, copy_dir, row["class"], row["bar"], args.bar_in_name)
+                    except Exception:
+                        pass
             continue
 
-        # Validación de formato y mapeo
+        # Validación de formato, mapeo y copia
         try:
             result = ensure_list_of_dicts(result, expected_len=len(batch_paths))
-              
             for p, r in zip(batch_paths, result):
-                rows.append({
+                row = {
                     "path": p,
-                    "class": r.get("class", "Uncertain") or "Uncertain",
-                    "bar": r.get("bar", False),
-                    "ring": r.get("ring", False),
-                    "inclination_deg": r.get("inclination_deg", 0),
-                    "confidence": r.get("confidence", 0.2),
-                    "notes": r.get("notes", "Model returned incomplete fields")
-                })
+                    "class": (r.get("class") or "Unknown"),
+                    "bar": bool(r.get("bar", False)),
+                    "ring": bool(r.get("ring", False)),
+                    "inclination_deg": float(r.get("inclination_deg", 0) or 0),
+                    "confidence": float(r.get("confidence", 0.2) or 0.2),
+                    "notes": r.get("notes", "empty fields filled")
+                }
+                rows.append(row)
+
+                if copy_dir:
+                    try:
+                        copy_with_label(p, copy_dir, row["class"], row["bar"], args.bar_in_name)
+                    except Exception as ce:
+                        row["notes"] = (row.get("notes","") + f" | COPY WARN: {repr(ce)}").strip()
 
         except Exception as e:
             for p in batch_paths:
-                rows.append({
-                    "path": p, "class": "", "bar": "", "ring": "",
-                    "inclination_deg": "", "confidence": "", "notes": f"INVALID FORMAT: {repr(e)}"
-                })
+                row = {
+                    "path": p, "class": "Unknown", "bar": False, "ring": False,
+                    "inclination_deg": 0, "confidence": 0.2, "notes": f"INVALID FORMAT: {repr(e)}"
+                }
+                rows.append(row)
+                if copy_dir:
+                    try:
+                        copy_with_label(p, copy_dir, row["class"], row["bar"], args.bar_in_name)
+                    except Exception:
+                        pass
 
     # Escritura CSV
     out_cols = ["path", "class", "bar", "ring", "inclination_deg", "confidence", "notes"]
@@ -258,6 +313,8 @@ def classify():
         pass
 
     print(f"Done. Results in: {args.out}")
+    if copy_dir:
+        print(f"Copied/renamed images in: {copy_dir.resolve()}")
 
 
 if __name__ == "__main__":
