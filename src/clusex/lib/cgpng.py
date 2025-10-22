@@ -147,17 +147,17 @@ class GUI:
         for c in range(3):
             self.ctrl_frame.grid_columnconfigure(c, weight=1, uniform="ctrls")
 
-        self.Button_Undo = tk.Button(self.ctrl_frame, text="Deshacer", font=self.font,
+        self.Button_Undo = tk.Button(self.ctrl_frame, text="Undo", font=self.font,
                                      bg="#444444", fg="#ffffff",
                                      activebackground="#666666", activeforeground="#ffffff",
                                      relief="flat", bd=2, highlightthickness=0,
                                      command=self.undo_last)
-        self.Button_Skip = tk.Button(self.ctrl_frame, text="Omitir", font=self.font,
+        self.Button_Skip = tk.Button(self.ctrl_frame, text="Skip", font=self.font,
                                      bg="#444444", fg="#ffffff",
                                      activebackground="#666666", activeforeground="#ffffff",
                                      relief="flat", bd=2, highlightthickness=0,
                                      command=self.skip_image)
-        self.Button_Quit = tk.Button(self.ctrl_frame, text="Salir", font=self.font,
+        self.Button_Quit = tk.Button(self.ctrl_frame, text="Exit", font=self.font,
                                      bg="#444444", fg="#ffffff",
                                      activebackground="#666666", activeforeground="#ffffff",
                                      relief="flat", bd=2, highlightthickness=0,
