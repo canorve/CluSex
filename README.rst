@@ -252,8 +252,8 @@ to how to do this).
 
 Galaxy Classification
 ~~~~~~~~~~~~~~~~~~~~~~~
-Once a catalog was obtained with `clusex`, use `downloadDesi` to
-download png images of `DESI`_ to classify galaxies using the gui `guiclass` 
+Once a catalog was obtained with ``clusex``, use ``downloadDesi`` to
+download png images of `DESI`_ to classify galaxies using the gui ``guiclass`` 
 command:
 
 .. _DESI: https://www.legacysurvey.org/viewer
@@ -261,7 +261,7 @@ command:
 
 .. image:: img/gui.png
 
-or use `classify` command to classify the downloaded galaxy images using the chatGPT API. (you
+or use ``classify`` command to classify the downloaded galaxy images using the chatGPT API. (you
 need a openai API key and must buy tokens from openai `platform`_) 
 
 .. _platform: https://platform.openai.com/docs/overview
