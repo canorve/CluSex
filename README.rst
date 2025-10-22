@@ -16,6 +16,9 @@
     :alt: Project generated with PyScaffold
     :target: https://pyscaffold.org/
 
+.. image:: https://www.repostatus.org/badges/latest/active.svg
+   :alt: Project Status: Active – The project has reached a stable, usable state and is being actively developed.
+   :target: https://www.repostatus.org/#active
 
 
 **CluSex**
@@ -245,6 +248,23 @@ To make CluSex works properly, the first run must be configurated with a
 low deblend number and high SNR, and, on the other hand, the second run
 with a high deblend number and low SNR (check sextractor manual for details 
 to how to do this).
+
+
+Galaxy Classification
+~~~~~~~~~~~~~~~~~~~~~~~
+Once a catalog was obtained with `clusex`, use `downloadDesi` to
+download png images of `DESI`_ to classify galaxies using the gui `guiclass` 
+command:
+
+.. _DESI: https://www.legacysurvey.org/viewer
+
+
+.. image:: img/Comaimproved.png
+
+or use `classify` command to classify galaxies using the chatGPT API. (you
+need a openai API key and you must buy tokens from openai `platform`_) 
+
+.. _platform: https://platform.openai.com/docs/overview
 
 --------------
 
