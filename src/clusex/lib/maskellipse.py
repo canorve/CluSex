@@ -30,29 +30,25 @@ def maskImage(sexcat, paths, scale, offset, desi_pixscale,
 
     df2 = pd.read_csv(sexcat,sep=" ", header=None)
 
-    #scale = 1.5
-    #offset = 3
-
-
 
     df1 = pd.read_csv(paths, sep=r"\s+", header=None, names=["path"], engine="python")
 
-    # ID desde el nombre del archivo
+    # ID from file name
     df1["ID"] = df1["path"].apply(extrae_id)
 
 
     df2.rename(columns={0: "ID"}, inplace=True)
 
-    # 3) Unir (left join) usando el ID. Mantiene el número de filas de df1.
+    # 3) join (left join) using ID. It keeps the rows size of df1.
     merged = pd.merge(df1, df2, on="ID", how="left", sort=False)
 
-    # 4) Reordenar columnas: primero path, clase, ID y luego las columnas originales del segundo archivo
+    # 4) sort columns in this order: path, clas, ID and the rest
     otras_cols = [c for c in merged.columns if c not in ["path",  "ID"]]
     merged = merged[["path", "ID"] + otras_cols]
 
 
 
-    #columnas X_new y Y_new para RA y DEC
+    #columns X_new y Y_new for RA y DEC
     img_paths =  merged.iloc[:,0]
     numbers = merged.iloc[:,1]
     X = merged.iloc[:,4]
@@ -126,21 +122,16 @@ def applyMask(img_path, number , a, b, theta_deg, outdir):
 
 
 
-
 def extrae_id(path: str) -> int:
     """
-    Extrae el ID numérico del nombre de archivo tipo imagen_0004.png -> 4.
-    Lanza ValueError si no encuentra un entero.
+    Extract ID number from file path  imagen_0004.png -> 4.
+    returns ValueError if number is not found
     """
     m = re.search(r'(\d+)\.png$', path.strip())
     if not m:
-        raise ValueError(f"No se pudo extraer ID de: {path}")
+        raise ValueError(f"ID can not be extracted from: {path}")
     return int(m.group(1).lstrip("0") or "0")
 
 
-
-
-if __name__ == '__main__':
-    maskArgParser()
 
 

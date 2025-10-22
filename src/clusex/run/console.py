@@ -22,7 +22,7 @@ from clusex.lib.make import MakeObjImg
 
 from clusex.lib.galaxypng import downloadDesi
 
-from clusex.lib.maskellipse import maskimage 
+from clusex.lib.maskellipse import maskImage 
 
 from clusex.lib.joinfiles import joinclass 
 
