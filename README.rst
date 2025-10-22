@@ -259,7 +259,7 @@ command:
 .. _DESI: https://www.legacysurvey.org/viewer
 
 
-.. image:: img/Comaimproved.png
+.. image:: img/gui.png
 
 or use `classify` command to classify the downloaded galaxy images using the chatGPT API. (you
 need a openai API key and must buy tokens from openai `platform`_) 
