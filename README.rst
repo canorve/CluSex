@@ -261,10 +261,12 @@ command:
 
 .. image:: img/Comaimproved.png
 
-or use `classify` command to classify galaxies using the chatGPT API. (you
-need a openai API key and you must buy tokens from openai `platform`_) 
+or use `classify` command to classify the downloaded galaxy images using the chatGPT API. (you
+need a openai API key and must buy tokens from openai `platform`_) 
 
 .. _platform: https://platform.openai.com/docs/overview
+
+
 
 --------------
 
