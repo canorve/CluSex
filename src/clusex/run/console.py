@@ -36,7 +36,6 @@ from clusex.lib.sky import SkyCal
 
 from clusex.lib.cgpng import cgPNG
 
-from clusex_test.lib.cgpng import cgPNG
 
 #console scripts
 
