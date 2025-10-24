@@ -252,7 +252,7 @@ to how to do this).
 
 Galaxy Classification
 ~~~~~~~~~~~~~~~~~~~~~~~
-Once a catalog was obtained with ``clusex``, use ``downloadDesi`` to
+Once a catalog was obtained with ``clusex``, use ``getDesi`` to
 download png images of `DESI`_ to classify galaxies using the gui ``guiclass`` 
 command:
 
