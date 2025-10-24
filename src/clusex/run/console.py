@@ -637,7 +637,7 @@ def getDesiParser():
     Function for argument parsing
     """
 
-    parser = argparse.ArgumentParser(description="downloadDesi: Download png images from DESI given a Sextractor Catalog")
+    parser = argparse.ArgumentParser(description="getDesi: Download png images from DESI given a Sextractor Catalog")
 
     # required arguments
     parser.add_argument("sexcat", help="Sextractor catalog")
