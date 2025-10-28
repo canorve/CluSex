@@ -642,10 +642,12 @@ def getDesiSex():
 
     parser.add_argument("-d","--dir", type=str, default="desi_images", help="name of the output directory where the images will be stored")
 
+    parser.add_argument("-sdss","--SDSS", action='store_true', help="download image from Sloan digital Sky Survey")
+  
     args = parser.parse_args()
 
     DesiFromSexCat(args.sexcat, args.dir, args.scale, args.offset, args.desi_pixscale, 
-                args.image_plate, args.max_mag, args.class_star)
+                args.image_plate, args.max_mag, args.class_star,args.SDSS)
 
 
 

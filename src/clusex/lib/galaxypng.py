@@ -21,7 +21,7 @@ import socket
 TIMEOUT = 20  # seconds
 
 
-def DesiFromSexCat(sexcat="hotcold.cat", output_dir="desi_images", scale=1, offset=0, desi_pixscale=0.262, image_plate=0.68, max_mag=18, starclass=0.6):
+def DesiFromSexCat(sexcat="hotcold.cat", output_dir="desi_images", scale=1, offset=0, desi_pixscale=0.262, image_plate=0.68, max_mag=18, starclass=0.6, sdss=False):
 
     if os.path.exists(output_dir):
         shutil.rmtree(output_dir)
@@ -29,7 +29,7 @@ def DesiFromSexCat(sexcat="hotcold.cat", output_dir="desi_images", scale=1, offs
     else:
         print("Directory not found. Creating one")
 
-
+    DR = 14 # sdss data release
 
     os.makedirs(output_dir, exist_ok=True)
 
@@ -101,7 +101,15 @@ def DesiFromSexCat(sexcat="hotcold.cat", output_dir="desi_images", scale=1, offs
     #Recorrer cada galaxia
     for idx, (number, ra, dec, mag, width, height, clas, flag) in enumerate(zip(numbers,ra_list, dec_list, mags, sizex, sizey, classtar, flags)):
 
-        url = f'http://legacysurvey.org/viewer/jpeg-cutout?ra={ra:.5f}&dec={dec:.5f}&width={width}&height={height}&layer=dr8&desi_pixscale={desi_pixscale}&bands=grz'
+
+        if sdss:
+            url = 'http://skyservice.pha.jhu.edu/dr%i/ImgCutout/getjpeg.aspx?'%DR
+            url += 'ra=%0.5f&dec=%0.5f&'%(ra, dec)
+            url += 'scale=%0.5f&'%desi_pixscale
+            url += 'width=%i&height=%i'%(width, height)
+        else:
+
+            url = f'http://legacysurvey.org/viewer/jpeg-cutout?ra={ra:.5f}&dec={dec:.5f}&width={width}&height={height}&layer=dr8&desi_pixscale={desi_pixscale}&bands=grz'
 
 
         try:
