@@ -20,7 +20,7 @@ from clusex.lib.make import MakeSatBox
 from clusex.lib.make import MakeStamps
 from clusex.lib.make import MakeObjImg
 
-from clusex.lib.galaxypng import downloadDesi
+from clusex.lib.galaxypng import DesiFromSexCat 
 
 from clusex.lib.maskellipse import maskImage 
 
@@ -578,30 +578,18 @@ def compsky():
 
             ###
 
-            #box = params.skybox
-            #num = params.skynum
-            #box = args.box
-            #numbox = args.numBox
-
-            #scaleMax = args.scaleRadMax
-
             print("computing sky for object ",N[idx])
             line="using Rad = {:.2f}, box size= {}, number of boxes = {}".format(Rinit,box,numbox)
             print(line)
 
 
-           # mean,std, median = SkyCal().RandBox(ImageFile,MaskFile,xx,yy,
-           #                                     thetadeg,q,Rinit,box,numbox,Rmax)
             mean,std, median = SkyCal().RandBox(datimg,maskimg,xx,yy,
                                                 thetadeg,q,Rinit,box,numbox,Rmax, outliers=outliers)
 
             line="Total sky:  mean = {:.2f}; std = {:.2f}; median = {:.2f}".format(mean,std,median)
             print(line)
 
-            #saving for output
             Bkgd[idx] = mean  
-            #galpar.randskystd = std
-            #galpar.randskymed = median
             line="{0:.0f} {1} {2} {3} {4} {5} {6} {7} {8:.0f} {9} {10} {11:.2f} {12:.2f} {13} {14:.0f} \n".format(N[idx], Alpha[idx], Delta[idx], X[idx], Y[idx], Mg[idx], Kr[idx], Fluxr[idx], Isoa[idx], Ai[idx], E[idx], Theta[idx], Bkgd[idx], Idx[idx], Flg[idx])
 
 
@@ -628,16 +616,12 @@ def compsky():
 
 
 
-
-
-
-
-def getDesiParser():
+def getDesiSex():
     """
     Function for argument parsing
     """
 
-    parser = argparse.ArgumentParser(description="getDesi: Download png images from DESI given a Sextractor Catalog")
+    parser = argparse.ArgumentParser(description="desisexcat: Download png images from DESI given a Sextractor Catalog")
 
     # required arguments
     parser.add_argument("sexcat", help="Sextractor catalog")
@@ -660,7 +644,7 @@ def getDesiParser():
 
     args = parser.parse_args()
 
-    downloadDesi(args.sexcat, args.dir, args.scale, args.offset, args.desi_pixscale, 
+    DesiFromSexCat(args.sexcat, args.dir, args.scale, args.offset, args.desi_pixscale, 
                 args.image_plate, args.max_mag, args.class_star)
 
 

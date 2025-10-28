@@ -21,7 +21,7 @@ import socket
 TIMEOUT = 20  # seconds
 
 
-def downloadDesi(sexcat="hotcold.cat", output_dir="desi_images", scale=1, offset=0, desi_pixscale=0.262, image_plate=0.68, max_mag=18, starclass=0.6):
+def DesiFromSexCat(sexcat="hotcold.cat", output_dir="desi_images", scale=1, offset=0, desi_pixscale=0.262, image_plate=0.68, max_mag=18, starclass=0.6):
 
     if os.path.exists(output_dir):
         shutil.rmtree(output_dir)
