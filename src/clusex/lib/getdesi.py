@@ -176,7 +176,7 @@ class DownImage(object):
 
 
 if __name__ == '__main__':
-    downFileParser()
+    desiListParser()
 
 
 
