@@ -125,7 +125,7 @@ def _get_client():
     wait=wait_exponential(multiplier=1, min=1, max=20),
     retry=retry_if_exception_type(Exception)
 )
-def call_api(client, model: str, messages: List[Dict[str, Any]], response_format: Dict[str, Any]) -> Dict[str, Any]:
+def call_api(client, model: str, messages: List[Dict[str, Any]], response_format: Dict[str, Any], temp: float) -> Dict[str, Any]:
     """
     Option:
       1) Try with response_format (esqueme validation).
@@ -136,7 +136,7 @@ def call_api(client, model: str, messages: List[Dict[str, Any]], response_format
             model=model,
             input=messages,
             response_format=response_format,
-            temperature=0.2,
+            temperature=temp,
         )
         return json.loads(resp.output_text)
 
@@ -147,7 +147,7 @@ def call_api(client, model: str, messages: List[Dict[str, Any]], response_format
         resp = client.responses.create(
             model=model,
             input=messages,
-            temperature=0.2,
+            temperature=temp,
         )
         raw = resp.output_text or ""
         m = re.search(r'(\{.*\}|\[.*\])', raw, re.S)
@@ -206,6 +206,7 @@ def classify():
     parser.add_argument("--prompt-file", required=True, help="File .txt with the prompt instruction.")
     parser.add_argument("--out", required=True, help="CSV file output.")
     parser.add_argument("--batch-size", type=int, default=8, help="Images per batch (≤10 recomended).")
+    parser.add_argument("--temperature", type=float, default=0.2, help="temperature. Less temperature less variation (default=0.2).")
     parser.add_argument("--model", default="gpt-4.1-mini", help="Vision model, example: gpt-4.1-mini.")
     parser.add_argument("--copy-dir", default=None, help="If activated, it will copy each image renamed to this directory.")
     parser.add_argument("--bar-in-name", action="store_true",
@@ -247,7 +248,7 @@ def classify():
 
         # Llamada a la API (con fallback)
         try:
-            result = call_api(client, args.model, messages, SCHEMA)
+            result = call_api(client, args.model, messages, SCHEMA, args.temperature)
         except Exception as e:
             for p in batch_paths:
                 row = {
