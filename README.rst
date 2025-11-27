@@ -31,6 +31,10 @@
    :alt: Build Status
 
 
+.. image:: https://codecov.io/gh/canorve/clusex/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/canorve/clusex
+   :alt: Coverage
+
 
 **CluSex**
 ===========
