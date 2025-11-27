@@ -21,6 +21,12 @@
    :target: https://www.repostatus.org/#active
 
 
+.. image:: https://img.shields.io/pypi/pyversions/CluSex.svg
+   :target: https://pypi.org/project/CluSex/
+   :alt: Supported Python versions
+
+
+
 **CluSex**
 ===========
 
