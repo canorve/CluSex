@@ -19,7 +19,7 @@ def test_exit():
 
 def test_sextractor():
 
-    runcmd="sex"
+    runcmd="source-extractor"
     err = sp.run([runcmd],shell=True,stdout=sp.PIPE,stderr=sp.PIPE,universal_newlines=True)  
 
     assert err.returncode == 0, "is Sextractor installed?"
