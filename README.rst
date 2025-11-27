@@ -26,6 +26,11 @@
    :alt: Supported Python versions
 
 
+.. image:: https://github.com/canorve/clusex/actions/workflows/run-test.yml/badge.svg
+   :target: https://github.com/canorve/clusex/actions/workflows/run-test.yml
+   :alt: Build Status
+
+
 
 **CluSex**
 ===========
