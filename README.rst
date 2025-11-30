@@ -36,6 +36,12 @@
    :alt: Coverage
 
 
+.. image:: https://readthedocs.org/projects/Clusex/badge/?version=latest
+        :alt: ReadTheDocs
+        :target: https://clusex.readthedocs.io/en/latest/ 
+
+
+
 **CluSex**
 ===========
 
