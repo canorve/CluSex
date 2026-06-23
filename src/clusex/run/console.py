@@ -658,12 +658,12 @@ def guiclass():
     parser = argparse.ArgumentParser(description="guiclass: classify galaxies from list")
 
     # required arguments
-    parser.add_argument("pnglist", help="list of the png files to classify. It can be created with ls command")
+    parser.add_argument("pngdir", help="Directory containing the png files to classify. ")
     parser.add_argument("pngout", help="name of the output file. It is the same as pnglist but a column of morphology is added ")
 
     args = parser.parse_args()
 
-    pnglist = args.pnglist
+    pnglist = args.pngdir
     pngout = args.pngout
 
     cgPNG(pnglist, pngout, include_header=True)
@@ -678,7 +678,7 @@ def maskArgParser():
 
     # required arguments
     parser.add_argument("sexcat", help="Sextractor catalog")
-    parser.add_argument("paths", type=str,  help="Text file with image paths, one per line.")
+    parser.add_argument("paths", type=str,  help="Text file with image paths, one per line. It can be created with ls command")
     parser.add_argument("-s","--scale",type=float, default=1, help="Scaling factor applied to enlarge the galaxies to apply mask. Default = .7")
     parser.add_argument("-off","--offset", type=float, default=0, help="adding/substract constant applied to enlarged galaxies. Default= 0")
     parser.add_argument("-desi","--desi_pixscale",type=float, default=0.262, 
